@@ -3,12 +3,18 @@ import { BrowserWindow, shell } from "electron";
 import { join } from "path";
 import icon from "../../resources/icon.png?asset";
 
+const WIDTH = 330;
+const HEIGHT = 600;
+
 export function createWindow(): BrowserWindow {
   const mainWindow: BrowserWindow = new BrowserWindow({
-    width: 330,
-    height: 600,
-    minWidth: 330,
-    minHeight: 600,
+    width: WIDTH,
+    height: HEIGHT,
+    minWidth: WIDTH,
+    minHeight: HEIGHT,
+    // maxWidth: WIDTH,
+    // maxHeight: HEIGHT,
+    // resizable: false,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === "linux" ? { icon } : {}),

@@ -35,6 +35,11 @@ export type Languages = {
 export type LanguageCode = keyof Languages;
 export type LanguageName = Languages[LanguageCode];
 
+// Settings
+export interface Settings {
+  theme: string;
+}
+
 // IPC 通道
 export enum IpcChannel {
   TRANSLATE_YOUDAO = "translate:youdao",

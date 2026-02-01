@@ -1,4 +1,4 @@
-import { IpcChannel, TranslateData, YoudaoResponse } from "@common/types";
+import type { IpcChannel, TranslateData, YoudaoResponse } from "@common/types";
 import { ipcMain } from "electron";
 
 const wordURL = (word: string): string => `https://dict.youdao.com/w/${encodeURIComponent(word)}/`;
@@ -6,7 +6,7 @@ const audioURL = (word: string, type: 1 | 2): string =>
   `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}`;
 
 export function setupTranslateHandlers(): void {
-  ipcMain.handle(IpcChannel.TRANSLATE_YOUDAO, async (_, data: TranslateData) => {
+  ipcMain.handle("translate:youdao" as IpcChannel, async (_, data: TranslateData) => {
     return youdaoTranslate(data);
   });
 }
