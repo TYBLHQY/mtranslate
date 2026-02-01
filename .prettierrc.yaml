@@ -1,4 +1,8 @@
-singleQuote: true
-semi: false
-printWidth: 100
-trailingComma: none
+printWidth: 110
+arrowParens: avoid
+singleAttributePerLine: true
+bracketSameLine: true
+objectWrap: preserve
+plugins:
+  - prettier-plugin-organize-imports
+  - prettier-plugin-tailwindcss
