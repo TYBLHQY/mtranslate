@@ -38,6 +38,8 @@ export type LanguageName = Languages[LanguageCode];
 // Settings
 export interface Settings {
   theme: string;
+  silent: boolean;
+  bounds: Electron.Rectangle;
 }
 
 // IPC 通道

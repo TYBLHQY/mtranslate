@@ -23,7 +23,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "electron-store": "^11.0.2",
+    "better-sqlite3": "^12.6.2",
     "pinia": "^3.0.4",
     "vue-router": "^5.0.1"
   },
@@ -34,6 +34,7 @@
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@iconify/json": "^2.2.433",
     "@tailwindcss/vite": "^4.1.18",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.19.1",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vitejs/plugin-vue-jsx": "^5.1.3",

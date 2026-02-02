@@ -1,37 +1,41 @@
 import { is } from "@electron-toolkit/utils";
 import { BrowserWindow, shell } from "electron";
 import { join } from "path";
-import icon from "../../resources/icon.png?asset";
+import icon from "../../../resources/icon.png?asset";
+import { getSetting, saveSetting } from "./store";
+import { debounce } from "./tools";
 
-const WIDTH = 330;
-const HEIGHT = 600;
+const windowConfig: Electron.BrowserWindowConstructorOptions = {
+  resizable: false,
+  show: false,
+  autoHideMenuBar: true,
+  ...(process.platform === "linux" ? { icon } : {}),
+  webPreferences: {
+    nodeIntegration: false,
+    contextIsolation: true,
+    preload: join(__dirname, "../preload/index.js"),
+    sandbox: false,
+  },
+};
 
-export function createWindow(): BrowserWindow {
-  const mainWindow: BrowserWindow = new BrowserWindow({
-    width: WIDTH,
-    height: HEIGHT,
-    minWidth: WIDTH,
-    minHeight: HEIGHT,
-    // maxWidth: WIDTH,
-    // maxHeight: HEIGHT,
-    // resizable: false,
-    show: false,
-    autoHideMenuBar: true,
-    ...(process.platform === "linux" ? { icon } : {}),
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: join(__dirname, "../preload/index.js"),
-      sandbox: false,
-    },
-  });
+const debouncedWrite = debounce(async (bounds: Electron.Rectangle) => {
+  saveSetting("bounds", bounds);
+}, 500);
+
+export async function createWindow(): Promise<BrowserWindow> {
+  const mainWindow: BrowserWindow = new BrowserWindow({ ...windowConfig, ...getSetting("bounds") });
 
   mainWindow.on("ready-to-show", () => {
-    // mainWindow?.show();
+    if (!getSetting("silent")) mainWindow.show();
   });
 
   mainWindow.on("closed", () => {
     mainWindow?.destroy();
+  });
+
+  mainWindow.on("move", () => {
+    const bounds = mainWindow.getBounds();
+    debouncedWrite(bounds);
   });
 
   mainWindow.webContents.setWindowOpenHandler(details => {
@@ -62,6 +66,6 @@ export function toggleMainWindow(mainWindow: BrowserWindow): void {
 export function showMainWindow(mainWindow: BrowserWindow): void {
   if (mainWindow.isMinimized()) mainWindow.restore();
   mainWindow.show();
-  mainWindow.focus(); // 推荐一起 focus，避免闪烁
+  mainWindow.focus();
   mainWindow.webContents.send("window-shown");
 }

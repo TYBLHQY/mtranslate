@@ -1,6 +1,6 @@
 import { app, BrowserWindow, Menu, nativeImage, Tray } from "electron";
-import icon from "../../resources/icon.png?asset";
-import { toggleMainWindow } from "./utils";
+import icon from "../../../resources/icon.png?asset";
+import { toggleMainWindow } from "./window";
 
 let tray: Tray;
 
