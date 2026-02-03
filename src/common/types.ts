@@ -44,6 +44,7 @@ export interface Settings {
   theme: string;
   font: string;
   silent: boolean;
+  resizable: boolean;
   bounds: Electron.Rectangle;
   service: string;
 }
@@ -51,12 +52,14 @@ export const defaultSettings: Settings = {
   theme: "mocha",
   font: "system-ui",
   silent: true,
+  resizable: false,
   bounds: { x: 0, y: 0, width: 330, height: 600 },
   service: "youdao-new",
 } as const;
 
 // IPC API
 export interface API {
+  windowShown: (callback: () => void) => void;
   translate: {
     youdaoOld: (data: QueryData) => Promise<YoudaoOldResponse>;
     youdaoNew: (data: QueryData) => Promise<YoudaoNewResponse>;
@@ -64,11 +67,12 @@ export interface API {
   font: {
     getFonts: () => Promise<string[]>;
   };
-  windowShown: (callback: () => void) => void;
   setting: {
     getSettings: () => Promise<Settings>;
     setTheme: (theme: string) => Promise<void>;
     setFont: (font: string) => Promise<void>;
     setService: (service: string) => Promise<void>;
+    setResizable: (resize: boolean) => Promise<void>;
+    setSilent: (silent: boolean) => Promise<void>;
   };
 }

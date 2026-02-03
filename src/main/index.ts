@@ -22,6 +22,11 @@ app.whenReady().then(async () => {
   ipcMain.handle("setting:set-theme", (_, theme: string) => saveSetting("theme", theme));
   ipcMain.handle("setting:set-font", (_, font: string) => saveSetting("font", font));
   ipcMain.handle("setting:set-service", (_, service: string) => saveSetting("service", service));
+  ipcMain.handle("setting:set-silent", (_, silent: boolean) => saveSetting("silent", silent));
+  ipcMain.handle("setting:set-resizable", (_, resizable: boolean) => {
+    saveSetting("resizable", resizable);
+    mainWindow.resizable = resizable;
+  });
 
   mainWindow = await createWindow();
   registerTray(mainWindow);

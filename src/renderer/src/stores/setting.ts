@@ -31,6 +31,18 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setService(serviceValue);
   };
 
+  const getResizable = (): boolean => settings.resizable;
+  const setResizable = (resizable: boolean): void => {
+    settings.resizable = resizable;
+    window.api.setting.setResizable(resizable);
+  };
+
+  const getSilent = (): boolean => settings.silent;
+  const setSilent = (silent: boolean): void => {
+    settings.silent = silent;
+    window.api.setting.setSilent(silent);
+  };
+
   return {
     settings,
     theme,
@@ -43,5 +55,9 @@ export const useSettingStore = defineStore("setting", () => {
     setFont,
     getService,
     setService,
+    getResizable,
+    setResizable,
+    getSilent,
+    setSilent,
   };
 });

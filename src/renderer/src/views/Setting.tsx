@@ -1,9 +1,12 @@
 import { Option } from "@common/types";
+import Button from "@renderer/components/common/Button";
 import Select from "@renderer/components/common/Select";
 import { useEsc } from "@renderer/composables/useEsc";
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, VNode } from "vue";
 import { useRouter } from "vue-router";
+import IconMdiLock from "~icons/mdi/lock";
+import IconMdiLockOpenVariant from "~icons/mdi/lock-open-variant";
 import IconMdiTransitionMasked from "~icons/mdi/transition-masked";
 
 export default defineComponent({
@@ -25,31 +28,66 @@ export default defineComponent({
       .then((fonts: string[]) => (fontOptions.value = fonts.map(font => ({ code: font, name: font }))))
       .finally(() => fontOptions.value.unshift({ code: "system-ui", name: "System Default" }));
 
+    const settingItem = (name: VNode, content: VNode): VNode => (
+      <div class="flex flex-row items-center justify-between gap-2">
+        {name}
+        {content}
+      </div>
+    );
+
     return () => (
       <div class="flex flex-1 flex-col gap-2 overflow-hidden">
-        <button
-          class="bg-ctp-crust hover:bg-ctp-surface0 flex cursor-pointer justify-center rounded py-2 transition-colors"
-          onClick={() => router.push({ name: "Home" })}>
-          <IconMdiTransitionMasked class="text-ctp-mauve" />
-        </button>
+        <Button onClick={() => router.push({ name: "Home" })}>
+          {{ icon: () => <IconMdiTransitionMasked class="text-ctp-mauve" /> }}
+        </Button>
 
-        <div class="flex flex-row items-center justify-between gap-2">
-          <div>主题</div>
+        {settingItem(
+          <div>主题</div>,
           <Select
+            class="flex-1"
             options={themeOption}
             value={settingStore.getTheme()}
             onUpdate:change={(value: Option) => settingStore.setTheme(value.code)}
-          />
-        </div>
+          />,
+        )}
 
-        <div class="flex flex-row items-center justify-between gap-2">
-          <div>字体</div>
+        {settingItem(
+          <div>字体</div>,
           <Select
+            class="flex-1"
             options={fontOptions.value}
             value={settingStore.getFont()}
             onUpdate:change={(value: Option) => settingStore.setFont(value.code)}
-          />
-        </div>
+          />,
+        )}
+
+        {settingItem(
+          <div>窗口大小</div>,
+          <Button
+            class="flex-1"
+            onClick={() => settingStore.setResizable(!settingStore.getResizable())}>
+            {
+              [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
+                +!settingStore.getResizable()
+              ]
+            }
+          </Button>,
+        )}
+
+        {settingItem(
+          <div>静默启动</div>,
+          <Button
+            class="flex-1"
+            onClick={() => settingStore.setSilent(!settingStore.getSilent())}>
+            {
+              [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
+                +!settingStore.getSilent()
+              ]
+            }
+          </Button>,
+        )}
+
+        <div></div>
       </div>
     );
   },

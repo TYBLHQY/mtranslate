@@ -16,7 +16,7 @@ export default defineComponent({
 
     return () => (
       <select
-        class="bg-ctp-crust hover:bg-ctp-surface0 min-h-8 min-w-8 flex-1 cursor-pointer appearance-none rounded text-center transition-colors outline-none"
+        class="bg-ctp-crust hover:bg-ctp-surface0 min-h-8 min-w-8 cursor-pointer appearance-none rounded text-center transition-colors outline-none"
         value={props.value}
         onChange={handleChange}
         {...attrs}>

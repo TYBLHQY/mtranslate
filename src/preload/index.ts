@@ -3,6 +3,9 @@ import { contextBridge, ipcRenderer } from "electron";
 import { API, QueryData } from "../common/types";
 
 const api: API = {
+  windowShown: (callback: () => void) => {
+    ipcRenderer.on("window-shown", callback);
+  },
   translate: {
     youdaoOld: (data: QueryData) => ipcRenderer.invoke("translate:youdao-old", data),
     youdaoNew: (data: QueryData) => ipcRenderer.invoke("translate:youdao-new", data),
@@ -10,14 +13,13 @@ const api: API = {
   font: {
     getFonts: () => ipcRenderer.invoke("font:get-fonts"),
   },
-  windowShown: (callback: () => void) => {
-    ipcRenderer.on("window-shown", callback);
-  },
   setting: {
     getSettings: () => ipcRenderer.invoke("setting:get-settings"),
     setTheme: (theme: string) => ipcRenderer.invoke("setting:set-theme", theme),
     setFont: (font: string) => ipcRenderer.invoke("setting:set-font", font),
     setService: (service: string) => ipcRenderer.invoke("setting:set-service", service),
+    setResizable: (resizable: boolean) => ipcRenderer.invoke("setting:set-resizable", resizable),
+    setSilent: (silent: boolean) => ipcRenderer.invoke("setting:set-silent", silent),
   },
 };
 

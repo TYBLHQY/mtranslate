@@ -4,7 +4,7 @@ import Select from "@renderer/components/common/Select";
 import YoudaoNew from "@renderer/components/translations/YoudaoNew";
 import YoudaoOld from "@renderer/components/translations/YoudaoOld";
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 // import IconMdiContentCopy from "~icons/mdi/content-copy";
 import IconMdiSettings from "~icons/mdi/settings";
@@ -42,11 +42,16 @@ export default defineComponent({
 
     window.api.windowShown(() => {
       sourceTextRef.value?.focus();
+      sourceTextRef.value?.select();
     });
 
     const autoLangRecognition = (): boolean => {
       return settingStore.getService() === "youdao-new" || settingStore.getService() === "youdao-old";
     };
+
+    onMounted(() => {
+      sourceTextRef.value?.focus();
+    });
 
     return () => (
       <div class="flex flex-1 flex-col gap-2 overflow-hidden">
@@ -65,6 +70,7 @@ export default defineComponent({
           {!autoLangRecognition() && (
             <div class="flex items-center justify-center">
               <Select
+                class="flex-1"
                 value={sourceLang.value}
                 options={languages}
                 onUpdate:change={(value: Option) => (sourceLang.value = value.code as LanguageCode)}
@@ -74,6 +80,7 @@ export default defineComponent({
                 {{ icon: () => <IconMdiSwapHorizontal /> }}
               </Button>
               <Select
+                class="flex-1"
                 value={targetLang.value}
                 options={languages}
                 onUpdate:change={(value: Option) => (targetLang.value = value.code as LanguageCode)}
@@ -82,6 +89,7 @@ export default defineComponent({
           )}
           <div class="flex items-center justify-center">
             <Select
+              class="flex-1"
               value={settingStore.getService()}
               options={translateServices}
               onUpdate:change={(value: Option) => settingStore.setService(value.code)}
