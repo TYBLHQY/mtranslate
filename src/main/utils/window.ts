@@ -6,7 +6,6 @@ import { getSetting, saveSetting } from "./store";
 import { debounce } from "./tools";
 
 const windowConfig: Electron.BrowserWindowConstructorOptions = {
-  resizable: false,
   minWidth: 330,
   minHeight: 600,
   show: false,
@@ -20,12 +19,14 @@ const windowConfig: Electron.BrowserWindowConstructorOptions = {
   },
 };
 
-const debouncedWrite = debounce(async (bounds: Electron.Rectangle) => {
-  saveSetting("bounds", bounds);
-}, 500);
+const debouncedWrite = debounce(async (bounds: Electron.Rectangle) => saveSetting("bounds", bounds), 500);
 
 export async function createWindow(): Promise<{ window: BrowserWindow }> {
-  const window: BrowserWindow = new BrowserWindow({ ...windowConfig, ...getSetting("bounds") });
+  const window: BrowserWindow = new BrowserWindow({
+    ...windowConfig,
+    ...getSetting("bounds"),
+    resizable: getSetting("resizable"),
+  });
 
   window.on("ready-to-show", () => {
     if (!getSetting("silent")) window.show();
