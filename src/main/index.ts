@@ -9,12 +9,10 @@ import { closeDB, getAllSettings, saveSetting } from "./utils/store";
 import { destroyTray, registerTray } from "./utils/tray";
 import { createWindow } from "./utils/window";
 
-let mainWindow: BrowserWindow;
-const lock = app.requestSingleInstanceLock();
-
-if (!lock) {
+if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
+  let mainWindow: BrowserWindow;
   app.whenReady().then(async () => {
     electronApp.setAppUserModelId("com.myq.mtranslate");
     app.on("browser-window-created", (_, window) => {

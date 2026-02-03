@@ -5,7 +5,7 @@ import YoudaoNew from "@renderer/components/translations/YoudaoNew";
 import YoudaoOld from "@renderer/components/translations/YoudaoOld";
 import { useSettingStore } from "@renderer/stores/setting";
 import { useTranslationStore } from "@renderer/stores/translation";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onActivated, ref } from "vue";
 import { useRouter } from "vue-router";
 import IconMdiSettings from "~icons/mdi/settings";
 import IconMdiSwapHorizontal from "~icons/mdi/swap-horizontal";
@@ -58,7 +58,7 @@ export default defineComponent({
       handleTranslate();
     });
     window.api.windowShown(() => focusInput());
-    onMounted(() => handleTranslate());
+    onActivated(() => focusInput());
 
     return () => (
       <div class="flex flex-1 flex-col gap-2 overflow-hidden">
