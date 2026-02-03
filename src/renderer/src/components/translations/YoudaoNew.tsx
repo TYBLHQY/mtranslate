@@ -18,7 +18,6 @@ export default defineComponent({
       window.api.translate
         .youdaoNew({ ...props.query })
         .then((res: YoudaoNewResponse) => {
-          console.log(res);
           translateData.value = res;
         })
         .catch(err => console.log(err));

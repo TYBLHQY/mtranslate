@@ -1,4 +1,4 @@
-import { defaultSettings, Settings } from "@common/types";
+import { defaultSettings, Settings, Shortcut } from "@common/types";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
@@ -43,6 +43,13 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setSilent(silent);
   };
 
+  const getGlobalShortcuts = (): Shortcut[] => settings.globalShortcuts;
+  const setGlobalShortcut = (shortcuts: Shortcut): void => {
+    console.log("Setting global shortcut:", shortcuts);
+    settings.globalShortcuts = settings.globalShortcuts.map(s => (s.id === shortcuts.id ? shortcuts : s));
+    window.api.setting.setGlobalShortcut(shortcuts);
+  };
+
   return {
     settings,
     theme,
@@ -59,5 +66,7 @@ export const useSettingStore = defineStore("setting", () => {
     setResizable,
     getSilent,
     setSilent,
+    getGlobalShortcuts,
+    setGlobalShortcut,
   };
 });

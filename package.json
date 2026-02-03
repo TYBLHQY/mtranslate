@@ -25,6 +25,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "better-sqlite3": "^12.6.2",
     "cheerio": "^1.2.0",
+    "node-get-selected-text": "^0.1.9",
     "pinia": "^3.0.4",
     "vue-router": "^5.0.1"
   },

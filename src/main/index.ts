@@ -1,8 +1,9 @@
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
+import { Shortcut } from "src/common/types";
 import { setupTransServices } from "./services";
 import { getSystemFonts } from "./utils/fonts";
-import { registerGlobalShortcut } from "./utils/globalShortcut";
+import { registerGlobalShortcut, unregisterGlobalShortcut } from "./utils/globalShortcut";
 import { closeDB, getAllSettings, saveSetting } from "./utils/store";
 import { destroyTray, registerTray } from "./utils/tray";
 import { createWindow } from "./utils/window";
@@ -14,6 +15,8 @@ app.whenReady().then(async () => {
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
+
+  mainWindow = await createWindow();
 
   setupTransServices();
 
@@ -27,10 +30,16 @@ app.whenReady().then(async () => {
     saveSetting("resizable", resizable);
     mainWindow.resizable = resizable;
   });
+  ipcMain.handle("setting:set-global-shortcut", (_, shortcut: Shortcut) => {
+    const settings = getAllSettings();
+    unregisterGlobalShortcut(settings.globalShortcuts.find(s => s.id === shortcut.id)!);
+    const updatedShortcuts = settings.globalShortcuts.map(s => (s.id === shortcut.id ? shortcut : s));
+    saveSetting("globalShortcuts", updatedShortcuts);
+    registerGlobalShortcut(mainWindow, shortcut);
+  });
 
-  mainWindow = await createWindow();
   registerTray(mainWindow);
-  registerGlobalShortcut(mainWindow);
+  getAllSettings().globalShortcuts.forEach(shortcut => registerGlobalShortcut(mainWindow, shortcut));
 });
 
 app.on("window-all-closed", () => {

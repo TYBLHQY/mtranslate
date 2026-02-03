@@ -1,10 +1,13 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import { API, QueryData } from "../common/types";
+import { API, QueryData, Shortcut } from "../common/types";
 
 const api: API = {
   windowShown: (callback: () => void) => {
     ipcRenderer.on("window-shown", callback);
+  },
+  selectedText: (callback: (text: string) => void) => {
+    ipcRenderer.on("selected-text", (_, text) => callback(text));
   },
   translate: {
     youdaoOld: (data: QueryData) => ipcRenderer.invoke("translate:youdao-old", data),
@@ -20,6 +23,7 @@ const api: API = {
     setService: (service: string) => ipcRenderer.invoke("setting:set-service", service),
     setResizable: (resizable: boolean) => ipcRenderer.invoke("setting:set-resizable", resizable),
     setSilent: (silent: boolean) => ipcRenderer.invoke("setting:set-silent", silent),
+    setGlobalShortcut: (shortcut: Shortcut) => ipcRenderer.invoke("setting:set-global-shortcut", shortcut),
   },
 };
 

@@ -4,9 +4,9 @@ import Select from "@renderer/components/common/Select";
 import YoudaoNew from "@renderer/components/translations/YoudaoNew";
 import YoudaoOld from "@renderer/components/translations/YoudaoOld";
 import { useSettingStore } from "@renderer/stores/setting";
+import { useTranslationStore } from "@renderer/stores/translation";
 import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-// import IconMdiContentCopy from "~icons/mdi/content-copy";
 import IconMdiSettings from "~icons/mdi/settings";
 import IconMdiSwapHorizontal from "~icons/mdi/swap-horizontal";
 
@@ -14,44 +14,46 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const settingStore = useSettingStore();
+    const translationStore = useTranslationStore();
 
     const sourceTextRef = ref<HTMLTextAreaElement>();
-    const sourceText = ref("");
     const query = ref<QueryData>();
     const sourceLang = ref<LanguageCode>("zh-CN");
     const targetLang = ref<LanguageCode>("en");
 
     const handleInput = async (event: KeyboardEvent): Promise<void> => {
-      const target = event.target as HTMLTextAreaElement;
-      sourceText.value = target.value;
+      translationStore.setSourceText((event.target as HTMLTextAreaElement).value);
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         handleTranslate();
         sourceTextRef.value?.select();
       }
+      if (event.key === "Escape") {
+        event.preventDefault();
+        sourceTextRef.value?.select();
+      }
     };
 
     const handleTranslate = async (): Promise<void> => {
-      if (!sourceText.value.trim()) return;
+      if (!translationStore.getSourceText()) return;
       query.value = {
         langfrom: sourceLang.value,
         langto: targetLang.value,
-        raw: sourceText.value,
+        raw: translationStore.getSourceText(),
       };
-    };
-
-    window.api.windowShown(() => {
       sourceTextRef.value?.focus();
       sourceTextRef.value?.select();
-    });
+    };
 
     const autoLangRecognition = (): boolean => {
       return settingStore.getService() === "youdao-new" || settingStore.getService() === "youdao-old";
     };
 
-    onMounted(() => {
-      sourceTextRef.value?.focus();
+    window.api.selectedText((text: string) => {
+      useTranslationStore().setSourceText(text);
+      handleTranslate();
     });
+    onMounted(() => handleTranslate());
 
     return () => (
       <div class="flex flex-1 flex-col gap-2 overflow-hidden">
@@ -59,10 +61,9 @@ export default defineComponent({
           <textarea
             class="flex-1 resize-none outline-none"
             ref={sourceTextRef}
-            value={sourceText.value}
+            value={translationStore.getSourceText()}
             onKeydown={(e: KeyboardEvent) => handleInput(e)}
             placeholder="原文"
-            autofocus
           />
         </div>
 

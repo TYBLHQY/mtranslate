@@ -40,6 +40,12 @@ export type LanguageCode = (typeof languages)[number]["code"];
 export type LanguageName = (typeof languages)[number]["name"];
 
 // Settings
+export type ShortcutId = "openAndClose" | "copyText";
+export interface Shortcut {
+  id: ShortcutId;
+  key: string;
+  name: string;
+}
 export interface Settings {
   theme: string;
   font: string;
@@ -47,6 +53,7 @@ export interface Settings {
   resizable: boolean;
   bounds: Electron.Rectangle;
   service: string;
+  globalShortcuts: Shortcut[];
 }
 export const defaultSettings: Settings = {
   theme: "mocha",
@@ -55,11 +62,16 @@ export const defaultSettings: Settings = {
   resizable: false,
   bounds: { x: 0, y: 0, width: 330, height: 600 },
   service: "youdao-new",
+  globalShortcuts: [
+    { id: "openAndClose", key: "", name: "打开关闭窗口" },
+    { id: "copyText", key: "", name: "翻译选中文本" },
+  ],
 } as const;
 
 // IPC API
 export interface API {
   windowShown: (callback: () => void) => void;
+  selectedText: (callback: (text: string) => void) => void;
   translate: {
     youdaoOld: (data: QueryData) => Promise<YoudaoOldResponse>;
     youdaoNew: (data: QueryData) => Promise<YoudaoNewResponse>;
@@ -74,5 +86,6 @@ export interface API {
     setService: (service: string) => Promise<void>;
     setResizable: (resize: boolean) => Promise<void>;
     setSilent: (silent: boolean) => Promise<void>;
+    setGlobalShortcut: (shortcut: Shortcut) => Promise<void>;
   };
 }

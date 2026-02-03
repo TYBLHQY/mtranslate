@@ -1,11 +1,24 @@
 import { BrowserWindow, globalShortcut } from "electron";
-import { toggleMainWindow } from "./window";
+import { getSelectedText } from "node-get-selected-text";
+import { Shortcut } from "src/common/types";
+import { showMainWindow, toggleMainWindow } from "./window";
 
-export function registerGlobalShortcut(mainWindow: BrowserWindow): void {
-  globalShortcut.register("Control+Shift+Space", () => {
-    toggleMainWindow(mainWindow);
-  });
-  // globalShortcut.register("Control+Space", () => {
-  //   // 获取选中文字
-  // });
+export function registerGlobalShortcut(mainWindow: BrowserWindow, shortcuts: Shortcut): void {
+  if (!shortcuts.key) return;
+  if (shortcuts.id === "openAndClose")
+    globalShortcut.register(shortcuts.key, () => {
+      toggleMainWindow(mainWindow);
+    });
+  if (shortcuts.id === "copyText")
+    globalShortcut.register(shortcuts.key, async () => {
+      const selectedText = getSelectedText();
+      mainWindow.webContents.send("selected-text", selectedText);
+      showMainWindow(mainWindow);
+    });
+}
+
+export function unregisterGlobalShortcut(shortcut: Shortcut): void {
+  if (!shortcut.key) return;
+  if (!globalShortcut.isRegistered(shortcut.key)) return;
+  globalShortcut.unregister(shortcut.key);
 }

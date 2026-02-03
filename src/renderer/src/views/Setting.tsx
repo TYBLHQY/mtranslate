@@ -1,7 +1,8 @@
-import { Option } from "@common/types";
+import { Option, Shortcut } from "@common/types";
 import Button from "@renderer/components/common/Button";
 import Select from "@renderer/components/common/Select";
 import { useEsc } from "@renderer/composables/useEsc";
+import { useShortcut } from "@renderer/composables/useGlobalShotcut";
 import { useSettingStore } from "@renderer/stores/setting";
 import { defineComponent, ref, VNode } from "vue";
 import { useRouter } from "vue-router";
@@ -13,10 +14,10 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const settingStore = useSettingStore();
-    useEsc(() => router.push({ name: "Home" }));
+    const escHandler = useEsc(() => router.push({ name: "Home" }));
 
     const fontOptions = ref<Option[]>([]);
-    const themeOption: Option[] = [
+    const themeOptions: Option[] = [
       { code: "latte", name: "latte" },
       { code: "mocha", name: "mocha" },
       { code: "frappe", name: "frappe" },
@@ -28,11 +29,30 @@ export default defineComponent({
       .then((fonts: string[]) => (fontOptions.value = fonts.map(font => ({ code: font, name: font }))))
       .finally(() => fontOptions.value.unshift({ code: "system-ui", name: "System Default" }));
 
+    const settingTitle = (title: string): VNode => <div class="text-ctp-surface2 text-center">{title}</div>;
+
     const settingItem = (name: VNode, content: VNode): VNode => (
       <div class="flex flex-row items-center justify-between gap-2">
         {name}
         {content}
       </div>
+    );
+
+    const currentShortcut = ref<Shortcut>();
+    const { pressedKeyString, handleShortcutInput } = useShortcut(
+      () => escHandler.stop(),
+      () => {
+        escHandler.start();
+        currentShortcut.value = undefined;
+      },
+      () => {
+        escHandler.start();
+        settingStore.setGlobalShortcut({
+          ...currentShortcut.value!,
+          key: pressedKeyString.value,
+        });
+        currentShortcut.value = undefined;
+      },
     );
 
     return () => (
@@ -41,11 +61,13 @@ export default defineComponent({
           {{ icon: () => <IconMdiTransitionMasked class="text-ctp-mauve" /> }}
         </Button>
 
+        {settingTitle("基本配置")}
+
         {settingItem(
           <div>主题</div>,
           <Select
             class="flex-1"
-            options={themeOption}
+            options={themeOptions}
             value={settingStore.getTheme()}
             onUpdate:change={(value: Option) => settingStore.setTheme(value.code)}
           />,
@@ -87,7 +109,21 @@ export default defineComponent({
           </Button>,
         )}
 
-        <div></div>
+        {settingTitle("全局快捷键")}
+
+        {settingStore.getGlobalShortcuts().map(s => (
+          <div class="flex flex-row items-center justify-between gap-2">
+            <div>{s.name}</div>
+            <Button
+              class={["flex-1 text-sm", currentShortcut.value?.id === s.id ? "border-ctp-base" : ""]}
+              onClick={() => {
+                currentShortcut.value = s;
+                handleShortcutInput();
+              }}>
+              {currentShortcut.value?.id === s.id ? pressedKeyString.value : s.key || "未设置"}
+            </Button>
+          </div>
+        ))}
       </div>
     );
   },
