@@ -1,5 +1,5 @@
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
+import { app, globalShortcut, ipcMain } from "electron";
 import { Shortcut } from "src/common/types";
 import { setupTransServices } from "./services";
 import { captureWindow } from "./utils/capturer";
@@ -12,17 +12,15 @@ import { createWindow } from "./utils/window";
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  let mainWindow: BrowserWindow;
   app.whenReady().then(async () => {
     electronApp.setAppUserModelId("com.myq.mtranslate");
     app.on("browser-window-created", (_, window) => {
       optimizer.watchWindowShortcuts(window);
     });
 
-    mainWindow = await createWindow();
+    const { window } = await createWindow();
 
     setupTransServices();
-
     ipcMain.handle("font:get-fonts", () => getSystemFonts());
     ipcMain.handle("setting:get-settings", async () => getAllSettings());
     ipcMain.handle("setting:set-theme", (_, theme: string) => saveSetting("theme", theme));
@@ -31,20 +29,20 @@ if (!app.requestSingleInstanceLock()) {
     ipcMain.handle("setting:set-silent", (_, silent: boolean) => saveSetting("silent", silent));
     ipcMain.handle("setting:set-resizable", (_, resizable: boolean) => {
       saveSetting("resizable", resizable);
-      mainWindow.resizable = resizable;
+      window.resizable = resizable;
     });
     ipcMain.handle("setting:set-global-shortcut", (_, shortcut: Shortcut) => {
       const settings = getAllSettings();
       unregisterGlobalShortcut(settings.globalShortcuts.find(s => s.id === shortcut.id)!);
       const updatedShortcuts = settings.globalShortcuts.map(s => (s.id === shortcut.id ? shortcut : s));
       saveSetting("globalShortcuts", updatedShortcuts);
-      registerGlobalShortcut(mainWindow, shortcut);
+      registerGlobalShortcut(window, shortcut);
     });
 
-    registerTray(mainWindow);
-    getAllSettings().globalShortcuts.forEach(shortcut => registerGlobalShortcut(mainWindow, shortcut));
+    registerTray(window);
+    getAllSettings().globalShortcuts.forEach(shortcut => registerGlobalShortcut(window, shortcut));
 
-    ipcMain.handle("window:capture", async () => await captureWindow(mainWindow));
+    ipcMain.handle("window:capture", async () => await captureWindow(window));
   });
 
   app.on("window-all-closed", () => {

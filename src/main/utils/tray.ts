@@ -8,7 +8,13 @@ const buildMenu = (mainWindow: BrowserWindow): Menu => {
   return Menu.buildFromTemplate([
     { label: "Toggle Window", click: () => toggleMainWindow(mainWindow) },
     { type: "separator" },
-    { label: "Quit", click: () => app.quit() },
+    {
+      label: "Quit",
+      click: () => {
+        mainWindow.destroy();
+        app.quit();
+      },
+    },
   ]);
 };
 

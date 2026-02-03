@@ -22,52 +22,43 @@ const debouncedWrite = debounce(async (bounds: Electron.Rectangle) => {
   saveSetting("bounds", bounds);
 }, 500);
 
-export async function createWindow(): Promise<BrowserWindow> {
-  const mainWindow: BrowserWindow = new BrowserWindow({ ...windowConfig, ...getSetting("bounds") });
+export async function createWindow(): Promise<{ window: BrowserWindow }> {
+  const window: BrowserWindow = new BrowserWindow({ ...windowConfig, ...getSetting("bounds") });
 
-  mainWindow.on("ready-to-show", () => {
-    if (!getSetting("silent")) mainWindow.show();
+  window.on("ready-to-show", () => {
+    if (!getSetting("silent")) window.show();
   });
 
-  mainWindow.on("closed", () => {
-    mainWindow?.destroy();
+  window.on("close", event => {
+    event.preventDefault();
+    window.hide();
   });
 
-  mainWindow.on("move", () => {
-    const bounds = mainWindow.getBounds();
+  window.on("closed", () => {
+    window?.destroy();
+  });
+
+  window.on("move", () => {
+    const bounds = window.getBounds();
     debouncedWrite(bounds);
   });
 
-  mainWindow.webContents.setWindowOpenHandler(details => {
+  window.webContents.setWindowOpenHandler(details => {
     shell.openExternal(details.url);
     return { action: "deny" };
   });
 
   // HMR
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"])
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  else mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) window.loadURL(process.env["ELECTRON_RENDERER_URL"]);
+  else window.loadFile(join(__dirname, "../renderer/index.html"));
 
-  return mainWindow;
+  return { window };
 }
 
 export function toggleMainWindow(mainWindow: BrowserWindow): void {
-  // if (!mainWindow) {
-  //   createWindow();
-  // } else if (mainWindow.isFocused()) {
-  //   mainWindow.hide();
-  // } else if (mainWindow.isVisible()) {
-  //   mainWindow.focus();
-  // } else {
-  //   showMainWindow(mainWindow);
-  // }
-  if (!mainWindow) {
-    createWindow();
-  } else if (mainWindow.isVisible()) {
-    mainWindow.hide();
-  } else {
-    showMainWindow(mainWindow);
-  }
+  if (!mainWindow) createWindow();
+  else if (mainWindow.isVisible()) mainWindow.hide();
+  else showMainWindow(mainWindow);
 }
 
 export function showMainWindow(mainWindow: BrowserWindow): void {
