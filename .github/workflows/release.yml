@@ -36,5 +36,5 @@ jobs:
 
       - name: Build and release app
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run build:release
