@@ -21,16 +21,21 @@ export default defineComponent({
     const sourceLang = ref<LanguageCode>("zh-CN");
     const targetLang = ref<LanguageCode>("en");
 
+    const focusInput = (): void => {
+      sourceTextRef.value?.focus();
+      sourceTextRef.value?.select();
+    };
+
     const handleInput = async (event: KeyboardEvent): Promise<void> => {
       translationStore.setSourceText((event.target as HTMLTextAreaElement).value);
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         handleTranslate();
-        sourceTextRef.value?.select();
+        focusInput();
       }
       if (event.key === "Escape") {
         event.preventDefault();
-        sourceTextRef.value?.select();
+        focusInput();
       }
     };
 
@@ -41,8 +46,7 @@ export default defineComponent({
         langto: targetLang.value,
         raw: translationStore.getSourceText(),
       };
-      sourceTextRef.value?.focus();
-      sourceTextRef.value?.select();
+      focusInput();
     };
 
     const autoLangRecognition = (): boolean => {
@@ -53,6 +57,7 @@ export default defineComponent({
       useTranslationStore().setSourceText(text);
       handleTranslate();
     });
+    window.api.windowShown(() => focusInput());
     onMounted(() => handleTranslate());
 
     return () => (

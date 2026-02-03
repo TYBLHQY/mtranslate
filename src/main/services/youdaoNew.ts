@@ -4,8 +4,10 @@ import { QueryData, YoudaoNewResponse } from "../../common/types";
 
 const URL = (word: string, lang: string): string =>
   `https://dict.youdao.com/result?word=${word}&lang=${lang}`;
-const audioURL = (word: string, type: 1 | 2, longMode: boolean = false): string =>
-  `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}${longMode ? "&le=zh&product=pc" : ""}`;
+// const audioURL = (word: string, type: 1 | 2, longMode: boolean = false): string =>
+//   `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}${longMode ? "&le=zh&product=pc" : ""}`;
+const audioURL = (word: string, type: 1 | 2): string =>
+  `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}`;
 
 export async function parse(html: string, word: string): Promise<YoudaoNewResponse> {
   const $ = cheerio.load(html);
@@ -18,7 +20,7 @@ export async function parse(html: string, word: string): Promise<YoudaoNewRespon
   // audios
   if (audioRoot.find(".lj-title").length > 0 && audioRoot.find(".pronounce").length > 0) {
     // 长句
-    res.audio.push({ text: "", url: audioURL(word, 2, true) });
+    res.audio.push({ text: "", url: audioURL(word, 2) });
   } else if (audioRoot.find(".per-phone").length > 0) {
     // 单词
     audioRoot.find(".per-phone").each((i, el) => {
@@ -26,13 +28,7 @@ export async function parse(html: string, word: string): Promise<YoudaoNewRespon
     });
   } else {
     // 短句
-    if (audioRoot.find(".title").find(".pronounce").length > 0) {
-      // en
-      res.audio.push({ text: "", url: audioURL(word, 2) });
-    } else {
-      // zh
-      res.audio.push({ text: "", url: audioURL(word, 2, true) });
-    }
+    res.audio.push({ text: "", url: audioURL(word, 2) });
   }
 
   // exps

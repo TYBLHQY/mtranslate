@@ -1,5 +1,5 @@
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, KeepAlive, onMounted, watch } from "vue";
+import { defineComponent, KeepAlive, watch } from "vue";
 import { RouterView, useRouter } from "vue-router";
 
 export default defineComponent({
@@ -7,10 +7,8 @@ export default defineComponent({
     const settingStore = useSettingStore();
     const router = useRouter();
 
-    onMounted(() => {
-      window.api.setting.getSettings().then(settings => settingStore.initSettings(settings));
-      window.api.windowShown(() => router.push({ name: "Home" }));
-    });
+    window.api.setting.getSettings().then(settings => settingStore.initSettings(settings));
+    window.api.windowShown(() => router.push({ name: "Home" }));
 
     watch(
       () => settingStore.font,
@@ -21,13 +19,11 @@ export default defineComponent({
       <div class={["bg-ctp-base text-ctp-text flex h-screen p-2", settingStore.theme]}>
         <RouterView>
           {{
-            default: ({ Component }) => {
-              return (
-                <KeepAlive>
-                  <Component />
-                </KeepAlive>
-              );
-            },
+            default: ({ Component }) => (
+              <KeepAlive>
+                <Component />
+              </KeepAlive>
+            ),
           }}
         </RouterView>
       </div>
