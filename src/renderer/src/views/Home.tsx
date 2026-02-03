@@ -81,14 +81,14 @@ export default defineComponent({
             </div>
           )}
           <div class="flex items-center justify-center">
-            <Button onClick={() => router.push({ name: "Settings" })}>
-              {{ icon: () => <IconMdiSettings /> }}
-            </Button>
             <Select
               value={settingStore.getService()}
               options={translateServices}
               onUpdate:change={(value: Option) => settingStore.setService(value.code)}
             />
+            <Button onClick={() => router.push({ name: "Settings" })}>
+              {{ icon: () => <IconMdiSettings /> }}
+            </Button>
             {/* <Button onClick={() => navigator.clipboard.writeText(translatedData.value?.result || "")}>
               {{ icon: () => <IconMdiContentCopy /> }}
             </Button> */}

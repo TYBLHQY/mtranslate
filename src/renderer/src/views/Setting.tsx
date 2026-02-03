@@ -4,7 +4,7 @@ import { useEsc } from "@renderer/composables/useEsc";
 import { useSettingStore } from "@renderer/stores/setting";
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
-import IconMdiArrowULeftTop from "~icons/mdi/arrow-u-left-top";
+import IconMdiTransitionMasked from "~icons/mdi/transition-masked";
 
 export default defineComponent({
   setup() {
@@ -30,7 +30,7 @@ export default defineComponent({
         <button
           class="bg-ctp-crust hover:bg-ctp-surface0 flex cursor-pointer justify-center rounded py-2 transition-colors"
           onClick={() => router.push({ name: "Home" })}>
-          <IconMdiArrowULeftTop />
+          <IconMdiTransitionMasked class="text-ctp-mauve" />
         </button>
 
         <div class="flex flex-row items-center justify-between gap-2">
