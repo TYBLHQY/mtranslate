@@ -58,7 +58,7 @@ export interface Settings {
 export const defaultSettings: Settings = {
   theme: "mocha",
   font: "system-ui",
-  silent: true,
+  silent: false,
   resizable: false,
   bounds: { x: 0, y: 0, width: 330, height: 600 },
   service: "youdao-new",
