@@ -1,56 +1,74 @@
-export interface TranslateData {
+export type Option = { code: string; name: string };
+
+export interface QueryData {
   langfrom: string;
   langto: string;
   raw: string;
-  result?: string;
-  audio?: Array<{ text: string; url: string }>;
 }
 
-export interface YoudaoResponse {
-  result: string;
+export const translateServices: Option[] = [
+  { name: "有道 NEW", code: "youdao-new" },
+  { name: "有道 OLD", code: "youdao-old" },
+] as const;
+
+export interface YoudaoNewResponse {
+  exp: Array<{ po: string; tr: string[] }>;
+  examType: string[];
+  audio: Array<{ text: string; url: string }>;
+  form: Array<{ form: string; type: string }>;
+}
+
+export interface YoudaoOldResponse {
+  text: string;
   audio: Array<{ text: string; url: string }>;
   error?: string;
 }
 
-export type TranslateType = "sentence" | "word";
-
-export interface TranslateService {
-  id: string;
-  type: TranslateType;
-  translate: (data: TranslateData) => Promise<void>;
-}
-
-export type Languages = {
-  "zh-CN": "简体中文";
-  "zh-TW": "繁體中文";
-  en: "English";
-  ja: "日本語";
-  ko: "한국어";
-  fr: "Français";
-  de: "Deutsch";
-  es: "Español";
-  pt: "Português";
-  ru: "Русский";
-};
-export type LanguageCode = keyof Languages;
-export type LanguageName = Languages[LanguageCode];
+export const languages: Option[] = [
+  { code: "zh-CN", name: "简体中文" },
+  { code: "zh-TW", name: "繁體中文" },
+  { code: "en", name: "English" },
+  { code: "ja", name: "日本語" },
+  { code: "ko", name: "한국어" },
+  { code: "fr", name: "Français" },
+  { code: "de", name: "Deutsch" },
+  { code: "es", name: "Español" },
+  { code: "pt", name: "Português" },
+  { code: "ru", name: "Русский" },
+] as const;
+export type LanguageCode = (typeof languages)[number]["code"];
+export type LanguageName = (typeof languages)[number]["name"];
 
 // Settings
 export interface Settings {
   theme: string;
+  font: string;
   silent: boolean;
   bounds: Electron.Rectangle;
+  service: string;
 }
-
-// IPC 通道
-export enum IpcChannel {
-  TRANSLATE_YOUDAO = "translate:youdao",
-}
+export const defaultSettings: Settings = {
+  theme: "mocha",
+  font: "system-ui",
+  silent: true,
+  bounds: { x: 0, y: 0, width: 330, height: 600 },
+  service: "youdao-new",
+} as const;
 
 // IPC API
 export interface API {
   translate: {
-    youdao: (data: TranslateData) => Promise<YoudaoResponse>;
+    youdaoOld: (data: QueryData) => Promise<YoudaoOldResponse>;
+    youdaoNew: (data: QueryData) => Promise<YoudaoNewResponse>;
+  };
+  font: {
+    getFonts: () => Promise<string[]>;
   };
   windowShown: (callback: () => void) => void;
+  setting: {
+    getSettings: () => Promise<Settings>;
+    setTheme: (theme: string) => Promise<void>;
+    setFont: (font: string) => Promise<void>;
+    setService: (service: string) => Promise<void>;
+  };
 }

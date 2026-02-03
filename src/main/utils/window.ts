@@ -52,12 +52,19 @@ export async function createWindow(): Promise<BrowserWindow> {
 }
 
 export function toggleMainWindow(mainWindow: BrowserWindow): void {
+  // if (!mainWindow) {
+  //   createWindow();
+  // } else if (mainWindow.isFocused()) {
+  //   mainWindow.hide();
+  // } else if (mainWindow.isVisible()) {
+  //   mainWindow.focus();
+  // } else {
+  //   showMainWindow(mainWindow);
+  // }
   if (!mainWindow) {
     createWindow();
-  } else if (mainWindow.isFocused()) {
-    mainWindow.hide();
   } else if (mainWindow.isVisible()) {
-    mainWindow.focus();
+    mainWindow.hide();
   } else {
     showMainWindow(mainWindow);
   }

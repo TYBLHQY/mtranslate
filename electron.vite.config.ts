@@ -13,6 +13,7 @@ export default defineConfig({
     resolve: {
       alias: {
         "@renderer": resolve("src/renderer/src"),
+        "@common": resolve("src/common"),
       },
     },
     plugins: [vue(), vueJsx(), tailwindcss(), Icons(), VueDevTools()],

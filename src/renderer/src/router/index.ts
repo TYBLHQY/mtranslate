@@ -9,12 +9,12 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "",
         name: "Home",
-        component: () => import("@renderer/pages/Home"),
+        component: () => import("@renderer/views/Home"),
       },
       {
         path: "settings",
         name: "Settings",
-        component: () => import("@renderer/pages/Setting"),
+        component: () => import("@renderer/views/Setting"),
       },
     ],
   },

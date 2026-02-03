@@ -1,14 +1,9 @@
-import { Settings } from "@common/types";
 import Database, { Statement } from "better-sqlite3";
 import { app } from "electron";
 import path from "path";
+import { defaultSettings, Settings } from "../../common/types";
 
 const dbPath = path.join(app.getPath("userData"), "settings.db");
-const defaultData: Settings = {
-  theme: "mocha",
-  silent: true,
-  bounds: { x: 0, y: 0, width: 330, height: 600 },
-};
 let db: Database.Database;
 
 export function getDB(): Database.Database {
@@ -37,7 +32,7 @@ function initGetSettingStmt(): Statement {
 export function getSetting<K extends keyof Settings>(key: K): Settings[K] {
   const result = initGetSettingStmt().get(key) as { value: string };
   if (result) return JSON.parse(result.value) as Settings[K];
-  return defaultData[key];
+  return defaultSettings[key];
 }
 
 let saveSettingStmt: Statement;
@@ -63,7 +58,7 @@ function initGetAllSettingsStmt(): Statement {
 }
 export function getAllSettings(): Settings {
   const rows = initGetAllSettingsStmt().all() as Array<{ key: string; value: string }>;
-  const settings: Settings = { ...defaultData };
+  const settings: Settings = { ...defaultSettings };
   for (const row of rows) {
     const key = row.key as keyof Settings;
     if (key in settings) {

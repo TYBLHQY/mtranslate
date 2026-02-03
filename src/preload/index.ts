@@ -1,14 +1,23 @@
-import { API } from "@common/types";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
+import { API, QueryData } from "../common/types";
 
 const api: API = {
   translate: {
-    youdao: (data: { langfrom: string; langto: string; raw: string }) =>
-      ipcRenderer.invoke("translate:youdao", data),
+    youdaoOld: (data: QueryData) => ipcRenderer.invoke("translate:youdao-old", data),
+    youdaoNew: (data: QueryData) => ipcRenderer.invoke("translate:youdao-new", data),
+  },
+  font: {
+    getFonts: () => ipcRenderer.invoke("font:get-fonts"),
   },
   windowShown: (callback: () => void) => {
     ipcRenderer.on("window-shown", callback);
+  },
+  setting: {
+    getSettings: () => ipcRenderer.invoke("setting:get-settings"),
+    setTheme: (theme: string) => ipcRenderer.invoke("setting:set-theme", theme),
+    setFont: (font: string) => ipcRenderer.invoke("setting:set-font", font),
+    setService: (service: string) => ipcRenderer.invoke("setting:set-service", service),
   },
 };
 

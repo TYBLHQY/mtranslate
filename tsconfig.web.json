@@ -14,9 +14,7 @@
     "baseUrl": ".",
     "jsx": "preserve",
     "paths": {
-      "@renderer/*": [
-        "src/renderer/src/*"
-      ],
+      "@renderer/*": ["src/renderer/src/*"],
       "@common/*": ["src/common/*"]
     }
   }

@@ -10,8 +10,5 @@
     "composite": true,
     "types": ["electron-vite/node"],
     "baseUrl": ".",
-    "paths": {
-      "@common/*": ["src/common/*"],
-    }
   }
 }
