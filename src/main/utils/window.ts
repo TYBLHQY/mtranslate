@@ -7,6 +7,8 @@ import { debounce } from "./tools";
 
 const windowConfig: Electron.BrowserWindowConstructorOptions = {
   resizable: false,
+  minWidth: 330,
+  minHeight: 600,
   show: false,
   autoHideMenuBar: true,
   ...(process.platform === "linux" ? { icon } : {}),
