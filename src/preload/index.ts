@@ -25,6 +25,9 @@ const api: API = {
     setSilent: (silent: boolean) => ipcRenderer.invoke("setting:set-silent", silent),
     setGlobalShortcut: (shortcut: Shortcut) => ipcRenderer.invoke("setting:set-global-shortcut", shortcut),
   },
+  window: {
+    capture: () => ipcRenderer.invoke("window:capture"),
+  },
 };
 
 if (process.contextIsolated) {

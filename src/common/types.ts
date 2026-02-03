@@ -88,4 +88,7 @@ export interface API {
     setSilent: (silent: boolean) => Promise<void>;
     setGlobalShortcut: (shortcut: Shortcut) => Promise<void>;
   };
+  window: {
+    capture: () => Promise<void>;
+  };
 }

@@ -2,6 +2,7 @@ import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, globalShortcut, ipcMain } from "electron";
 import { Shortcut } from "src/common/types";
 import { setupTransServices } from "./services";
+import { captureWindow } from "./utils/capturer";
 import { getSystemFonts } from "./utils/fonts";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "./utils/globalShortcut";
 import { closeDB, getAllSettings, saveSetting } from "./utils/store";
@@ -40,6 +41,8 @@ app.whenReady().then(async () => {
 
   registerTray(mainWindow);
   getAllSettings().globalShortcuts.forEach(shortcut => registerGlobalShortcut(mainWindow, shortcut));
+
+  ipcMain.handle("window:capture", async () => await captureWindow(mainWindow));
 });
 
 app.on("window-all-closed", () => {
