@@ -33,8 +33,6 @@ linux:
     - AppImage
     - snap
     - deb
-  arch:
-    - x64
   maintainer: electronjs.org
   category: Utility
 appImage:
