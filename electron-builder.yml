@@ -40,5 +40,3 @@ appImage:
 npmRebuild: false
 publish:
   provider: github
-electronDownload:
-  mirror: https://npmmirror.com/mirrors/electron/
