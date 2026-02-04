@@ -47,6 +47,8 @@ export interface Shortcut {
   name: string;
 }
 export interface Settings {
+  appVersion: string;
+  dbVersion: number;
   theme: string;
   font: string;
   silent: boolean;
@@ -56,6 +58,8 @@ export interface Settings {
   globalShortcuts: Shortcut[];
 }
 export const defaultSettings: Settings = {
+  appVersion: "1.0.0",
+  dbVersion: 1,
   theme: "mocha",
   font: "system-ui",
   silent: false,

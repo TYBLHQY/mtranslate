@@ -7,8 +7,20 @@ import Icons from "unplugin-icons/vite";
 import VueDevTools from "vite-plugin-vue-devtools";
 
 export default defineConfig({
-  main: {},
-  preload: {},
+  main: {
+    resolve: {
+      alias: {
+        "@main": resolve("src/main"),
+        "@common": resolve("src/common"),
+        "@resources": resolve("resources"),
+      },
+    },
+  },
+  preload: {
+    resolve: {
+      alias: {},
+    },
+  },
   renderer: {
     resolve: {
       alias: {

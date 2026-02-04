@@ -1,9 +1,9 @@
 import { is } from "@electron-toolkit/utils";
+import { getSetting, saveSetting } from "@main/store/operation";
+import { debounce } from "@main/utils/tools";
+import icon from "@resources/icon.png?asset";
 import { BrowserWindow, shell } from "electron";
 import { join } from "path";
-import icon from "../../../resources/icon.png?asset";
-import { getSetting, saveSetting } from "./store";
-import { debounce } from "./tools";
 
 const windowConfig: Electron.BrowserWindowConstructorOptions = {
   minWidth: 330,
@@ -21,7 +21,7 @@ const windowConfig: Electron.BrowserWindowConstructorOptions = {
 
 const debouncedWrite = debounce(async (bounds: Electron.Rectangle) => saveSetting("bounds", bounds), 500);
 
-export async function createWindow(): Promise<{ window: BrowserWindow }> {
+export async function createWindow(): Promise<BrowserWindow> {
   const window: BrowserWindow = new BrowserWindow({
     ...windowConfig,
     ...getSetting("bounds"),
@@ -55,7 +55,7 @@ export async function createWindow(): Promise<{ window: BrowserWindow }> {
   if (is.dev && process.env["ELECTRON_RENDERER_URL"]) window.loadURL(process.env["ELECTRON_RENDERER_URL"]);
   else window.loadFile(join(__dirname, "../renderer/index.html"));
 
-  return { window };
+  return window;
 }
 
 export function toggleMainWindow(mainWindow: BrowserWindow): void {

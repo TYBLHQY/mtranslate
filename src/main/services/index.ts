@@ -1,7 +1,7 @@
 import { setupYoudaoNewService } from "./youdaoNew";
 import { setupYoudaoOldService } from "./youdaoOld";
 
-export function setupTransServices(): void {
+export function registerTransServices(): void {
   setupYoudaoNewService();
   setupYoudaoOldService();
 }

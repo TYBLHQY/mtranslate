@@ -1,3 +1,5 @@
+import { BrowserWindow, clipboard } from "electron";
+
 export function debounce<Args extends unknown[]>(
   fn: (...args: Args) => void,
   wait: number = 500,
@@ -9,4 +11,9 @@ export function debounce<Args extends unknown[]>(
       fn(...args);
     }, wait);
   };
+}
+
+export async function captureWindow(mainWindow: BrowserWindow): Promise<void> {
+  const image = await mainWindow.capturePage();
+  clipboard.writeImage(image);
 }
