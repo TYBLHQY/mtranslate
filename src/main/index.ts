@@ -5,6 +5,7 @@ import { closeDB, getDB } from "@main/store";
 import { destroyTray, registerTray } from "@main/tray";
 import { createMainWindow } from "@main/windows";
 import { app, globalShortcut } from "electron";
+import { registerUpdate } from "./update";
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -18,6 +19,7 @@ app.whenReady().then(async () => {
   registerIpcs(mainWindow);
   registerTray(mainWindow);
   registerAllGlobalShortcut(mainWindow);
+  registerUpdate(mainWindow);
 });
 
 app.on("browser-window-created", (_, window) => optimizer.watchWindowShortcuts(window));

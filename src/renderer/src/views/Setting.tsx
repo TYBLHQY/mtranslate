@@ -4,6 +4,7 @@ import Select from "@renderer/components/common/Select";
 import { useEsc } from "@renderer/composables/useEsc";
 import { useShortcut } from "@renderer/composables/useGlobalShotcut";
 import { useSettingStore } from "@renderer/stores/setting";
+import { ProgressInfo } from "electron-updater";
 import { defineComponent, ref, VNode } from "vue";
 import { useRouter } from "vue-router";
 import IconMdiGithub from "~icons/mdi/github";
@@ -33,7 +34,7 @@ export default defineComponent({
     const settingTitle = (title: string): VNode => <div class="text-ctp-surface2 text-center">{title}</div>;
 
     const settingItem = (name: VNode, content: VNode): VNode => (
-      <div class="flex flex-row items-center justify-between gap-2">
+      <div class="flex min-h-8 flex-row items-center justify-between gap-2">
         {name}
         {content}
       </div>
@@ -55,6 +56,23 @@ export default defineComponent({
         currentShortcut.value = undefined;
       },
     );
+
+    const isAvailable = ref(false);
+    const progressInfo = ref<ProgressInfo | null>(null);
+    const isDownloaded = ref(false);
+    window.api.update.getAvailable((available: boolean) => {
+      isAvailable.value = available;
+    });
+    window.api.update.getDownloadProgress((progress: ProgressInfo) => {
+      progressInfo.value = progress;
+      isAvailable.value = false;
+    });
+    window.api.update.getUpdateDownloaded((downloaded: boolean) => {
+      isDownloaded.value = downloaded;
+      isAvailable.value = false;
+      progressInfo.value = null;
+    });
+    window.api.update.check();
 
     return () => (
       <div class="flex flex-1 flex-col gap-2 overflow-hidden">
@@ -141,7 +159,31 @@ export default defineComponent({
 
         {settingTitle("关于")}
 
-        {settingItem(<div>版本</div>, <div class="text-ctp-surface2">{settingStore.getAppVersion()}</div>)}
+        {settingItem(
+          <div>版本</div>,
+          <div class="flex flex-row items-center gap-2">
+            {isAvailable.value && (
+              <Button
+                class="text-ctp-mauve min-w-22"
+                onClick={() => window.api.update.download()}>
+                可用更新
+              </Button>
+            )}
+            {progressInfo.value && (
+              <Button class="text-ctp-yellow pointer-events-none min-w-22">
+                {Math.floor(progressInfo.value.percent)}%
+              </Button>
+            )}
+            {isDownloaded.value && (
+              <Button
+                class="text-ctp-green min-w-22"
+                onClick={() => window.api.update.upgrade()}>
+                安装更新
+              </Button>
+            )}
+            <div class="text-ctp-surface2">{settingStore.getAppVersion()}</div>
+          </div>,
+        )}
 
         {settingItem(<div>作者</div>, <div class="text-ctp-surface2">MYQ</div>)}
 

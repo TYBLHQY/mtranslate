@@ -1,3 +1,5 @@
+import { ProgressInfo } from "electron-updater";
+
 export type Option = { code: string; name: string };
 
 export interface QueryData {
@@ -93,10 +95,18 @@ export interface API {
   };
   window: {
     capture: () => Promise<void>;
-    shown: (callback: () => void) => void;
-    selectedText: (callback: (text: string) => void) => void;
+    shown: (fn: () => void) => void;
+    selectedText: (fn: (text: string) => void) => void;
     openExternal: (url: string) => void;
     getFonts: () => Promise<string[]>;
+  };
+  update: {
+    getAvailable: (fn: (available: boolean) => void) => void;
+    getDownloadProgress: (fn: (progress: ProgressInfo) => void) => void;
+    getUpdateDownloaded: (fn: (downloaded: boolean) => void) => void;
+    check: () => void;
+    download: () => void;
+    upgrade: () => void;
   };
 }
 export type IpcChannel = {

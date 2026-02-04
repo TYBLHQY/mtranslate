@@ -1,6 +1,6 @@
 {
   "name": "mtranslate",
-  "version": "1.0.4",
+  "version": "1.0.3",
   "description": "一个跨平台的翻译工具",
   "main": "./out/main/index.js",
   "author": "MYQ",
@@ -26,6 +26,7 @@
     "@electron-toolkit/utils": "^4.0.0",
     "better-sqlite3": "^12.6.2",
     "cheerio": "^1.2.0",
+    "electron-updater": "^6.3.9",
     "node-get-selected-text": "^0.1.9",
     "pinia": "^3.0.4",
     "vue-router": "^5.0.1"

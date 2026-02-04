@@ -1,4 +1,5 @@
 import { is } from "@electron-toolkit/utils";
+import { sendWindowShown } from "@main/ipcs";
 import { getSetting, saveSetting } from "@main/store";
 import { debounce } from "@main/utils";
 import icon from "@resources/icon.png?asset";
@@ -68,5 +69,5 @@ export function showMainWindow(mainWindow: BrowserWindow): void {
   if (mainWindow.isMinimized()) mainWindow.restore();
   mainWindow.show();
   mainWindow.focus();
-  mainWindow.webContents.send("window-shown");
+  sendWindowShown(mainWindow);
 }

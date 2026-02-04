@@ -1,4 +1,5 @@
 import { Shortcut } from "@common/types";
+import { sendSelectedText } from "@main/ipcs";
 import { getAllSettings } from "@main/store";
 import { showMainWindow, toggleMainWindow } from "@main/windows";
 import { BrowserWindow, globalShortcut } from "electron";
@@ -15,7 +16,7 @@ export function registerGlobalShortcut(mainWindow: BrowserWindow, shortcut: Shor
       toggleMainWindow(mainWindow);
     } else if (shortcut.id === "copyText") {
       const selectedText = getSelectedText();
-      mainWindow.webContents.send("selected-text", selectedText);
+      sendSelectedText(mainWindow, selectedText);
       showMainWindow(mainWindow);
     }
   });

@@ -1,5 +1,6 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
+import { ProgressInfo } from "electron-updater";
 import { API, IpcChannel, PronunciationMode, QueryData, Shortcut } from "../common/types";
 
 const api: API = {
@@ -23,6 +24,17 @@ const api: API = {
     selectedText: (fn: (text: string) => void) => on("window:selectedText", (_, text) => fn(text)),
     openExternal: (url: string) => invoke("window:openExternal", url),
     getFonts: () => invoke("window:getFonts"),
+  },
+  update: {
+    getAvailable: (fn: (available: boolean) => void) =>
+      on("update:getAvailable", (_, available) => fn(available)),
+    getDownloadProgress: (fn: (progress: ProgressInfo) => void) =>
+      on("update:getDownloadProgress", (_, progress) => fn(progress)),
+    getUpdateDownloaded: (fn: (downloaded: boolean) => void) =>
+      on("update:getUpdateDownloaded", (_, downloaded) => fn(downloaded)),
+    check: () => invoke("update:check"),
+    download: () => invoke("update:download"),
+    upgrade: () => invoke("update:upgrade"),
   },
 };
 
