@@ -1,8 +1,8 @@
 # mtranslate - 跨平台桌面翻译工具
 
-<h1 align="center">
+<h3 align="center">
   <img src="./resources/icon.png" width="150" height="150" /><br>
-</h1>
+</h3>
 
 mtranslate 提供快速、便捷的文本翻译功能。
 
@@ -15,9 +15,9 @@ mtranslate 提供快速、便捷的文本翻译功能。
 
 - catppuccin 系列
 
-<div style="display: flex; justify-content: center; width: 100%;">
+<h3 align="center">
   <img src="./docs/theme-preview.png" />
-</div>
+</h3>
 
 ## 自定义配置
 
@@ -33,9 +33,9 @@ mtranslate 提供快速、便捷的文本翻译功能。
 - 打开/关闭窗口
 - 划词翻译
 
-<div style="display: flex; justify-content: center; width: 100%;">
+<h3 align="center">
   <img src="./docs/settings-preview.png" />
-</div>
+</h3>
 
 ## 翻译接口
 
