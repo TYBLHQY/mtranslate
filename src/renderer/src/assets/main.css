@@ -12,4 +12,7 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-transparent;
   }
+  button {
+    @apply border-transparent;
+  }
 }

@@ -76,6 +76,7 @@ export const defaultSettings: Settings = {
 export interface API {
   windowShown: (callback: () => void) => void;
   selectedText: (callback: (text: string) => void) => void;
+  openExternal: (url: string) => void;
   translate: {
     youdaoOld: (data: QueryData) => Promise<YoudaoOldResponse>;
     youdaoNew: (data: QueryData) => Promise<YoudaoNewResponse>;

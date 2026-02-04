@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "一个跨平台的翻译工具",
   "main": "./out/main/index.js",
-  "author": "myq",
+  "author": "MYQ",
   "homepage": "https://github.com/TYBLHQY/mtranslate",
   "scripts": {
     "format": "prettier --write .",

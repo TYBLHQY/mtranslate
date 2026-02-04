@@ -9,6 +9,7 @@ const api: API = {
   selectedText: (callback: (text: string) => void) => {
     ipcRenderer.on("selected-text", (_, text) => callback(text));
   },
+  openExternal: (url: string) => ipcRenderer.invoke("open-external", url),
   translate: {
     youdaoOld: (data: QueryData) => ipcRenderer.invoke("translate:youdao-old", data),
     youdaoNew: (data: QueryData) => ipcRenderer.invoke("translate:youdao-new", data),

@@ -6,6 +6,7 @@ import { useShortcut } from "@renderer/composables/useGlobalShotcut";
 import { useSettingStore } from "@renderer/stores/setting";
 import { defineComponent, ref, VNode } from "vue";
 import { useRouter } from "vue-router";
+import IconMdiGithub from "~icons/mdi/github";
 import IconMdiLock from "~icons/mdi/lock";
 import IconMdiLockOpenVariant from "~icons/mdi/lock-open-variant";
 import IconMdiTransitionMasked from "~icons/mdi/transition-masked";
@@ -115,7 +116,7 @@ export default defineComponent({
           <div class="flex flex-row items-center justify-between gap-2">
             <div>{s.name}</div>
             <Button
-              class={["flex-1 text-sm", currentShortcut.value?.id === s.id ? "border-ctp-base" : ""]}
+              class={["flex-1 text-sm", currentShortcut.value?.id === s.id ? "border-ctp-mauve" : ""]}
               onClick={() => {
                 currentShortcut.value = s;
                 handleShortcutInput();
@@ -124,6 +125,19 @@ export default defineComponent({
             </Button>
           </div>
         ))}
+
+        {settingTitle("关于")}
+
+        {settingItem(<div>版本</div>, <div class="text-ctp-surface2">{settingStore.getAppVersion()}</div>)}
+
+        {settingItem(<div>作者</div>, <div class="text-ctp-surface2">MYQ</div>)}
+
+        <div class="flex justify-center">
+          <IconMdiGithub
+            class="text-ctp-surface2 hover:text-ctp-text cursor-pointer text-2xl transition-colors"
+            onClick={() => window.api.openExternal("https://github.com/TYBLHQY/mtranslate")}
+          />
+        </div>
       </div>
     );
   },

@@ -50,6 +50,8 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setGlobalShortcut(shortcuts);
   };
 
+  const getAppVersion = (): string => settings.appVersion;
+
   return {
     settings,
     theme,
@@ -68,5 +70,6 @@ export const useSettingStore = defineStore("setting", () => {
     setSilent,
     getGlobalShortcuts,
     setGlobalShortcut,
+    getAppVersion,
   };
 });
