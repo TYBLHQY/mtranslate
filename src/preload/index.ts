@@ -1,31 +1,28 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import { API, PronunciationMode, QueryData, Shortcut } from "../common/types";
+import { API, IpcChannel, PronunciationMode, QueryData, Shortcut } from "../common/types";
 
 const api: API = {
   translate: {
-    youdaoOld: (data: QueryData) => ipcRenderer.invoke("translate:youdao-old", data),
-    youdaoNew: (data: QueryData) => ipcRenderer.invoke("translate:youdao-new", data),
-  },
-  font: {
-    getFonts: () => ipcRenderer.invoke("font:get-fonts"),
+    youdaoOld: (data: QueryData) => invoke("translate:youdaoOld", data),
+    youdaoNew: (data: QueryData) => invoke("translate:youdaoNew", data),
   },
   setting: {
-    getSettings: () => ipcRenderer.invoke("setting:get-settings"),
-    setTheme: (theme: string) => ipcRenderer.invoke("setting:set-theme", theme),
-    setFont: (font: string) => ipcRenderer.invoke("setting:set-font", font),
-    setService: (service: string) => ipcRenderer.invoke("setting:set-service", service),
-    setPronunciationMode: (mode: PronunciationMode) =>
-      ipcRenderer.invoke("setting:set-pronunciation-mode", mode),
-    setResizable: (resizable: boolean) => ipcRenderer.invoke("setting:set-resizable", resizable),
-    setSilent: (silent: boolean) => ipcRenderer.invoke("setting:set-silent", silent),
-    setGlobalShortcut: (shortcut: Shortcut) => ipcRenderer.invoke("setting:set-global-shortcut", shortcut),
+    getSettings: () => invoke("setting:getSettings"),
+    setTheme: (theme: string) => invoke("setting:setTheme", theme),
+    setFont: (font: string) => invoke("setting:setFont", font),
+    setService: (service: string) => invoke("setting:setService", service),
+    setPronunciationMode: (mode: PronunciationMode) => invoke("setting:setPronunciationMode", mode),
+    setResizable: (resizable: boolean) => invoke("setting:setResizable", resizable),
+    setSilent: (silent: boolean) => invoke("setting:setSilent", silent),
+    setGlobalShortcut: (shortcut: Shortcut) => invoke("setting:setGlobalShortcut", shortcut),
   },
   window: {
-    capture: () => ipcRenderer.invoke("window:capture"),
-    shown: (fn: () => void) => ipcRenderer.on("window-shown", fn),
-    selectedText: (fn: (text: string) => void) => ipcRenderer.on("selected-text", (_, text) => fn(text)),
-    openExternal: (url: string) => ipcRenderer.invoke("open-external", url),
+    capture: () => invoke("window:capture"),
+    shown: (fn: () => void) => on("window:shown", fn),
+    selectedText: (fn: (text: string) => void) => on("window:selectedText", (_, text) => fn(text)),
+    openExternal: (url: string) => invoke("window:openExternal", url),
+    getFonts: () => invoke("window:getFonts"),
   },
 };
 
@@ -35,4 +32,12 @@ if (process.contextIsolated) {
 } else {
   window.electron = electronAPI;
   window.api = api;
+}
+
+// eslint-disable-next-line
+function invoke(channel: IpcChannel, ...args: any[]): Promise<any> {
+  return ipcRenderer.invoke(channel, ...args);
+}
+function on(channel: IpcChannel, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void): void {
+  ipcRenderer.on(channel, listener);
 }

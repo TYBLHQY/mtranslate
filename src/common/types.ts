@@ -81,9 +81,6 @@ export interface API {
     youdaoOld: (data: QueryData) => Promise<YoudaoOldResponse>;
     youdaoNew: (data: QueryData) => Promise<YoudaoNewResponse>;
   };
-  font: {
-    getFonts: () => Promise<string[]>;
-  };
   setting: {
     getSettings: () => Promise<Settings>;
     setTheme: (theme: string) => Promise<void>;
@@ -99,8 +96,9 @@ export interface API {
     shown: (callback: () => void) => void;
     selectedText: (callback: (text: string) => void) => void;
     openExternal: (url: string) => void;
+    getFonts: () => Promise<string[]>;
   };
 }
-// export type IpcChannel = {
-//   [K in keyof API & string]: API[K] extends Record<string, unknown> ? `${K}:${keyof API[K] & string}` : never;
-// }[keyof API & string];
+export type IpcChannel = {
+  [K in keyof API & string]: API[K] extends Record<string, unknown> ? `${K}:${keyof API[K] & string}` : never;
+}[keyof API & string];

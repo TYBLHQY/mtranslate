@@ -1,5 +1,4 @@
 import * as cheerio from "cheerio";
-import { ipcMain } from "electron";
 import type { QueryData, YoudaoOldResponse } from "../../common/types";
 
 const URL = (word: string): string => `https://dict.youdao.com/w/${encodeURIComponent(word)}/`;
@@ -30,15 +29,9 @@ function parse(html: string, word: string): YoudaoOldResponse {
   return res;
 }
 
-async function translate(data: QueryData): Promise<YoudaoOldResponse> {
+export async function transYoudaoOldService(data: QueryData): Promise<YoudaoOldResponse> {
   return fetch(URL(data.raw), { method: "GET" })
     .then(res => res.text())
     .then(text => parse(text, data.raw))
     .catch(error => Promise.reject(error));
-}
-
-export function setupYoudaoOldService(): void {
-  ipcMain.handle("translate:youdao-old", async (_, data: QueryData) => {
-    return translate(data);
-  });
 }

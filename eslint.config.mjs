@@ -34,6 +34,7 @@ export default defineConfig(
           },
         },
       ],
+      "@typescript-eslint/no-explicit-any": ["error", { ignoreRestArgs: true }],
     },
   },
   eslintConfigPrettier,

@@ -25,7 +25,7 @@ export default defineComponent({
       { code: "macchiato", name: "macchiato" },
     ];
 
-    window.api.font
+    window.api.window
       .getFonts()
       .then((fonts: string[]) => (fontOptions.value = fonts.map(font => ({ code: font, name: font }))))
       .finally(() => fontOptions.value.unshift({ code: "system-ui", name: "System Default" }));

@@ -20,7 +20,7 @@ export function getDB(): Database.Database {
 }
 
 export function closeDB(): void {
-  if (db) db.close();
+  db?.close();
 }
 
 export * from "./operation";

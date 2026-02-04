@@ -1,5 +1,4 @@
 import * as cheerio from "cheerio";
-import { ipcMain } from "electron";
 import { QueryData, YoudaoNewResponse } from "../../common/types";
 
 const URL = (word: string, lang: string): string =>
@@ -90,15 +89,9 @@ export async function parse(html: string, word: string): Promise<YoudaoNewRespon
   return res;
 }
 
-async function translate(data: QueryData): Promise<YoudaoNewResponse> {
+export async function transYoudaoNewService(data: QueryData): Promise<YoudaoNewResponse> {
   return fetch(URL(data.raw, data.langto), { method: "GET" })
     .then(res => res.text())
     .then(text => parse(text, data.raw))
     .catch(error => Promise.reject(error));
-}
-
-export function setupYoudaoNewService(): void {
-  ipcMain.handle("translate:youdao-new", async (_, data: QueryData) => {
-    return translate(data);
-  });
 }

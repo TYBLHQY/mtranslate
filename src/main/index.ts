@@ -1,7 +1,6 @@
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerAllGlobalShortcut } from "@main/globalShortcuts";
 import { registerIpcs } from "@main/ipcs";
-import { registerTransServices } from "@main/services";
 import { closeDB, getDB } from "@main/store";
 import { destroyTray, registerTray } from "@main/tray";
 import { createMainWindow } from "@main/windows";
@@ -19,7 +18,6 @@ app.whenReady().then(async () => {
   registerIpcs(mainWindow);
   registerTray(mainWindow);
   registerAllGlobalShortcut(mainWindow);
-  registerTransServices();
 });
 
 app.on("browser-window-created", (_, window) => optimizer.watchWindowShortcuts(window));

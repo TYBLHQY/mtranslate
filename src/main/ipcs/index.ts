@@ -1,25 +1,25 @@
-import { PronunciationMode, Shortcut } from "@common/types";
+import { IpcChannel, PronunciationMode, QueryData, Shortcut } from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
+import { transYoudaoNewService, transYoudaoOldService } from "@main/services";
 import { getAllSettings, saveSetting } from "@main/store";
 import { captureWindow, getSystemFonts } from "@main/utils";
 import { ipcMain, shell } from "electron";
 
 export function registerIpcs(window: Electron.BrowserWindow): void {
-  ipcMain.handle("font:get-fonts", () => getSystemFonts());
-  ipcMain.handle("open-external", (_, url: string) => shell.openExternal(url));
-  ipcMain.handle("setting:get-settings", async () => getAllSettings());
-  ipcMain.handle("setting:set-theme", (_, theme: string) => saveSetting("theme", theme));
-  ipcMain.handle("setting:set-font", (_, font: string) => saveSetting("font", font));
-  ipcMain.handle("setting:set-service", (_, service: string) => saveSetting("service", service));
-  ipcMain.handle("setting:set-pronunciation-mode", (_, mode: PronunciationMode) =>
+  // settings
+  handle("setting:getSettings", async () => getAllSettings());
+  handle("setting:setTheme", (_, theme: string) => saveSetting("theme", theme));
+  handle("setting:setFont", (_, font: string) => saveSetting("font", font));
+  handle("setting:setService", (_, service: string) => saveSetting("service", service));
+  handle("setting:setPronunciationMode", (_, mode: PronunciationMode) =>
     saveSetting("pronunciationMode", mode),
   );
-  ipcMain.handle("setting:set-silent", (_, silent: boolean) => saveSetting("silent", silent));
-  ipcMain.handle("setting:set-resizable", (_, resizable: boolean) => {
+  handle("setting:setSilent", (_, silent: boolean) => saveSetting("silent", silent));
+  handle("setting:setResizable", (_, resizable: boolean) => {
     saveSetting("resizable", resizable);
     window.resizable = resizable;
   });
-  ipcMain.handle("setting:set-global-shortcut", (_, shortcut: Shortcut) => {
+  handle("setting:setGlobalShortcut", (_, shortcut: Shortcut) => {
     unregisterGlobalShortcut(getAllSettings().globalShortcuts.find(s => s.id === shortcut.id)!);
     saveSetting(
       "globalShortcuts",
@@ -27,5 +27,20 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
     );
     registerGlobalShortcut(window, shortcut);
   });
-  ipcMain.handle("window:capture", async () => await captureWindow(window));
+
+  // window
+  handle("window:capture", async () => await captureWindow(window));
+  handle("window:getFonts", () => getSystemFonts());
+  handle("window:openExternal", (_, url: string) => shell.openExternal(url));
+
+  // translate services
+  handle("translate:youdaoNew", async (_, data: QueryData) => transYoudaoNewService(data));
+  handle("translate:youdaoOld", async (_, data: QueryData) => transYoudaoOldService(data));
+}
+
+function handle(
+  channel: IpcChannel,
+  listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => unknown,
+): void {
+  ipcMain.handle(channel, listener);
 }
