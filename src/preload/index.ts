@@ -1,6 +1,6 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import { API, QueryData, Shortcut } from "../common/types";
+import { API, PronunciationMode, QueryData, Shortcut } from "../common/types";
 
 const api: API = {
   translate: {
@@ -15,6 +15,8 @@ const api: API = {
     setTheme: (theme: string) => ipcRenderer.invoke("setting:set-theme", theme),
     setFont: (font: string) => ipcRenderer.invoke("setting:set-font", font),
     setService: (service: string) => ipcRenderer.invoke("setting:set-service", service),
+    setPronunciationMode: (mode: PronunciationMode) =>
+      ipcRenderer.invoke("setting:set-pronunciation-mode", mode),
     setResizable: (resizable: boolean) => ipcRenderer.invoke("setting:set-resizable", resizable),
     setSilent: (silent: boolean) => ipcRenderer.invoke("setting:set-silent", silent),
     setGlobalShortcut: (shortcut: Shortcut) => ipcRenderer.invoke("setting:set-global-shortcut", shortcut),

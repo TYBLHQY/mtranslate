@@ -110,6 +110,19 @@ export default defineComponent({
           </Button>,
         )}
 
+        {settingItem(
+          <div>发音模式</div>,
+          <Button
+            class="flex-1"
+            onClick={() =>
+              settingStore.setPronunciationMode(
+                settingStore.getPronunciationMode() === "hover" ? "click" : "hover",
+              )
+            }>
+            {settingStore.getPronunciationMode() === "hover" ? "悬停播放" : "点击播放"}
+          </Button>,
+        )}
+
         {settingTitle("全局快捷键")}
 
         {settingStore.getGlobalShortcuts().map(s => (

@@ -46,6 +46,7 @@ export interface Shortcut {
   key: string;
   name: string;
 }
+export type PronunciationMode = "hover" | "click";
 export interface Settings {
   appVersion: string;
   dbVersion: number;
@@ -55,6 +56,7 @@ export interface Settings {
   resizable: boolean;
   bounds: Electron.Rectangle;
   service: string;
+  pronunciationMode: PronunciationMode;
   globalShortcuts: Shortcut[];
 }
 export const defaultSettings: Settings = {
@@ -66,6 +68,7 @@ export const defaultSettings: Settings = {
   resizable: false,
   bounds: { x: 0, y: 0, width: 330, height: 600 },
   service: "youdao-new",
+  pronunciationMode: "hover",
   globalShortcuts: [
     { id: "openAndClose", key: "", name: "打开关闭窗口" },
     { id: "copyText", key: "", name: "翻译选中文本" },
@@ -86,6 +89,7 @@ export interface API {
     setTheme: (theme: string) => Promise<void>;
     setFont: (font: string) => Promise<void>;
     setService: (service: string) => Promise<void>;
+    setPronunciationMode: (mode: PronunciationMode) => Promise<void>;
     setResizable: (resize: boolean) => Promise<void>;
     setSilent: (silent: boolean) => Promise<void>;
     setGlobalShortcut: (shortcut: Shortcut) => Promise<void>;

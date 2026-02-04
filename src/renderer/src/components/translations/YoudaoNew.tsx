@@ -1,4 +1,5 @@
 import { QueryData, YoudaoNewResponse } from "@common/types";
+import { useSettingStore } from "@renderer/stores/setting";
 import type { PropType, VNode } from "vue";
 import { defineComponent, ref, watch } from "vue";
 import IconMdiVolume from "~icons/mdi/volume";
@@ -13,6 +14,7 @@ export default defineComponent({
   setup(props) {
     const audiosRefs = ref<HTMLAudioElement[]>([]);
     const translateData = ref<YoudaoNewResponse>();
+    const settingStore = useSettingStore();
 
     const translate = async (): Promise<void> => {
       window.api.translate
@@ -56,7 +58,12 @@ export default defineComponent({
             {translateData.value.audio.map((audio, index) => (
               <button
                 class="bg-ctp-surface0 hover:bg-ctp-surface1 flex flex-1 items-center justify-center rounded-xs px-2 py-1 text-sm transition-colors"
-                onClick={() => playAudio(index)}>
+                onClick={() => {
+                  if (settingStore.getPronunciationMode() === "click") playAudio(index);
+                }}
+                onMouseenter={() => {
+                  if (settingStore.getPronunciationMode() === "hover") playAudio(index);
+                }}>
                 <span>{audio.text || <IconMdiVolume />}</span>
                 <audio
                   ref={(el: HTMLAudioElement | null) => (audiosRefs.value[index] = el as HTMLAudioElement)}

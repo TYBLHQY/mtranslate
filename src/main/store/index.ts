@@ -24,3 +24,4 @@ export function closeDB(): void {
 }
 
 export * from "./operation";
+export * from "./version";

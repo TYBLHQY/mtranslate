@@ -50,6 +50,12 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setGlobalShortcut(shortcuts);
   };
 
+  const getPronunciationMode = (): "hover" | "click" => settings.pronunciationMode;
+  const setPronunciationMode = (mode: "hover" | "click"): void => {
+    settings.pronunciationMode = mode;
+    window.api.setting.setPronunciationMode(mode);
+  };
+
   const getAppVersion = (): string => settings.appVersion;
 
   return {
@@ -70,6 +76,8 @@ export const useSettingStore = defineStore("setting", () => {
     setSilent,
     getGlobalShortcuts,
     setGlobalShortcut,
+    getPronunciationMode,
+    setPronunciationMode,
     getAppVersion,
   };
 });

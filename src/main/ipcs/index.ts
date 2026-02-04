@@ -1,4 +1,4 @@
-import { Shortcut } from "@common/types";
+import { PronunciationMode, Shortcut } from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { getAllSettings, saveSetting } from "@main/store";
 import { captureWindow, getSystemFonts } from "@main/utils";
@@ -11,6 +11,9 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
   ipcMain.handle("setting:set-theme", (_, theme: string) => saveSetting("theme", theme));
   ipcMain.handle("setting:set-font", (_, font: string) => saveSetting("font", font));
   ipcMain.handle("setting:set-service", (_, service: string) => saveSetting("service", service));
+  ipcMain.handle("setting:set-pronunciation-mode", (_, mode: PronunciationMode) =>
+    saveSetting("pronunciationMode", mode),
+  );
   ipcMain.handle("setting:set-silent", (_, silent: boolean) => saveSetting("silent", silent));
   ipcMain.handle("setting:set-resizable", (_, resizable: boolean) => {
     saveSetting("resizable", resizable);

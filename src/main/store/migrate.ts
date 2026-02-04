@@ -1,6 +1,6 @@
 import { defaultSettings } from "@common/types";
 import { app } from "electron";
-import { clearAllSettings, getSetting, saveAllSettings, saveSetting } from "./operation";
+import { clearAllSettings, getAllSettings, getSetting, saveAllSettings, saveSetting } from "./operation";
 import { latestDBVersion } from "./version";
 
 export function migrate(): void {
@@ -16,14 +16,11 @@ function migrateAppVersion(): void {
 }
 
 function migrateDbVersion(): void {
-  let oldDBVersion = getSetting("dbVersion");
-  const nowDBVersion = latestDBVersion;
+  const oldDBVersion = getSetting("dbVersion") || 0;
 
-  if (oldDBVersion === nowDBVersion) return;
-  if (oldDBVersion === undefined || oldDBVersion < 1) {
-    migrate0to1();
-    oldDBVersion = 1;
-  }
+  if (oldDBVersion === latestDBVersion) return;
+  if (oldDBVersion === undefined || oldDBVersion < 1) migrate0to1();
+  if (oldDBVersion < 2) migrate1to2();
 }
 
 function migrate0to1(): void {
@@ -32,5 +29,14 @@ function migrate0to1(): void {
     ...defaultSettings,
     dbVersion: 1,
     appVersion: app.getVersion(),
+  });
+}
+
+function migrate1to2(): void {
+  const allSettings = getAllSettings();
+  saveAllSettings({
+    ...allSettings,
+    dbVersion: 2,
+    pronunciationMode: "hover",
   });
 }
