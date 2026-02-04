@@ -10,7 +10,6 @@ export function registerAllGlobalShortcut(mainWindow: BrowserWindow): void {
 
 export function registerGlobalShortcut(mainWindow: BrowserWindow, shortcut: Shortcut): void {
   if (!shortcut.key) return;
-  unregisterGlobalShortcut(shortcut);
   globalShortcut.register(shortcut.key, () => {
     if (shortcut.id === "openAndClose") {
       toggleMainWindow(mainWindow);

@@ -1,5 +1,5 @@
 import { Shortcut } from "@common/types";
-import { registerGlobalShortcut } from "@main/globalShortcuts";
+import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { getAllSettings, saveSetting } from "@main/store/operation";
 import { getSystemFonts } from "@main/utils/fonts";
 import { captureWindow } from "@main/utils/tools";
@@ -18,6 +18,7 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
     window.resizable = resizable;
   });
   ipcMain.handle("setting:set-global-shortcut", (_, shortcut: Shortcut) => {
+    unregisterGlobalShortcut(getAllSettings().globalShortcuts.find(s => s.id === shortcut.id)!);
     saveSetting(
       "globalShortcuts",
       getAllSettings().globalShortcuts.map(s => (s.id === shortcut.id ? shortcut : s)),
