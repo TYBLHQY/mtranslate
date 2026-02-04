@@ -7,6 +7,7 @@ export function registerUpdate(window: Electron.BrowserWindow): void {
   autoUpdater.forceDevUpdateConfig = true;
   // autoUpdater.logger = null;
   autoUpdater.on("update-available", () => sendUpdateAvailable(window, true));
+  autoUpdater.on("update-not-available", () => sendUpdateAvailable(window, false));
   autoUpdater.on("download-progress", progress => sendUpdateDownloadProgress(window, progress));
   autoUpdater.on("update-downloaded", () => sendUpdateDownloaded(window, true));
 }

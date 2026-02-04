@@ -9,7 +9,8 @@ mtranslate 提供快速、便捷的文本翻译功能。
 ## 概览
 
 - Windows、macOS、Linux
-- 快速文本选中翻译
+- 划词翻译
+- 更新检测
 
 ## 多主题
 

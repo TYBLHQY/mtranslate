@@ -57,22 +57,19 @@ export default defineComponent({
       },
     );
 
-    const isAvailable = ref(false);
+    const updateState = ref(0); // 检查更新 | 可用更新 | 已是最新 | 下载进度 | 点击安装
     const progressInfo = ref<ProgressInfo | null>(null);
-    const isDownloaded = ref(false);
     window.api.update.getAvailable((available: boolean) => {
-      isAvailable.value = available;
+      updateState.value = available ? 1 : 2;
     });
     window.api.update.getDownloadProgress((progress: ProgressInfo) => {
       progressInfo.value = progress;
-      isAvailable.value = false;
+      updateState.value = 3;
     });
     window.api.update.getUpdateDownloaded((downloaded: boolean) => {
-      isDownloaded.value = downloaded;
-      isAvailable.value = false;
+      updateState.value = downloaded ? 4 : 0;
       progressInfo.value = null;
     });
-    window.api.update.check();
 
     return () => (
       <div class="flex flex-1 flex-col gap-2 overflow-hidden">
@@ -162,25 +159,31 @@ export default defineComponent({
         {settingItem(
           <div>版本</div>,
           <div class="flex flex-row items-center gap-2">
-            {isAvailable.value && (
-              <Button
-                class="text-ctp-mauve min-w-22"
-                onClick={() => window.api.update.download()}>
-                可用更新
-              </Button>
-            )}
-            {progressInfo.value && (
-              <Button class="text-ctp-yellow pointer-events-none min-w-22">
-                {Math.floor(progressInfo.value.percent)}%
-              </Button>
-            )}
-            {isDownloaded.value && (
-              <Button
-                class="text-ctp-green min-w-22"
-                onClick={() => window.api.update.upgrade()}>
-                安装更新
-              </Button>
-            )}
+            <div class="flex min-w-22 *:flex-1">
+              {
+                [
+                  <Button
+                    class="text-ctp-text"
+                    onClick={() => window.api.update.check()}>
+                    检查更新
+                  </Button>,
+                  <Button
+                    class="text-ctp-mauve"
+                    onClick={() => window.api.update.download()}>
+                    可用更新
+                  </Button>,
+                  <Button class="text-ctp-green pointer-events-none">已是最新</Button>,
+                  <Button class="text-ctp-yellow pointer-events-none">
+                    {progressInfo.value ? Math.floor(progressInfo.value.percent) : 0}%
+                  </Button>,
+                  <Button
+                    class="text-ctp-green"
+                    onClick={() => window.api.update.upgrade()}>
+                    点击安装
+                  </Button>,
+                ][updateState.value]
+              }
+            </div>
             <div class="text-ctp-surface2">{settingStore.getAppVersion()}</div>
           </div>,
         )}
