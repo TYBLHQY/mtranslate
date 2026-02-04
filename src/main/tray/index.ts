@@ -1,4 +1,4 @@
-import { toggleMainWindow } from "@main/windows/mainWindow";
+import { toggleMainWindow } from "@main/windows";
 import icon from "@resources/icon.png?asset";
 import { app, BrowserWindow, Menu, nativeImage, Tray } from "electron";
 

@@ -1,14 +1,13 @@
 import { Shortcut } from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
-import { getAllSettings, saveSetting } from "@main/store/operation";
-import { getSystemFonts } from "@main/utils/fonts";
-import { captureWindow } from "@main/utils/tools";
+import { getAllSettings, saveSetting } from "@main/store";
+import { captureWindow, getSystemFonts } from "@main/utils";
 import { ipcMain, shell } from "electron";
 
 export function registerIpcs(window: Electron.BrowserWindow): void {
   ipcMain.handle("font:get-fonts", () => getSystemFonts());
-  ipcMain.handle("setting:get-settings", async () => getAllSettings());
   ipcMain.handle("open-external", (_, url: string) => shell.openExternal(url));
+  ipcMain.handle("setting:get-settings", async () => getAllSettings());
   ipcMain.handle("setting:set-theme", (_, theme: string) => saveSetting("theme", theme));
   ipcMain.handle("setting:set-font", (_, font: string) => saveSetting("font", font));
   ipcMain.handle("setting:set-service", (_, service: string) => saveSetting("service", service));

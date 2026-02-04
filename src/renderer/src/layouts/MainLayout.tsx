@@ -8,16 +8,16 @@ export default defineComponent({
     const router = useRouter();
 
     window.api.setting.getSettings().then(settings => settingStore.initSettings(settings));
-    window.api.windowShown(() => router.push({ name: "Home" }));
+    window.api.window.shown(() => router.push({ name: "Home" }));
 
     watch(
       () => settingStore.font,
       newFont => (document.body.style.fontFamily = newFont),
     );
 
-    addEventListener("keydown", e => {
-      if (e.key === "F6") window.api.window.capture();
-    });
+    // addEventListener("keydown", e => {
+    //   if (e.key === "F6") window.api.window.capture();
+    // });
 
     return () => (
       <div class={["bg-ctp-base text-ctp-text flex h-screen p-2", settingStore.theme]}>

@@ -4,7 +4,7 @@ import { registerIpcs } from "@main/ipcs";
 import { registerTransServices } from "@main/services";
 import { closeDB, getDB } from "@main/store";
 import { destroyTray, registerTray } from "@main/tray";
-import { createWindow } from "@main/windows/mainWindow";
+import { createMainWindow } from "@main/windows";
 import { app, globalShortcut } from "electron";
 
 if (!app.requestSingleInstanceLock()) {
@@ -15,7 +15,7 @@ if (!app.requestSingleInstanceLock()) {
 app.whenReady().then(async () => {
   getDB();
   electronApp.setAppUserModelId("com.myq.mtranslate");
-  const mainWindow = await createWindow();
+  const mainWindow = await createMainWindow();
   registerIpcs(mainWindow);
   registerTray(mainWindow);
   registerAllGlobalShortcut(mainWindow);

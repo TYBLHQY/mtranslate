@@ -1,6 +1,6 @@
 import { Shortcut } from "@common/types";
-import { getAllSettings } from "@main/store/operation";
-import { showMainWindow, toggleMainWindow } from "@main/windows/mainWindow";
+import { getAllSettings } from "@main/store";
+import { showMainWindow, toggleMainWindow } from "@main/windows";
 import { BrowserWindow, globalShortcut } from "electron";
 import { getSelectedText } from "node-get-selected-text";
 

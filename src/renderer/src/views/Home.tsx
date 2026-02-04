@@ -53,11 +53,11 @@ export default defineComponent({
       return settingStore.getService() === "youdao-new" || settingStore.getService() === "youdao-old";
     };
 
-    window.api.selectedText((text: string) => {
+    window.api.window.selectedText((text: string) => {
       useTranslationStore().setSourceText(text);
       handleTranslate();
     });
-    window.api.windowShown(() => focusInput());
+    window.api.window.shown(() => focusInput());
     onActivated(() => focusInput());
 
     return () => (

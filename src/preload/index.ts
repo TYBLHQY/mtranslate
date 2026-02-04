@@ -3,13 +3,6 @@ import { contextBridge, ipcRenderer } from "electron";
 import { API, QueryData, Shortcut } from "../common/types";
 
 const api: API = {
-  windowShown: (callback: () => void) => {
-    ipcRenderer.on("window-shown", callback);
-  },
-  selectedText: (callback: (text: string) => void) => {
-    ipcRenderer.on("selected-text", (_, text) => callback(text));
-  },
-  openExternal: (url: string) => ipcRenderer.invoke("open-external", url),
   translate: {
     youdaoOld: (data: QueryData) => ipcRenderer.invoke("translate:youdao-old", data),
     youdaoNew: (data: QueryData) => ipcRenderer.invoke("translate:youdao-new", data),
@@ -28,6 +21,9 @@ const api: API = {
   },
   window: {
     capture: () => ipcRenderer.invoke("window:capture"),
+    shown: (fn: () => void) => ipcRenderer.on("window-shown", fn),
+    selectedText: (fn: (text: string) => void) => ipcRenderer.on("selected-text", (_, text) => fn(text)),
+    openExternal: (url: string) => ipcRenderer.invoke("open-external", url),
   },
 };
 

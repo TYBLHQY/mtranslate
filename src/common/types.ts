@@ -72,11 +72,8 @@ export const defaultSettings: Settings = {
   ],
 } as const;
 
-// IPC API
+// IPC
 export interface API {
-  windowShown: (callback: () => void) => void;
-  selectedText: (callback: (text: string) => void) => void;
-  openExternal: (url: string) => void;
   translate: {
     youdaoOld: (data: QueryData) => Promise<YoudaoOldResponse>;
     youdaoNew: (data: QueryData) => Promise<YoudaoNewResponse>;
@@ -95,5 +92,11 @@ export interface API {
   };
   window: {
     capture: () => Promise<void>;
+    shown: (callback: () => void) => void;
+    selectedText: (callback: (text: string) => void) => void;
+    openExternal: (url: string) => void;
   };
 }
+// export type IpcChannel = {
+//   [K in keyof API & string]: API[K] extends Record<string, unknown> ? `${K}:${keyof API[K] & string}` : never;
+// }[keyof API & string];

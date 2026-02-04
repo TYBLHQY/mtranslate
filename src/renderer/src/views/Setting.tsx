@@ -135,7 +135,7 @@ export default defineComponent({
         <div class="flex justify-center">
           <IconMdiGithub
             class="text-ctp-surface2 hover:text-ctp-text cursor-pointer text-2xl transition-colors"
-            onClick={() => window.api.openExternal("https://github.com/TYBLHQY/mtranslate")}
+            onClick={() => window.api.window.openExternal("https://github.com/TYBLHQY/mtranslate")}
           />
         </div>
       </div>
