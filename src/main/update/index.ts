@@ -5,7 +5,7 @@ export function registerUpdate(window: Electron.BrowserWindow): void {
   autoUpdater.setFeedURL("https://github.com/TYBLHQY/mtranslate/releases/latest/download/");
   autoUpdater.autoDownload = false;
   autoUpdater.forceDevUpdateConfig = true;
-  // autoUpdater.logger = null;
+  autoUpdater.logger = null;
   autoUpdater.on("update-available", () => sendUpdateAvailable(window, true));
   autoUpdater.on("update-not-available", () => sendUpdateAvailable(window, false));
   autoUpdater.on("download-progress", progress => sendUpdateDownloadProgress(window, progress));

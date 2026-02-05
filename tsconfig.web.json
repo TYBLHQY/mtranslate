@@ -8,7 +8,7 @@
     "src/renderer/src/**/*.ts",
     "src/preload/*.d.ts",
     "src/common/**/*.ts"
-  ],
+, "src/main/utils/network.ts"  ],
   "compilerOptions": {
     "composite": true,
     "baseUrl": ".",

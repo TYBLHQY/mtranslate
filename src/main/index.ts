@@ -6,6 +6,7 @@ import { destroyTray, registerTray } from "@main/tray";
 import { createMainWindow } from "@main/windows";
 import { app, globalShortcut } from "electron";
 import { registerUpdate } from "./update";
+import { registerProxy } from "./utils/proxy";
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -16,6 +17,7 @@ app.whenReady().then(async () => {
   getDB();
   electronApp.setAppUserModelId("com.myq.mtranslate");
   const mainWindow = await createMainWindow();
+  registerProxy();
   registerIpcs(mainWindow);
   registerTray(mainWindow);
   registerAllGlobalShortcut(mainWindow);

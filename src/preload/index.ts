@@ -1,7 +1,7 @@
+import { API, IpcChannel, PronunciationMode, Proxy, QueryData, Shortcut } from "@common/types";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { ProgressInfo } from "electron-updater";
-import { API, IpcChannel, PronunciationMode, QueryData, Shortcut } from "../common/types";
 
 const api: API = {
   translate: {
@@ -17,6 +17,7 @@ const api: API = {
     setResizable: (resizable: boolean) => invoke("setting:setResizable", resizable),
     setSilent: (silent: boolean) => invoke("setting:setSilent", silent),
     setGlobalShortcut: (shortcut: Shortcut) => invoke("setting:setGlobalShortcut", shortcut),
+    setProxy: (proxy: Proxy) => invoke("setting:setProxy", proxy),
   },
   window: {
     capture: () => invoke("window:capture"),

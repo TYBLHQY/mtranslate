@@ -1,4 +1,4 @@
-import { defaultSettings, Settings, Shortcut } from "@common/types";
+import { defaultSettings, Proxy, Settings, Shortcut } from "@common/types";
 import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
 
@@ -58,6 +58,12 @@ export const useSettingStore = defineStore("setting", () => {
 
   const getAppVersion = (): string => settings.appVersion;
 
+  const getProxy = (): Proxy => settings.proxy;
+  const setProxy = (proxy: Proxy): void => {
+    settings.proxy = proxy;
+    window.api.setting.setProxy(proxy);
+  };
+
   return {
     settings,
     theme,
@@ -79,5 +85,7 @@ export const useSettingStore = defineStore("setting", () => {
     getPronunciationMode,
     setPronunciationMode,
     getAppVersion,
+    getProxy,
+    setProxy,
   };
 });

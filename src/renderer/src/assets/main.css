@@ -13,6 +13,9 @@
     @apply bg-transparent;
   }
   button {
-    @apply border-transparent;
+    @apply border-transparent outline-none;
+  }
+  input {
+    @apply border-transparent outline-none;
   }
 }

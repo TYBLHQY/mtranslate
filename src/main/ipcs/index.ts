@@ -1,9 +1,10 @@
-import { IpcChannel, PronunciationMode, QueryData, Shortcut } from "@common/types";
+import { IpcChannel, PronunciationMode, Proxy, QueryData, Shortcut } from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { transYoudaoNewService, transYoudaoOldService } from "@main/services";
 import { getAllSettings, saveSetting } from "@main/store";
 import { check, download, upgrade } from "@main/update";
 import { captureWindow, getSystemFonts } from "@main/utils";
+import { registerProxy } from "@main/utils/proxy";
 import { ipcMain, shell } from "electron";
 import { ProgressInfo } from "electron-updater";
 
@@ -29,6 +30,10 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
       getAllSettings().globalShortcuts.map(s => (s.id === shortcut.id ? shortcut : s)),
     );
     registerGlobalShortcut(window, shortcut);
+  });
+  handle("setting:setProxy", (_, proxy: Proxy) => {
+    saveSetting("proxy", proxy);
+    registerProxy(proxy);
   });
 
   // window

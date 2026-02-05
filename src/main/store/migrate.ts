@@ -21,6 +21,7 @@ function migrateDbVersion(): void {
   if (oldDBVersion === latestDBVersion) return;
   if (oldDBVersion === undefined || oldDBVersion < 1) migrate0to1();
   if (oldDBVersion < 2) migrate1to2();
+  if (oldDBVersion < 3) migrate2to3();
 }
 
 function migrate0to1(): void {
@@ -33,10 +34,26 @@ function migrate0to1(): void {
 }
 
 function migrate1to2(): void {
-  const allSettings = getAllSettings();
   saveAllSettings({
-    ...allSettings,
+    ...getAllSettings(),
     dbVersion: 2,
     pronunciationMode: "hover",
+  });
+}
+
+function migrate2to3(): void {
+  const settings = getAllSettings();
+  saveAllSettings({
+    ...settings,
+    dbVersion: 3,
+    proxy: {
+      mode: "system",
+      url: "",
+      port: 0,
+      username: "",
+      password: "",
+      pacScript: "",
+      proxyBypassRules: "",
+    },
   });
 }

@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@main/utils/network";
 import * as cheerio from "cheerio";
 import { QueryData, YoudaoNewResponse } from "../../common/types";
 
@@ -90,7 +91,7 @@ export async function parse(html: string, word: string): Promise<YoudaoNewRespon
 }
 
 export async function transYoudaoNewService(data: QueryData): Promise<YoudaoNewResponse> {
-  return fetch(URL(data.raw, data.langto), { method: "GET" })
+  return fetchWithTimeout(URL(data.raw, data.langto), { method: "GET" })
     .then(res => res.text())
     .then(text => parse(text, data.raw))
     .catch(error => Promise.reject(error));

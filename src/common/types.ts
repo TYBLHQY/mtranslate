@@ -43,12 +43,27 @@ export type LanguageName = (typeof languages)[number]["name"];
 
 // Settings
 export type ShortcutId = "openAndClose" | "copyText";
+export type PronunciationMode = "hover" | "click";
 export interface Shortcut {
   id: ShortcutId;
   key: string;
   name: string;
 }
-export type PronunciationMode = "hover" | "click";
+export interface Proxy extends Electron.ProxyConfig {
+  url: string;
+  port: number;
+  username: string;
+  password: string;
+  pacScript: string;
+  proxyBypassRules: string;
+}
+export const proxyOptions: Option[] = [
+  { code: "system", name: "系统代理" },
+  { code: "direct", name: "直连" },
+  { code: "fixed_servers", name: "手动配置代理" },
+  { code: "pac_script", name: "PAC脚本" },
+  { code: "auto_detect", name: "自动检测代理" },
+] as const;
 export interface Settings {
   appVersion: string;
   dbVersion: number;
@@ -60,6 +75,7 @@ export interface Settings {
   service: string;
   pronunciationMode: PronunciationMode;
   globalShortcuts: Shortcut[];
+  proxy: Proxy;
 }
 export const defaultSettings: Settings = {
   appVersion: "1.0.0",
@@ -75,6 +91,15 @@ export const defaultSettings: Settings = {
     { id: "openAndClose", key: "", name: "打开关闭窗口" },
     { id: "copyText", key: "", name: "翻译选中文本" },
   ],
+  proxy: {
+    mode: "system",
+    proxyBypassRules: "",
+    pacScript: "",
+    url: "",
+    port: 0,
+    username: "",
+    password: "",
+  },
 } as const;
 
 // IPC
@@ -92,6 +117,7 @@ export interface API {
     setResizable: (resize: boolean) => Promise<void>;
     setSilent: (silent: boolean) => Promise<void>;
     setGlobalShortcut: (shortcut: Shortcut) => Promise<void>;
+    setProxy: (proxy: Proxy) => Promise<void>;
   };
   window: {
     capture: () => Promise<void>;

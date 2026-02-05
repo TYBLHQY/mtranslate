@@ -3,13 +3,13 @@ import { defineComponent } from "vue";
 export default defineComponent({
   setup(_, { slots, attrs }) {
     return () => (
-      <button
-        class="bg-ctp-crust hover:bg-ctp-surface0 flex min-h-8 min-w-8 cursor-pointer appearance-none items-center justify-center rounded border-2 px-2 text-center transition-colors"
-        type={attrs.type || "button"}
+      <input
+        class="bg-ctp-mantle hover:bg-ctp-surface0 focus:border-ctp-mauve flex min-h-8 min-w-8 appearance-none items-center justify-center rounded border-2 px-2 transition-colors"
+        type={attrs.type || "text"}
         {...attrs}>
         {slots.icon ? slots.icon() : null}
         {slots.default ? slots.default() : null}
-      </button>
+      </input>
     );
   },
 });

@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@main/utils/network";
 import * as cheerio from "cheerio";
 import type { QueryData, YoudaoOldResponse } from "../../common/types";
 
@@ -30,7 +31,7 @@ function parse(html: string, word: string): YoudaoOldResponse {
 }
 
 export async function transYoudaoOldService(data: QueryData): Promise<YoudaoOldResponse> {
-  return fetch(URL(data.raw), { method: "GET" })
+  return fetchWithTimeout(URL(data.raw), { method: "GET" })
     .then(res => res.text())
     .then(text => parse(text, data.raw))
     .catch(error => Promise.reject(error));

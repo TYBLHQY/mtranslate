@@ -1,5 +1,6 @@
-import { Option, Shortcut } from "@common/types";
+import { Option, proxyOptions, Shortcut } from "@common/types";
 import Button from "@renderer/components/common/Button";
+import Input from "@renderer/components/common/Input";
 import Select from "@renderer/components/common/Select";
 import { useEsc } from "@renderer/composables/useEsc";
 import { useShortcut } from "@renderer/composables/useGlobalShotcut";
@@ -72,7 +73,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div class="flex flex-1 flex-col gap-2 overflow-hidden">
+      <div class="flex flex-1 flex-col gap-2 overflow-auto">
         <Button onClick={() => router.push({ name: "Home" })}>
           {{ icon: () => <IconMdiTransitionMasked class="text-ctp-mauve" /> }}
         </Button>
@@ -153,6 +154,105 @@ export default defineComponent({
             </Button>
           </div>
         ))}
+
+        {settingTitle("代理配置")}
+
+        {settingItem(
+          <div>模式</div>,
+          <Select
+            class="flex-1"
+            options={proxyOptions}
+            value={settingStore.getProxy().mode}
+            onUpdate:change={(value: Option) =>
+              settingStore.setProxy({
+                ...settingStore.getProxy(),
+                mode: value.code as Electron.ProxyConfig["mode"],
+              })
+            }
+          />,
+        )}
+
+        {settingStore.getProxy().mode === "fixed_servers" && (
+          <>
+            {settingItem(
+              <div>地址</div>,
+              <Input
+                class="flex-1"
+                value={settingStore.getProxy().url}
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setProxy({
+                    ...settingStore.getProxy(),
+                    url: (e.target as HTMLInputElement).value,
+                  })
+                }
+              />,
+            )}
+
+            {settingItem(
+              <div>端口</div>,
+              <Input
+                class="flex-1"
+                value={settingStore.getProxy().port}
+                onInput={(e: KeyboardEvent) => {
+                  const value = Number((e.target as HTMLInputElement).value);
+                  if (!isNaN(value)) {
+                    settingStore.setProxy({
+                      ...settingStore.getProxy(),
+                      port: value,
+                    });
+                  }
+                }}
+              />,
+            )}
+
+            {settingItem(
+              <div>用户名</div>,
+              <Input
+                class="flex-1"
+                value={settingStore.getProxy().username}
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setProxy({
+                    ...settingStore.getProxy(),
+                    username: (e.target as HTMLInputElement).value,
+                  })
+                }
+              />,
+            )}
+
+            {settingItem(
+              <div>密码</div>,
+              <Input
+                class="flex-1"
+                type="password"
+                value={settingStore.getProxy().password}
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setProxy({
+                    ...settingStore.getProxy(),
+                    password: (e.target as HTMLInputElement).value,
+                  })
+                }
+              />,
+            )}
+          </>
+        )}
+
+        {settingStore.getProxy().mode === "pac_script" && (
+          <>
+            {settingItem(
+              <div>PAC脚本</div>,
+              <Input
+                class="flex-1"
+                value={settingStore.getProxy().pacScript}
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setProxy({
+                    ...settingStore.getProxy(),
+                    pacScript: (e.target as HTMLInputElement).value,
+                  })
+                }
+              />,
+            )}
+          </>
+        )}
 
         {settingTitle("关于")}
 
