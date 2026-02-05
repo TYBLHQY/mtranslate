@@ -1,6 +1,6 @@
 import { QueryData, YoudaoOldResponse } from "@common/types";
 import type { PropType } from "vue";
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 
 export default defineComponent({
   props: {
@@ -26,6 +26,7 @@ export default defineComponent({
       () => props.query,
       () => translate(),
     );
+    onMounted(() => props.query && translate());
 
     return () => (
       <div class="flex flex-col gap-1">

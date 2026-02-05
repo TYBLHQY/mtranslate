@@ -49,9 +49,8 @@ export default defineComponent({
       focusInput();
     };
 
-    const autoLangRecognition = (): boolean => {
-      return settingStore.getService() === "youdao-new" || settingStore.getService() === "youdao-old";
-    };
+    const autoLangRecognition = (): boolean =>
+      settingStore.getService() === "youdao-new" || settingStore.getService() === "youdao-old";
 
     window.api.window.selectedText((text: string) => {
       useTranslationStore().setSourceText(text);
@@ -103,9 +102,6 @@ export default defineComponent({
             <Button onClick={() => router.push({ name: "Settings" })}>
               {{ icon: () => <IconMdiSettings /> }}
             </Button>
-            {/* <Button onClick={() => navigator.clipboard.writeText(translatedData.value?.result || "")}>
-              {{ icon: () => <IconMdiContentCopy /> }}
-            </Button> */}
           </div>
         </div>
 

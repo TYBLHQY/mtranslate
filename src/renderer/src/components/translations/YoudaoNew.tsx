@@ -1,7 +1,7 @@
 import { QueryData, YoudaoNewResponse } from "@common/types";
 import { useSettingStore } from "@renderer/stores/setting";
 import type { PropType, VNode } from "vue";
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import IconMdiVolume from "~icons/mdi/volume";
 
 export default defineComponent({
@@ -42,6 +42,7 @@ export default defineComponent({
       () => props.query,
       () => translate(),
     );
+    onMounted(() => props.query && translate());
 
     function renderWithCnParen(text: string): VNode[] {
       const parts = text.split(/(（[^）]*）|〈[^〉]*〉)/g);
