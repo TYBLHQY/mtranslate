@@ -1,6 +1,6 @@
+import type { QueryData, YoudaoOldResponse } from "@common/types";
 import { fetchWithTimeout } from "@main/utils/network";
 import * as cheerio from "cheerio";
-import type { QueryData, YoudaoOldResponse } from "../../common/types";
 
 const URL = (word: string): string => `https://dict.youdao.com/w/${encodeURIComponent(word)}/`;
 const audioURL = (word: string, type: 1 | 2): string =>

@@ -1,12 +1,12 @@
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { registerAllGlobalShortcut } from "@main/globalShortcuts";
 import { registerIpcs } from "@main/ipcs";
+import { registerProxy } from "@main/proxy";
 import { closeDB, getDB } from "@main/store";
 import { destroyTray, registerTray } from "@main/tray";
+import { registerUpdate } from "@main/update";
 import { createMainWindow } from "@main/windows";
 import { app, globalShortcut } from "electron";
-import { registerUpdate } from "./update";
-import { registerProxy } from "./utils/proxy";
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();

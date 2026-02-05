@@ -1,6 +1,6 @@
+import { QueryData, YoudaoNewResponse } from "@common/types";
 import { fetchWithTimeout } from "@main/utils/network";
 import * as cheerio from "cheerio";
-import { QueryData, YoudaoNewResponse } from "../../common/types";
 
 const URL = (word: string, lang: string): string =>
   `https://dict.youdao.com/result?word=${word}&lang=${lang}`;

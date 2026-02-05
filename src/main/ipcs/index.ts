@@ -1,10 +1,10 @@
 import { IpcChannel, PronunciationMode, Proxy, QueryData, Shortcut } from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
+import { registerProxy } from "@main/proxy";
 import { transYoudaoNewService, transYoudaoOldService } from "@main/services";
 import { getAllSettings, saveSetting } from "@main/store";
 import { check, download, upgrade } from "@main/update";
 import { captureWindow, getSystemFonts } from "@main/utils";
-import { registerProxy } from "@main/utils/proxy";
 import { ipcMain, shell } from "electron";
 import { ProgressInfo } from "electron-updater";
 
