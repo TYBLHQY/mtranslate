@@ -1,7 +1,7 @@
-import { IpcChannel, PronunciationMode, Proxy, QueryData, Shortcut } from "@common/types";
+import { IpcChannel, PronunciationMode, Proxy, ServicesConfig, Shortcut, themeOptions } from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { registerProxy } from "@main/proxy";
-import { transYoudaoNewService, transYoudaoOldService } from "@main/services";
+import { youdaoWebNewService, youdaoWebOldService, youdaoZhiYunService } from "@main/services";
 import { getAllSettings, saveSetting } from "@main/store";
 import { check, download, upgrade } from "@main/update";
 import { captureWindow, getSystemFonts } from "@main/utils";
@@ -12,7 +12,7 @@ import { ProgressInfo } from "electron-updater";
 export function registerIpcs(window: Electron.BrowserWindow): void {
   // settings
   handle("setting:getSettings", async () => getAllSettings());
-  handle("setting:setTheme", (_, theme: string) => saveSetting("theme", theme));
+  handle("setting:setTheme", (_, theme: keyof typeof themeOptions) => saveSetting("theme", theme));
   handle("setting:setFont", (_, font: string) => saveSetting("font", font));
   handle("setting:setService", (_, service: string) => saveSetting("service", service));
   handle("setting:setPronunciationMode", (_, mode: PronunciationMode) =>
@@ -35,6 +35,9 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
     saveSetting("proxy", proxy);
     registerProxy(proxy);
   });
+  handle("setting:setServiceConfig", (_, serviceConfig: ServicesConfig) => {
+    saveSetting("servicesConfig", serviceConfig);
+  });
 
   // window
   handle("window:capture", async () => await captureWindow(window));
@@ -42,8 +45,9 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
   handle("window:openExternal", (_, url: string) => shell.openExternal(url));
 
   // translate services
-  handle("translate:youdaoNew", async (_, data: QueryData) => transYoudaoNewService(data));
-  handle("translate:youdaoOld", async (_, data: QueryData) => transYoudaoOldService(data));
+  handle("translate:youdaoWebNew", async (_, data: string) => youdaoWebNewService(data));
+  handle("translate:youdaoWebOld", async (_, data: string) => youdaoWebOldService(data));
+  handle("translate:youdaoZhiYun", async (_, data: string) => youdaoZhiYunService(data));
 
   // update
   handle("update:check", async () => check());

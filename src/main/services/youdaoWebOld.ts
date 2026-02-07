@@ -1,4 +1,4 @@
-import type { QueryData, YoudaoOldResponse } from "@common/types";
+import type { YoudaoWebOldService } from "@common/types";
 import { fetchWithTimeout } from "@main/utils/network";
 import * as cheerio from "cheerio";
 
@@ -6,7 +6,7 @@ const URL = (word: string): string => `https://dict.youdao.com/w/${encodeURIComp
 const audioURL = (word: string, type: 1 | 2): string =>
   `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}`;
 
-function parse(html: string, word: string): YoudaoOldResponse {
+function parse(html: string, word: string): YoudaoWebOldService["response"] {
   const $ = cheerio.load(html);
   const root = $("#phrsListTab");
   const pronounces = root.find(".pronounce");
@@ -14,7 +14,7 @@ function parse(html: string, word: string): YoudaoOldResponse {
   const exps = transContainer.find("ul").find("li");
   const additional = transContainer.find(".additional");
 
-  const res: YoudaoOldResponse = { text: "", audio: [] };
+  const res: YoudaoWebOldService["response"] = { text: "", audio: [] };
   exps.each((_, el) => !!(res.text += $(el).text() + "\n"));
   res.text += additional.text().replace(/\s\s+/g, " ").trim();
   pronounces.each((_, el) => {
@@ -30,9 +30,9 @@ function parse(html: string, word: string): YoudaoOldResponse {
   return res;
 }
 
-export async function transYoudaoOldService(data: QueryData): Promise<YoudaoOldResponse> {
-  return fetchWithTimeout(URL(data.raw), { method: "GET" })
+export async function youdaoWebOldService(data: string): Promise<YoudaoWebOldService["response"]> {
+  return fetchWithTimeout(URL(data))
     .then(res => res.text())
-    .then(text => parse(text, data.raw))
+    .then(text => parse(text, data))
     .catch(error => Promise.reject(error));
 }

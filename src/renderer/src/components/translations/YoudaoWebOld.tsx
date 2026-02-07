@@ -1,32 +1,21 @@
-import { QueryData, YoudaoOldResponse } from "@common/types";
-import type { PropType } from "vue";
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { YoudaoWebOldService } from "@common/types";
+import { useTranslation } from "@renderer/composables/useTranslation";
+import { useTranslationStore } from "@renderer/stores/translation";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
-  props: {
-    query: {
-      type: Object as PropType<QueryData>,
-      default: null,
-    },
-  },
-  setup(props) {
+  setup() {
     const audiosRefs = ref<HTMLAudioElement[]>([]);
-    const translateData = ref<YoudaoOldResponse>();
+    const translateData = ref<YoudaoWebOldService["response"]>();
 
-    const translate = async (): Promise<void> => {
+    useTranslation(() => {
       window.api.translate
-        .youdaoOld({ ...props.query })
-        .then((res: YoudaoOldResponse) => {
+        .youdaoWebOld(useTranslationStore().getSourceText())
+        .then((res: YoudaoWebOldService["response"]) => {
           translateData.value = res;
         })
         .catch(err => console.log(err));
-    };
-
-    watch(
-      () => props.query,
-      () => translate(),
-    );
-    onMounted(() => props.query && translate());
+    });
 
     return () => (
       <div class="flex flex-col gap-1">
@@ -39,7 +28,7 @@ export default defineComponent({
                 onClick={() => audiosRefs.value[index]?.play()}>
                 <span>{audio.text}</span>
                 <audio
-                  ref={(el: HTMLAudioElement | null) => (audiosRefs.value[index] = el as HTMLAudioElement)}
+                  ref={(el: HTMLAudioElement) => (audiosRefs.value[index] = el as HTMLAudioElement)}
                   src={audio.url}
                 />
               </button>
@@ -50,7 +39,7 @@ export default defineComponent({
         <textarea
           class="flex-1 resize-none border-2 border-transparent transition-colors outline-none"
           value={translateData.value?.text || ""}
-          placeholder={translateData.value?.text ? "" : "译文"}
+          placeholder={translateData.value?.text ?? ""}
           readOnly
         />
       </div>

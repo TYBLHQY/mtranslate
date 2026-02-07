@@ -1,5 +1,5 @@
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, KeepAlive, watch } from "vue";
+import { defineComponent, watch } from "vue";
 import { RouterView, useRouter } from "vue-router";
 
 export default defineComponent({
@@ -8,11 +8,12 @@ export default defineComponent({
     const router = useRouter();
 
     window.api.setting.getSettings().then(settings => settingStore.initSettings(settings));
-    window.api.window.shown(() => router.push({ name: "Home" }));
+    window.api.window.shown(() => router.replace({ name: settingStore.getService() }));
 
     watch(
       () => settingStore.font,
       newFont => (document.body.style.fontFamily = newFont),
+      { immediate: true },
     );
 
     // addEventListener("keydown", e => {
@@ -20,16 +21,8 @@ export default defineComponent({
     // });
 
     return () => (
-      <div class={["bg-ctp-base text-ctp-text flex h-screen p-2", settingStore.theme]}>
-        <RouterView>
-          {{
-            default: ({ Component }) => (
-              <KeepAlive>
-                <Component />
-              </KeepAlive>
-            ),
-          }}
-        </RouterView>
+      <div class={["bg-ctp-base text-ctp-text flex h-screen p-2 *:flex-1", settingStore.theme]}>
+        <RouterView />
       </div>
     );
   },

@@ -1,12 +1,13 @@
-import { API, IpcChannel, PronunciationMode, Proxy, QueryData, Shortcut } from "@common/types";
+import { Api, IpcChannel, PronunciationMode, Proxy, ServicesConfig, Shortcut } from "@common/types";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { ProgressInfo } from "electron-updater";
 
-const api: API = {
+const api: Api = {
   translate: {
-    youdaoOld: (data: QueryData) => invoke("translate:youdaoOld", data),
-    youdaoNew: (data: QueryData) => invoke("translate:youdaoNew", data),
+    youdaoWebOld: (data: string) => invoke("translate:youdaoWebOld", data),
+    youdaoWebNew: (data: string) => invoke("translate:youdaoWebNew", data),
+    youdaoZhiYun: (data: string) => invoke("translate:youdaoZhiYun", data),
   },
   setting: {
     getSettings: () => invoke("setting:getSettings"),
@@ -18,6 +19,7 @@ const api: API = {
     setSilent: (silent: boolean) => invoke("setting:setSilent", silent),
     setGlobalShortcut: (shortcut: Shortcut) => invoke("setting:setGlobalShortcut", shortcut),
     setProxy: (proxy: Proxy) => invoke("setting:setProxy", proxy),
+    setServiceConfig: (serviceConfig: ServicesConfig) => invoke("setting:setServiceConfig", serviceConfig),
   },
   window: {
     capture: () => invoke("window:capture"),

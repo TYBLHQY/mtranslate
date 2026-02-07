@@ -1,21 +1,18 @@
-import { QueryData, YoudaoNewResponse } from "@common/types";
+import { YoudaoWebNewService } from "@common/types";
 import { fetchWithTimeout } from "@main/utils/network";
 import * as cheerio from "cheerio";
 
-const URL = (word: string, lang: string): string =>
-  `https://dict.youdao.com/result?word=${word}&lang=${lang}`;
-// const audioURL = (word: string, type: 1 | 2, longMode: boolean = false): string =>
-//   `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}${longMode ? "&le=zh&product=pc" : ""}`;
+const URL = (word: string): string => `https://dict.youdao.com/result?word=${word}&lang=en`;
 const audioURL = (word: string, type: 1 | 2): string =>
   `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}`;
 
-export async function parse(html: string, word: string): Promise<YoudaoNewResponse> {
+export async function parse(html: string, word: string): Promise<YoudaoWebNewService["response"]> {
   const $ = cheerio.load(html);
   const root = $(".modules");
   const audioRoot = root.find(".simple-explain");
   const textRoot = root.find("#catalogue_author").find(".dict-book");
 
-  const res: YoudaoNewResponse = { exp: [], examType: [], audio: [], form: [] };
+  const res: YoudaoWebNewService["response"] = { exp: [], examType: [], audio: [], form: [] };
 
   // audios
   if (audioRoot.find(".lj-title").length > 0 && audioRoot.find(".pronounce").length > 0) {
@@ -90,9 +87,9 @@ export async function parse(html: string, word: string): Promise<YoudaoNewRespon
   return res;
 }
 
-export async function transYoudaoNewService(data: QueryData): Promise<YoudaoNewResponse> {
-  return fetchWithTimeout(URL(data.raw, data.langto), { method: "GET" })
+export async function youdaoWebNewService(data: string): Promise<YoudaoWebNewService["response"]> {
+  return fetchWithTimeout(URL(data))
     .then(res => res.text())
-    .then(text => parse(text, data.raw))
+    .then(text => parse(text, data))
     .catch(error => Promise.reject(error));
 }

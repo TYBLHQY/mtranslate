@@ -1,6 +1,6 @@
 import { defaultSettings } from "@common/types";
 import { app } from "electron";
-import { clearAllSettings, getAllSettings, getSetting, saveAllSettings, saveSetting } from "./operation";
+import { clearAllSettings, getSetting, saveAllSettings, saveSetting } from "./operation";
 import { latestDBVersion } from "./version";
 
 export function migrate(): void {
@@ -19,41 +19,14 @@ function migrateDbVersion(): void {
   const oldDBVersion = getSetting("dbVersion") || 0;
 
   if (oldDBVersion === latestDBVersion) return;
-  if (oldDBVersion === undefined || oldDBVersion < 1) migrate0to1();
-  if (oldDBVersion < 2) migrate1to2();
-  if (oldDBVersion < 3) migrate2to3();
+  if (oldDBVersion === undefined || oldDBVersion < 4) migrateto4();
 }
 
-function migrate0to1(): void {
+function migrateto4(): void {
   clearAllSettings();
   saveAllSettings({
     ...defaultSettings,
-    dbVersion: 1,
+    dbVersion: 4,
     appVersion: app.getVersion(),
-  });
-}
-
-function migrate1to2(): void {
-  saveAllSettings({
-    ...getAllSettings(),
-    dbVersion: 2,
-    pronunciationMode: "hover",
-  });
-}
-
-function migrate2to3(): void {
-  const settings = getAllSettings();
-  saveAllSettings({
-    ...settings,
-    dbVersion: 3,
-    proxy: {
-      mode: "system",
-      url: "",
-      port: 0,
-      username: "",
-      password: "",
-      pacScript: "",
-      proxyBypassRules: "",
-    },
   });
 }

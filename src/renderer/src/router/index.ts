@@ -8,13 +8,39 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: "",
-        name: "Home",
-        component: () => import("@renderer/views/Home"),
+        redirect: "/service",
       },
       {
-        path: "settings",
-        name: "Settings",
+        path: "service",
+        name: "service",
+        component: () => import("@renderer/views/Service"),
+        children: [
+          {
+            path: "youdaoWebNew",
+            name: "youdaoWebNew",
+            component: () => import("@renderer/components/translations/YoudaoWebNew"),
+          },
+          {
+            path: "youdaoWebOld",
+            name: "youdaoWebOld",
+            component: () => import("@renderer/components/translations/YoudaoWebOld"),
+          },
+          {
+            path: "youdaoZhiYun",
+            name: "youdaoZhiYun",
+            component: () => import("@renderer/components/translations/YoudaoZhiYun"),
+          },
+        ],
+      },
+      {
+        path: "setting",
+        name: "setting",
         component: () => import("@renderer/views/Setting"),
+      },
+      {
+        path: "serviceConfig",
+        name: "serviceConfig",
+        component: () => import("@renderer/views/ServiceConfig"),
       },
     ],
   },

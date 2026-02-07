@@ -1,1 +1,1 @@
-export const latestDBVersion = 3;
+export const latestDBVersion = 4;

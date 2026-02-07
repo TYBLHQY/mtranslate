@@ -8,7 +8,6 @@ export const useTranslationStore = defineStore("translation", () => {
   const setSourceText = (text: string): string => (sourceText.value = text.trim());
 
   return {
-    sourceText: sourceText.value,
     getSourceText,
     setSourceText,
   };

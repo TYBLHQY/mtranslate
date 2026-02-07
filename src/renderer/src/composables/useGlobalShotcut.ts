@@ -1,3 +1,5 @@
+import { Shortcut } from "@common/types";
+import { useSettingStore } from "@renderer/stores/setting";
 import { computed, Ref, ref } from "vue";
 
 export function useShortcut(
@@ -5,10 +7,14 @@ export function useShortcut(
   onEsc: () => void,
   onEnter: () => void,
 ): {
+  shortcut: Ref<Shortcut | undefined>;
   pressedKeys: Ref<Set<string>>;
   pressedKeyString: Ref<string>;
   handleShortcutInput: () => void;
 } {
+  const settingStore = useSettingStore();
+
+  const shortcut = ref<Shortcut>();
   const pressedKeys = ref<Set<string>>(new Set());
   const pressedKeyString = computed(() => Array.from(pressedKeys.value).join("+"));
 
@@ -28,6 +34,10 @@ export function useShortcut(
     }
     if (e.code === "Enter") {
       onEnter();
+      settingStore.setGlobalShortcut({
+        ...shortcut.value!,
+        key: pressedKeyString.value,
+      });
       reset();
       return;
     }
@@ -50,6 +60,7 @@ export function useShortcut(
   const reset = (): void => {
     pressedKeys.value.clear();
     removeEventListener("keydown", handleKeyDown);
+    shortcut.value = undefined;
   };
 
   const normalizeKey = (key: string): string => {
@@ -67,6 +78,7 @@ export function useShortcut(
   };
 
   return {
+    shortcut,
     pressedKeys,
     pressedKeyString,
     handleShortcutInput,

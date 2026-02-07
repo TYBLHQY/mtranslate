@@ -1,12 +1,14 @@
-import { Option, proxyOptions, Shortcut } from "@common/types";
-import Button from "@renderer/components/common/Button";
-import Input from "@renderer/components/common/Input";
-import Select from "@renderer/components/common/Select";
+import { proxyOptions, Settings, shortcuts, themeOptions } from "@common/types";
+import Button from "@renderer/components/base/Button";
+import Input from "@renderer/components/base/Input";
+import Select from "@renderer/components/base/Select";
+import Text from "@renderer/components/base/Text";
 import { useEsc } from "@renderer/composables/useEsc";
+import { useFont } from "@renderer/composables/useFont";
 import { useShortcut } from "@renderer/composables/useGlobalShotcut";
+import { useUpdate } from "@renderer/composables/useUpdate";
 import { useSettingStore } from "@renderer/stores/setting";
-import { ProgressInfo } from "electron-updater";
-import { defineComponent, ref, VNode } from "vue";
+import { defineComponent, VNode } from "vue";
 import { useRouter } from "vue-router";
 import IconMdiGithub from "~icons/mdi/github";
 import IconMdiLock from "~icons/mdi/lock";
@@ -16,285 +18,207 @@ import IconMdiTransitionMasked from "~icons/mdi/transition-masked";
 export default defineComponent({
   setup() {
     const router = useRouter();
+    const { fontOptions } = useFont();
     const settingStore = useSettingStore();
-    const escHandler = useEsc(() => router.push({ name: "Home" }));
-
-    const fontOptions = ref<Option[]>([]);
-    const themeOptions: Option[] = [
-      { code: "latte", name: "latte" },
-      { code: "mocha", name: "mocha" },
-      { code: "frappe", name: "frappe" },
-      { code: "macchiato", name: "macchiato" },
-    ];
-
-    window.api.window
-      .getFonts()
-      .then((fonts: string[]) => (fontOptions.value = fonts.map(font => ({ code: font, name: font }))))
-      .finally(() => fontOptions.value.unshift({ code: "system-ui", name: "System Default" }));
-
-    const settingTitle = (title: string): VNode => <div class="text-ctp-surface2 text-center">{title}</div>;
-
-    const settingItem = (name: VNode, content: VNode): VNode => (
-      <div class="flex min-h-8 flex-row items-center justify-between gap-2">
-        {name}
-        {content}
-      </div>
-    );
-
-    const currentShortcut = ref<Shortcut>();
-    const { pressedKeyString, handleShortcutInput } = useShortcut(
+    const escHandler = useEsc(() => router.replace({ name: "service" }));
+    const { updateState, progressInfo, check, download, upgrade } = useUpdate();
+    const { shortcut, pressedKeyString, handleShortcutInput } = useShortcut(
       () => escHandler.stop(),
-      () => {
-        escHandler.start();
-        currentShortcut.value = undefined;
-      },
-      () => {
-        escHandler.start();
-        settingStore.setGlobalShortcut({
-          ...currentShortcut.value!,
-          key: pressedKeyString.value,
-        });
-        currentShortcut.value = undefined;
-      },
+      () => escHandler.start(),
+      () => escHandler.start(),
     );
 
-    const updateState = ref(0); // 检查更新 | 可用更新 | 已是最新 | 下载进度 | 点击安装
-    const progressInfo = ref<ProgressInfo | null>(null);
-    window.api.update.getAvailable((available: boolean) => {
-      updateState.value = available ? 1 : 2;
-    });
-    window.api.update.getDownloadProgress((progress: ProgressInfo) => {
-      progressInfo.value = progress;
-      updateState.value = 3;
-    });
-    window.api.update.getUpdateDownloaded((downloaded: boolean) => {
-      updateState.value = downloaded ? 4 : 0;
-      progressInfo.value = null;
-    });
-
-    return () => (
-      <div class="flex flex-1 flex-col gap-2 overflow-auto">
-        <Button onClick={() => router.push({ name: "Home" })}>
-          {{ icon: () => <IconMdiTransitionMasked class="text-ctp-mauve" /> }}
+    const renderSettings: Record<keyof Settings, () => VNode> = {
+      theme: () => (
+        <Select
+          options={themeOptions}
+          value={settingStore.getTheme()}
+          onUpdate:change={(value: keyof typeof themeOptions) => settingStore.setTheme(value)}>
+          {{ prev: () => "主题" }}
+        </Select>
+      ),
+      font: () => (
+        <Select
+          options={fontOptions.value}
+          value={settingStore.getFont()}
+          onUpdate:change={(value: string) => settingStore.setFont(value)}>
+          {{ prev: () => "字体" }}
+        </Select>
+      ),
+      service: () => <></>,
+      pronunciationMode: () => (
+        <Button onClick={() => settingStore.setPronunciationMode()}>
+          {{
+            prev: () => "发音模式",
+            default: () => (settingStore.getPronunciationMode() === "hover" ? "悬停播放" : "点击播放"),
+          }}
         </Button>
-
-        {settingTitle("基本配置")}
-
-        {settingItem(
-          <div>主题</div>,
-          <Select
-            class="flex-1"
-            options={themeOptions}
-            value={settingStore.getTheme()}
-            onUpdate:change={(value: Option) => settingStore.setTheme(value.code)}
-          />,
-        )}
-
-        {settingItem(
-          <div>字体</div>,
-          <Select
-            class="flex-1"
-            options={fontOptions.value}
-            value={settingStore.getFont()}
-            onUpdate:change={(value: Option) => settingStore.setFont(value.code)}
-          />,
-        )}
-
-        {settingItem(
-          <div>窗口大小</div>,
-          <Button
-            class="flex-1"
-            onClick={() => settingStore.setResizable(!settingStore.getResizable())}>
-            {
+      ),
+      resizable: () => (
+        <Button onClick={() => settingStore.setResizable(!settingStore.getResizable())}>
+          {{
+            prev: () => "窗口大小",
+            default: () =>
               [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
                 +!settingStore.getResizable()
-              ]
-            }
-          </Button>,
-        )}
-
-        {settingItem(
-          <div>静默启动</div>,
-          <Button
-            class="flex-1"
-            onClick={() => settingStore.setSilent(!settingStore.getSilent())}>
-            {
+              ],
+          }}
+        </Button>
+      ),
+      silent: () => (
+        <Button onClick={() => settingStore.setSilent(!settingStore.getSilent())}>
+          {{
+            prev: () => "静默启动",
+            default: () =>
               [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
                 +!settingStore.getSilent()
-              ]
-            }
-          </Button>,
-        )}
-
-        {settingItem(
-          <div>发音模式</div>,
-          <Button
-            class="flex-1"
-            onClick={() =>
-              settingStore.setPronunciationMode(
-                settingStore.getPronunciationMode() === "hover" ? "click" : "hover",
-              )
-            }>
-            {settingStore.getPronunciationMode() === "hover" ? "悬停播放" : "点击播放"}
-          </Button>,
-        )}
-
-        {settingTitle("全局快捷键")}
-
-        {settingStore.getGlobalShortcuts().map(s => (
-          <div class="flex flex-row items-center justify-between gap-2">
-            <div>{s.name}</div>
+              ],
+          }}
+        </Button>
+      ),
+      globalShortcuts: () => (
+        <>
+          {settingStore.getGlobalShortcuts().map(s => (
             <Button
-              class={["flex-1 text-sm", currentShortcut.value?.id === s.id ? "border-ctp-mauve" : ""]}
+              class={[shortcut.value?.id === s.id ? "border-ctp-mauve" : ""]}
               onClick={() => {
-                currentShortcut.value = s;
+                shortcut.value = s;
                 handleShortcutInput();
               }}>
-              {currentShortcut.value?.id === s.id ? pressedKeyString.value : s.key || "未设置"}
+              {{
+                prev: () => shortcuts[s.id],
+                default: () => (shortcut.value?.id === s.id ? pressedKeyString.value : s.key || "未设置"),
+              }}
             </Button>
-          </div>
-        ))}
-
-        {settingTitle("代理配置")}
-
-        {settingItem(
-          <div>模式</div>,
-          <Select
-            class="flex-1"
-            options={proxyOptions}
-            value={settingStore.getProxy().mode}
-            onUpdate:change={(value: Option) =>
-              settingStore.setProxy({
-                ...settingStore.getProxy(),
-                mode: value.code as Electron.ProxyConfig["mode"],
-              })
-            }
-          />,
-        )}
-
-        {settingStore.getProxy().mode === "fixed_servers" && (
+          ))}
+        </>
+      ),
+      proxy: () => {
+        const proxy = settingStore.getProxy();
+        const proxyFixedFields = [
+          {
+            label: "地址",
+            value: proxy.url,
+            onInput: (val: string) => settingStore.setProxy({ ...proxy, url: val }),
+          },
+          {
+            label: "端口",
+            value: proxy.port,
+            onInput: (val: string) => {
+              const num = Number(val);
+              if (!isNaN(num)) settingStore.setProxy({ ...proxy, port: num });
+            },
+          },
+          {
+            label: "用户",
+            value: proxy.username,
+            onInput: (val: string) => settingStore.setProxy({ ...proxy, username: val }),
+          },
+          {
+            label: "密码",
+            value: proxy.password,
+            type: "password",
+            onInput: (val: string) => settingStore.setProxy({ ...proxy, password: val }),
+          },
+        ];
+        return (
           <>
-            {settingItem(
-              <div>地址</div>,
-              <Input
-                class="flex-1"
-                value={settingStore.getProxy().url}
-                onInput={(e: KeyboardEvent) =>
-                  settingStore.setProxy({
-                    ...settingStore.getProxy(),
-                    url: (e.target as HTMLInputElement).value,
-                  })
-                }
-              />,
+            <Select
+              options={proxyOptions}
+              value={proxy.mode}
+              onUpdate:change={(value: string) =>
+                settingStore.setProxy({ ...proxy, mode: value as Electron.ProxyConfig["mode"] })
+              }>
+              {{ prev: () => <div>模式</div> }}
+            </Select>
+
+            {proxy.mode === "fixed_servers" && (
+              <>
+                {proxyFixedFields.map(field => (
+                  <Input
+                    class="flex-1"
+                    type={field.type ?? "text"}
+                    placeholder={field.label}
+                    value={field.value}
+                    onInput={(e: KeyboardEvent) => field.onInput((e.target as HTMLInputElement).value)}>
+                    {{ prev: () => <div>{field.label}</div> }}
+                  </Input>
+                ))}
+              </>
             )}
 
-            {settingItem(
-              <div>端口</div>,
+            {proxy.mode === "pac_script" && (
               <Input
                 class="flex-1"
-                value={settingStore.getProxy().port}
-                onInput={(e: KeyboardEvent) => {
-                  const value = Number((e.target as HTMLInputElement).value);
-                  if (!isNaN(value)) {
-                    settingStore.setProxy({
-                      ...settingStore.getProxy(),
-                      port: value,
-                    });
-                  }
-                }}
-              />,
-            )}
-
-            {settingItem(
-              <div>用户名</div>,
-              <Input
-                class="flex-1"
-                value={settingStore.getProxy().username}
+                value={proxy.pacScript}
                 onInput={(e: KeyboardEvent) =>
-                  settingStore.setProxy({
-                    ...settingStore.getProxy(),
-                    username: (e.target as HTMLInputElement).value,
-                  })
-                }
-              />,
-            )}
-
-            {settingItem(
-              <div>密码</div>,
-              <Input
-                class="flex-1"
-                type="password"
-                value={settingStore.getProxy().password}
-                onInput={(e: KeyboardEvent) =>
-                  settingStore.setProxy({
-                    ...settingStore.getProxy(),
-                    password: (e.target as HTMLInputElement).value,
-                  })
-                }
-              />,
+                  settingStore.setProxy({ ...proxy, pacScript: (e.target as HTMLInputElement).value })
+                }>
+                {{ prev: () => <div>脚本</div> }}
+              </Input>
             )}
           </>
-        )}
-
-        {settingStore.getProxy().mode === "pac_script" && (
-          <>
-            {settingItem(
-              <div>PAC脚本</div>,
-              <Input
-                class="flex-1"
-                value={settingStore.getProxy().pacScript}
-                onInput={(e: KeyboardEvent) =>
-                  settingStore.setProxy({
-                    ...settingStore.getProxy(),
-                    pacScript: (e.target as HTMLInputElement).value,
-                  })
-                }
-              />,
-            )}
-          </>
-        )}
-
-        {settingTitle("关于")}
-
-        {settingItem(
-          <div>版本</div>,
-          <div class="flex flex-row items-center gap-2">
-            <div class="flex min-w-22 *:flex-1">
-              {
-                [
+        );
+      },
+      servicesConfig: () => <></>,
+      appVersion: () => {
+        const percent = Math.floor(progressInfo.value?.percent ?? 0);
+        return (
+          <Text>
+            {{
+              prev: () => "版本",
+              default: () => (
+                <div class="flex flex-row items-center gap-2">
                   <Button
-                    class="text-ctp-text"
-                    onClick={() => window.api.update.check()}>
-                    检查更新
-                  </Button>,
-                  <Button
-                    class="text-ctp-mauve"
-                    onClick={() => window.api.update.download()}>
-                    可用更新
-                  </Button>,
-                  <Button class="text-ctp-green pointer-events-none">已是最新</Button>,
-                  <Button class="text-ctp-yellow pointer-events-none">
-                    {progressInfo.value ? Math.floor(progressInfo.value.percent) : 0}%
-                  </Button>,
-                  <Button
-                    class="text-ctp-green"
-                    onClick={() => window.api.update.upgrade()}>
-                    点击安装
-                  </Button>,
-                ][updateState.value]
-              }
-            </div>
-            <div class="text-ctp-surface2">{settingStore.getAppVersion()}</div>
-          </div>,
-        )}
+                    class={[
+                      "min-w-22",
+                      `text-ctp-${["text", "mauve", "green", "yellow", "green"][updateState.value]}`,
+                      { "pointer-events-none": updateState.value === 2 || updateState.value === 3 },
+                    ]}
+                    onClick={[check, download, () => {}, () => {}, upgrade][updateState.value]}>
+                    {["检查更新", "可用更新", "已是最新", `${percent}%`, "点击安装"][updateState.value]}
+                  </Button>
+                  <div class="text-ctp-surface2">{settingStore.getAppVersion()}</div>
+                </div>
+              ),
+            }}
+          </Text>
+        );
+      },
+      dbVersion: () => <></>,
+      bounds: () => <></>,
+    };
 
-        {settingItem(<div>作者</div>, <div class="text-ctp-surface2">MYQ</div>)}
+    return () => (
+      <div class="flex flex-col gap-2 overflow-auto">
+        <Button onClick={() => router.replace({ name: "service" })}>
+          <IconMdiTransitionMasked class="text-ctp-mauve" />
+        </Button>
 
-        <div class="flex justify-center">
-          <IconMdiGithub
-            class="text-ctp-surface2 hover:text-ctp-text cursor-pointer text-2xl transition-colors"
-            onClick={() => window.api.window.openExternal("https://github.com/TYBLHQY/mtranslate")}
-          />
+        <div class="flex flex-1 flex-col gap-2 overflow-auto">
+          <Text>基本设置</Text>
+          {renderSettings.theme()}
+          {renderSettings.font()}
+          {renderSettings.resizable()}
+          {renderSettings.silent()}
+          {renderSettings.pronunciationMode()}
+
+          <Text>全局快捷键</Text>
+          {renderSettings.globalShortcuts()}
+
+          <Text>代理设置</Text>
+          {renderSettings.proxy()}
+
+          <Text>关于</Text>
+          {renderSettings.appVersion()}
+          <Text>{{ prev: () => "作者", default: () => "MYQ" }}</Text>
+
+          <Text>
+            <IconMdiGithub
+              class="hover:text-ctp-text cursor-pointer text-2xl transition-colors"
+              onClick={() => window.api.window.openExternal("https://github.com/TYBLHQY/mtranslate")}
+            />
+          </Text>
         </div>
       </div>
     );
