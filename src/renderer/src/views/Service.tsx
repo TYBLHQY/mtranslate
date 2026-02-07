@@ -6,8 +6,8 @@ import { RouterView } from "vue-router";
 export default defineComponent({
   setup() {
     return () => (
-      <div class="flex flex-col gap-2 overflow-hidden">
-        <SourceInput />
+      <div class="flex flex-col overflow-hidden">
+        <SourceInput class="pb-2" />
         <OptionBar />
         <div class="flex min-h-0 flex-4 *:flex-1">
           <RouterView />

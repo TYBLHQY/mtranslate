@@ -1,5 +1,6 @@
 import Select from "@renderer/components/base/Select";
-import { defineComponent, PropType } from "vue";
+import { useTranslationStore } from "@renderer/stores/translation";
+import { defineComponent, nextTick, PropType } from "vue";
 import IconMdiSwapHorizontal from "~icons/mdi/swap-horizontal";
 import Button from "../base/Button";
 
@@ -18,29 +19,41 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["update:sourceLang", "update:targetLang"],
+  emits: ["update:changeSource", "update:changeTarget", "update:exchange"],
   setup(props, { emit }) {
-    const exchangeLanguages = (): void => {
-      emit("update:sourceLang", props.targetLang);
-      emit("update:targetLang", props.sourceLang);
+    const translationStore = useTranslationStore();
+    const reflash = async (): Promise<void> => {
+      const currentText = translationStore.getSourceText();
+      translationStore.setSourceText("");
+      await nextTick();
+      translationStore.setSourceText(currentText);
     };
-
     return () => (
-      <div class="flex items-center justify-center">
+      <div class="bg-ctp-crust flex items-center justify-center">
         <Select
-          class="flex-1"
+          class="size-0 flex-1 text-sm"
           value={props.sourceLang}
           options={props.langSupport}
-          onUpdate:change={(value: string) => emit("update:sourceLang", value)}
+          onUpdate:change={(value: string) => {
+            emit("update:changeSource", value);
+            reflash();
+          }}
         />
-        <Button onClick={exchangeLanguages}>
+        <Button
+          onClick={() => {
+            emit("update:exchange");
+            reflash();
+          }}>
           <IconMdiSwapHorizontal />
         </Button>
         <Select
-          class="flex-1"
+          class="size-0 flex-1 text-sm"
           value={props.targetLang}
           options={props.langSupport}
-          onUpdate:change={(value: string) => emit("update:targetLang", value)}
+          onUpdate:change={(value: string) => {
+            emit("update:changeTarget", value);
+            reflash();
+          }}
         />
       </div>
     );

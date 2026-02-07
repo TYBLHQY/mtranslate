@@ -18,7 +18,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-1 pt-2">
         {translateData.value?.audio && translateData.value.audio.length > 0 && (
           <div class="flex flex-wrap gap-2">
             {translateData.value.audio.map((audio, index) => (
