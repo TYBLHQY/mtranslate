@@ -13,8 +13,7 @@ export default defineComponent({
         .youdaoWebOld(useTranslationStore().getSourceText())
         .then((res: YoudaoWebOldService["response"]) => {
           translateData.value = res;
-        })
-        .catch(err => console.log(err));
+        });
     });
 
     return () => (

@@ -10,10 +10,10 @@ export default defineComponent({
     const handleChange = (e: Event): void => emit("update:change", (e.target as HTMLSelectElement).value);
 
     return () => (
-      <div class="flex min-h-8 flex-row items-center justify-between gap-2">
+      <div class="flex min-h-8 flex-row items-center justify-between gap-2 select-none">
         {slots.prev ? <div class="min-w-1/4">{slots.prev()}</div> : null}
         <select
-          class="bg-ctp-crust hover:bg-ctp-surface0 min-h-8 min-w-8 flex-1 cursor-pointer appearance-none rounded text-center transition-colors outline-none"
+          class="bg-ctp-crust hover:bg-ctp-surface0 min-h-8 min-w-8 flex-1 cursor-pointer appearance-none rounded text-center transition-colors outline-none select-none"
           value={props.value}
           onChange={handleChange}
           {...attrs}>

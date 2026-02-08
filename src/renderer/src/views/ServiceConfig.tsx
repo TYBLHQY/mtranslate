@@ -1,4 +1,6 @@
 import { serviceOptions, ServicesConfig, youdaoZhiYunDomains } from "@common/types";
+import IconYoudaoWeb from "@renderer/assets/images/iconYoudaoWeb.png";
+import IconYoudaoZhiYun from "@renderer/assets/images/iconYoudaoZhiYun.png";
 import Button from "@renderer/components/base/Button";
 import Input from "@renderer/components/base/Input";
 import Select from "@renderer/components/base/Select";
@@ -17,6 +19,28 @@ export default defineComponent({
     const settingStore = useSettingStore();
     useEsc(() => router.replace({ name: "service" }));
 
+    const renderTitle = (title: string, icon?: string, doc?: string): VNode => (
+      <div class="flex items-center gap-2 leading-none">
+        {icon && (
+          <img
+            src={icon}
+            class="h-6 w-6"
+            draggable="false"
+          />
+        )}
+
+        <span class="flex -translate-y-px items-center select-none">{title}</span>
+
+        {doc && (
+          <Tag
+            class="flex items-center leading-none select-none"
+            onClick={() => window.api.window.openExternal(doc)}>
+            Doc
+          </Tag>
+        )}
+      </div>
+    );
+
     const renderState = (state: boolean, service: keyof ServicesConfig): VNode => (
       <IconMdiCircle
         class={["cursor-pointer", state ? "text-ctp-green" : "text-ctp-surface2"]}
@@ -28,7 +52,7 @@ export default defineComponent({
       youdaoWebNew: () => (
         <Text>
           {{
-            prev: () => serviceOptions.youdaoWebNew,
+            prev: () => renderTitle(serviceOptions.youdaoWebNew, IconYoudaoWeb),
             default: () => renderState(settingStore.getServicesConfig().youdaoWebNew.state, "youdaoWebNew"),
           }}
         </Text>
@@ -36,7 +60,7 @@ export default defineComponent({
       youdaoWebOld: () => (
         <Text>
           {{
-            prev: () => serviceOptions.youdaoWebOld,
+            prev: () => renderTitle(serviceOptions.youdaoWebOld, IconYoudaoWeb),
             default: () => renderState(settingStore.getServicesConfig().youdaoWebOld.state, "youdaoWebOld"),
           }}
         </Text>
@@ -47,19 +71,12 @@ export default defineComponent({
           <>
             <Text>
               {{
-                prev: () => (
-                  <>
-                    有道智云
-                    <Tag
-                      onClick={() =>
-                        window.api.window.openExternal(
-                          "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
-                        )
-                      }>
-                      Doc
-                    </Tag>
-                  </>
-                ),
+                prev: () =>
+                  renderTitle(
+                    serviceOptions.youdaoZhiYun,
+                    IconYoudaoZhiYun,
+                    "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
+                  ),
                 default: () => renderState(config.state, "youdaoZhiYun"),
               }}
             </Text>
@@ -67,6 +84,7 @@ export default defineComponent({
               <>
                 <Input
                   value={config.appKey}
+                  type="password"
                   onInput={(e: KeyboardEvent) =>
                     settingStore.setServiceConfig("youdaoZhiYun", {
                       appKey: (e.target as HTMLInputElement).value,
@@ -78,6 +96,7 @@ export default defineComponent({
                 </Input>
                 <Input
                   value={config.apiSecret}
+                  type="password"
                   onInput={(e: KeyboardEvent) =>
                     settingStore.setServiceConfig("youdaoZhiYun", {
                       apiSecret: (e.target as HTMLInputElement).value,
@@ -143,6 +162,9 @@ export default defineComponent({
             )}
           </>
         );
+      },
+      deepLProSiYiGuan: () => {
+        return <></>;
       },
     };
 

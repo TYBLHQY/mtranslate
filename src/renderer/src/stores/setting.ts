@@ -45,7 +45,6 @@ export const useSettingStore = defineStore("setting", () => {
 
   const getGlobalShortcuts = (): Shortcut[] => settings.value.globalShortcuts;
   const setGlobalShortcut = (shortcuts: Shortcut): void => {
-    console.log("Setting global shortcut:", shortcuts);
     settings.value.globalShortcuts = settings.value.globalShortcuts.map(s =>
       s.id === shortcuts.id ? shortcuts : s,
     );

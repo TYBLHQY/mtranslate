@@ -1,5 +1,4 @@
 export interface YoudaoWebNewService {
-  data: string;
   request: string;
   response: {
     exp: Array<{ po: string; tr: string[] }>;

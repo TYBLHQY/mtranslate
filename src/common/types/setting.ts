@@ -1,3 +1,5 @@
+import { UUID } from "crypto";
+import { deepLProSiYiGuanOption } from "./services/deepLProSiYiGuan";
 import { youdaoZhiYunDomains, youdaoZhiYunLangSupport } from "./services/youdaoZhiYun";
 
 export type PronunciationMode = "hover" | "click";
@@ -46,6 +48,19 @@ export interface ServicesConfig {
     vocabId: string;
     domain: keyof typeof youdaoZhiYunDomains;
     rejectFallback: boolean;
+  };
+  deepLProSiYiGuan: {
+    state: boolean;
+    contextId: string;
+    contexts: Record<UUID, string>;
+    authKey: string;
+    sourceLang: string;
+    targetLang: string;
+    modelType: keyof typeof deepLProSiYiGuanOption.modelType;
+    formality: keyof typeof deepLProSiYiGuanOption.formality;
+    tagHandling: keyof typeof deepLProSiYiGuanOption.tagHandling;
+    splitSentences: keyof typeof deepLProSiYiGuanOption.splitSentences;
+    showBilledCharacters: boolean;
   };
 }
 
@@ -114,6 +129,19 @@ export const defaultSettings: Settings = {
       vocabId: "",
       domain: "general",
       rejectFallback: false,
+    },
+    deepLProSiYiGuan: {
+      state: false,
+      contextId: "",
+      contexts: {},
+      authKey: "",
+      sourceLang: "ZH",
+      targetLang: "EN-US",
+      modelType: "latency_optimized",
+      formality: "default",
+      tagHandling: "xml",
+      splitSentences: "1",
+      showBilledCharacters: true,
     },
   },
 } as const;
