@@ -1,4 +1,12 @@
-import { Api, IpcChannel, PronunciationMode, Proxy, ServicesConfig, Shortcut } from "@common/types";
+import {
+  Api,
+  DeepLProSYGLang,
+  IpcChannel,
+  PronunciationMode,
+  Proxy,
+  Services,
+  Shortcuts,
+} from "@common/types";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { ProgressInfo } from "electron-updater";
@@ -8,6 +16,9 @@ const api: Api = {
     youdaoWebOld: (data: string) => invoke("translate:youdaoWebOld", data),
     youdaoWebNew: (data: string) => invoke("translate:youdaoWebNew", data),
     youdaoZhiYun: (data: string) => invoke("translate:youdaoZhiYun", data),
+    deepLProSYG: (data: string) => invoke("translate:deepLProSYG", data),
+    deepLProSYGLang: (data: DeepLProSYGLang["request"]) => invoke("translate:deepLProSYGLang", data),
+    deepLProSYGUsage: () => invoke("translate:deepLProSYGUsage"),
   },
   setting: {
     getSettings: () => invoke("setting:getSettings"),
@@ -17,9 +28,13 @@ const api: Api = {
     setPronunciationMode: (mode: PronunciationMode) => invoke("setting:setPronunciationMode", mode),
     setResizable: (resizable: boolean) => invoke("setting:setResizable", resizable),
     setSilent: (silent: boolean) => invoke("setting:setSilent", silent),
-    setGlobalShortcut: (shortcut: Shortcut) => invoke("setting:setGlobalShortcut", shortcut),
+    setGlobalShortcut: (id: keyof Shortcuts, map: string) => invoke("setting:setGlobalShortcut", id, map),
     setProxy: (proxy: Proxy) => invoke("setting:setProxy", proxy),
-    setServiceConfig: (serviceConfig: ServicesConfig) => invoke("setting:setServiceConfig", serviceConfig),
+    setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(
+      service: K,
+      field: T,
+      value: Services[K][T],
+    ) => invoke("setting:setServiceConfig", service, field, value),
   },
   window: {
     capture: () => invoke("window:capture"),

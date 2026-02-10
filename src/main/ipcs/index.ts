@@ -1,7 +1,16 @@
-import { IpcChannel, PronunciationMode, Proxy, ServicesConfig, Shortcut, themeOptions } from "@common/types";
+import {
+  DeepLProSYGLang,
+  IpcChannel,
+  PronunciationMode,
+  Proxy,
+  Services,
+  Shortcuts,
+  themeOptions,
+} from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { registerProxy } from "@main/proxy";
 import { youdaoWebNewService, youdaoWebOldService, youdaoZhiYunService } from "@main/services";
+import { deepLProSYGLang, deepLProSYGService, deepLProSYGUsage } from "@main/services/deepLProSYG";
 import { getAllSettings, saveSetting } from "@main/store";
 import { check, download, upgrade } from "@main/update";
 import { captureWindow, getSystemFonts } from "@main/utils";
@@ -10,6 +19,14 @@ import { ProgressInfo } from "electron-updater";
 
 // handle
 export function registerIpcs(window: Electron.BrowserWindow): void {
+  // translate services
+  handle("translate:youdaoWebNew", async (_, data: string) => youdaoWebNewService(data));
+  handle("translate:youdaoWebOld", async (_, data: string) => youdaoWebOldService(data));
+  handle("translate:youdaoZhiYun", async (_, data: string) => youdaoZhiYunService(data));
+  handle("translate:deepLProSYG", async (_, data: string) => deepLProSYGService(data));
+  handle("translate:deepLProSYGLang", async (_, data: DeepLProSYGLang["request"]) => deepLProSYGLang(data));
+  handle("translate:deepLProSYGUsage", async () => deepLProSYGUsage());
+
   // settings
   handle("setting:getSettings", async () => getAllSettings());
   handle("setting:setTheme", (_, theme: keyof typeof themeOptions) => saveSetting("theme", theme));
@@ -23,31 +40,40 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
     saveSetting("resizable", resizable);
     window.resizable = resizable;
   });
-  handle("setting:setGlobalShortcut", (_, shortcut: Shortcut) => {
-    unregisterGlobalShortcut(getAllSettings().globalShortcuts.find(s => s.id === shortcut.id)!);
-    saveSetting(
-      "globalShortcuts",
-      getAllSettings().globalShortcuts.map(s => (s.id === shortcut.id ? shortcut : s)),
-    );
-    registerGlobalShortcut(window, shortcut);
+  handle("setting:setGlobalShortcut", (_, id: keyof Shortcuts, key: string) => {
+    unregisterGlobalShortcut(id);
+    saveSetting("globalShortcuts", {
+      ...getAllSettings().globalShortcuts,
+      [id]: key,
+    });
+    registerGlobalShortcut(window, id, key);
   });
   handle("setting:setProxy", (_, proxy: Proxy) => {
     saveSetting("proxy", proxy);
     registerProxy(proxy);
   });
-  handle("setting:setServiceConfig", (_, serviceConfig: ServicesConfig) => {
-    saveSetting("servicesConfig", serviceConfig);
-  });
+  handle(
+    "setting:setServiceConfig",
+    <K extends keyof Services, T extends keyof Services[K]>(
+      _: Electron.IpcMainInvokeEvent,
+      service: K,
+      field: T,
+      value: Services[K][T],
+    ) => {
+      saveSetting("servicesConfig", {
+        ...getAllSettings().servicesConfig,
+        [service]: {
+          ...getAllSettings().servicesConfig[service],
+          [field]: value,
+        },
+      });
+    },
+  );
 
   // window
   handle("window:capture", async () => await captureWindow(window));
   handle("window:getFonts", () => getSystemFonts());
   handle("window:openExternal", (_, url: string) => shell.openExternal(url));
-
-  // translate services
-  handle("translate:youdaoWebNew", async (_, data: string) => youdaoWebNewService(data));
-  handle("translate:youdaoWebOld", async (_, data: string) => youdaoWebOldService(data));
-  handle("translate:youdaoZhiYun", async (_, data: string) => youdaoZhiYunService(data));
 
   // update
   handle("update:check", async () => check());

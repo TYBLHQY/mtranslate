@@ -1,26 +1,11 @@
+import { IconMdiSwapHorizontal } from "@renderer/assets";
+import { Button } from "@renderer/components";
 import Select from "@renderer/components/base/Select";
 import { useTranslationStore } from "@renderer/stores/translation";
 import { defineComponent, nextTick, PropType } from "vue";
-import IconMdiSwapHorizontal from "~icons/mdi/swap-horizontal";
-import Button from "../base/Button";
 
-export default defineComponent({
-  props: {
-    sourceLang: {
-      type: String,
-      required: true,
-    },
-    targetLang: {
-      type: String,
-      required: true,
-    },
-    langSupport: {
-      type: Object as PropType<Record<string, string>>,
-      required: true,
-    },
-  },
-  emits: ["update:changeSource", "update:changeTarget", "update:exchange"],
-  setup(props, { emit }) {
+export default defineComponent(
+  (props, { emit }) => {
     const translationStore = useTranslationStore();
     const reflash = async (): Promise<void> => {
       const currentText = translationStore.getSourceText();
@@ -33,29 +18,56 @@ export default defineComponent({
         <Select
           class="size-0 flex-1 text-sm"
           value={props.sourceLang}
-          options={props.langSupport}
-          onUpdate:change={(value: string) => {
-            emit("update:changeSource", value);
+          options={props.sourceSupport}
+          onChange={(value: string) => {
+            emit("updateSource", value);
             reflash();
           }}
         />
-        <Button
-          onClick={() => {
-            emit("update:exchange");
-            reflash();
-          }}>
-          <IconMdiSwapHorizontal />
-        </Button>
+        {props.changeButton && (
+          <Button
+            onClick={() => {
+              emit("updateExchange");
+              reflash();
+            }}>
+            <IconMdiSwapHorizontal />
+          </Button>
+        )}
         <Select
           class="size-0 flex-1 text-sm"
           value={props.targetLang}
-          options={props.langSupport}
-          onUpdate:change={(value: string) => {
-            emit("update:changeTarget", value);
+          options={props.targetSupport}
+          onChange={(value: string) => {
+            emit("updateTarget", value);
             reflash();
           }}
         />
       </div>
     );
   },
-});
+  {
+    props: {
+      changeButton: {
+        type: Boolean,
+        required: true,
+      },
+      sourceLang: {
+        type: String,
+        required: true,
+      },
+      targetLang: {
+        type: String,
+        required: true,
+      },
+      sourceSupport: {
+        type: Object as PropType<Record<string, string>>,
+        required: true,
+      },
+      targetSupport: {
+        type: Object as PropType<Record<string, string>>,
+        required: true,
+      },
+    },
+    emits: ["updateSource", "updateTarget", "updateExchange"],
+  },
+);

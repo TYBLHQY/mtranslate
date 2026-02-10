@@ -1,13 +1,8 @@
 import { defineComponent, PropType } from "vue";
 
-export default defineComponent({
-  props: {
-    value: { type: String as PropType<string>, required: true },
-    options: { type: Object as PropType<Record<string, string>>, required: true },
-  },
-  emits: ["update:change"],
-  setup(props, { attrs, emit, slots }) {
-    const handleChange = (e: Event): void => emit("update:change", (e.target as HTMLSelectElement).value);
+export default defineComponent(
+  (props, { attrs, emit, slots }) => {
+    const handleChange = (e: Event): void => emit("change", (e.target as HTMLSelectElement).value);
 
     return () => (
       <div class="flex min-h-8 flex-row items-center justify-between gap-2 select-none">
@@ -29,4 +24,11 @@ export default defineComponent({
       </div>
     );
   },
-});
+  {
+    props: {
+      value: { type: String as PropType<string>, required: true },
+      options: { type: Object as PropType<Record<string, string>>, required: true },
+    },
+    emits: ["change"],
+  },
+);

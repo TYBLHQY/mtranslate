@@ -4,7 +4,6 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import { defineConfig } from "electron-vite";
 import { resolve } from "path";
 import Icons from "unplugin-icons/vite";
-import VueDevTools from "vite-plugin-vue-devtools";
 
 export default defineConfig({
   main: {
@@ -28,6 +27,7 @@ export default defineConfig({
         "@common": resolve("src/common"),
       },
     },
-    plugins: [vue(), vueJsx(), tailwindcss(), Icons(), VueDevTools()],
+    // plugins: [vue(), vueJsx(), tailwindcss(), Icons(), VueDevTools()],
+    plugins: [vue(), vueJsx(), tailwindcss(), Icons()],
   },
 });

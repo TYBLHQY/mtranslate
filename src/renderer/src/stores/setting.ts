@@ -1,6 +1,6 @@
-import { defaultSettings, Proxy, ServicesConfig, Settings, Shortcut, themeOptions } from "@common/types";
+import { defaultSettings, Proxy, Services, Settings, Shortcuts, themeOptions } from "@common/types";
 import { defineStore } from "pinia";
-import { computed, ref, toRaw } from "vue";
+import { computed, ref } from "vue";
 
 export const useSettingStore = defineStore("setting", () => {
   const settings = ref<Settings>(defaultSettings);
@@ -43,12 +43,10 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setSilent(silent);
   };
 
-  const getGlobalShortcuts = (): Shortcut[] => settings.value.globalShortcuts;
-  const setGlobalShortcut = (shortcuts: Shortcut): void => {
-    settings.value.globalShortcuts = settings.value.globalShortcuts.map(s =>
-      s.id === shortcuts.id ? shortcuts : s,
-    );
-    window.api.setting.setGlobalShortcut(shortcuts);
+  const getGlobalShortcuts = (): Shortcuts => settings.value.globalShortcuts;
+  const setGlobalShortcut = <K extends keyof Shortcuts>(id: K, map: string): void => {
+    settings.value.globalShortcuts[id] = map;
+    window.api.setting.setGlobalShortcut(id, map);
   };
 
   const getPronunciationMode = (): "hover" | "click" => settings.value.pronunciationMode;
@@ -58,6 +56,7 @@ export const useSettingStore = defineStore("setting", () => {
   };
 
   const getAppVersion = (): string => settings.value.appVersion;
+  const getDbVersion = (): number => settings.value.dbVersion;
 
   const getProxy = (): Proxy => settings.value.proxy;
   const setProxy = (proxy: Proxy): void => {
@@ -65,16 +64,14 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setProxy(proxy);
   };
 
-  const getServicesConfig = (): ServicesConfig => settings.value.servicesConfig;
-  const setServiceConfig = <K extends keyof ServicesConfig>(
+  const getServicesConfig = (): Services => settings.value.servicesConfig;
+  const setServiceConfig = <K extends keyof Services, T extends keyof Services[K]>(
     service: K,
-    config: Partial<ServicesConfig[K]>,
+    field: T,
+    value: Services[K][T],
   ): void => {
-    settings.value.servicesConfig[service] = {
-      ...settings.value.servicesConfig[service],
-      ...config,
-    };
-    window.api.setting.setServiceConfig(toRaw(settings.value.servicesConfig));
+    settings.value.servicesConfig[service][field] = value;
+    window.api.setting.setServiceConfig(service, field, value);
   };
 
   return {
@@ -98,6 +95,7 @@ export const useSettingStore = defineStore("setting", () => {
     getPronunciationMode,
     setPronunciationMode,
     getAppVersion,
+    getDbVersion,
     getProxy,
     setProxy,
     getServicesConfig,

@@ -1,10 +1,10 @@
+import { IconMdiEye, IconMdiEyeOff } from "@renderer/assets";
 import { defineComponent, ref } from "vue";
-import IconMdiEye from "~icons/mdi/eye";
-import IconMdiEyeOff from "~icons/mdi/eye-off";
 
-export default defineComponent({
-  setup(_, { slots, attrs }) {
+export default defineComponent(
+  (_, { slots, attrs }) => {
     const type = ref(attrs.type || "text");
+
     return () => (
       <div class="flex min-h-8 flex-row items-center justify-between gap-2">
         {slots.prev ? <div class="min-w-1/4 select-none">{slots.prev()}</div> : null}
@@ -25,4 +25,7 @@ export default defineComponent({
       </div>
     );
   },
-});
+  {
+    emits: ["commit"],
+  },
+);

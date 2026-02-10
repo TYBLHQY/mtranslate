@@ -1,5 +1,5 @@
 import type { YoudaoWebOldService } from "@common/types";
-import { fetchWithTimeout } from "@main/utils/network";
+import { fetchWithTimeout } from "@main/utils";
 import * as cheerio from "cheerio";
 
 const URL = (word: string): string => `https://dict.youdao.com/w/${encodeURIComponent(word)}/`;

@@ -1,4 +1,4 @@
-import { Shortcut } from "@common/types";
+import { Shortcuts } from "@common/types";
 import { useSettingStore } from "@renderer/stores/setting";
 import { computed, Ref, ref } from "vue";
 
@@ -7,18 +7,20 @@ export function useShortcut(
   onEsc: () => void,
   onEnter: () => void,
 ): {
-  shortcut: Ref<Shortcut | undefined>;
+  shortcutId: Ref<keyof Shortcuts | undefined>;
   pressedKeys: Ref<Set<string>>;
   pressedKeyString: Ref<string>;
-  handleShortcutInput: () => void;
+  handleShortcutInput: (shortcutId: keyof Shortcuts) => void;
 } {
   const settingStore = useSettingStore();
 
-  const shortcut = ref<Shortcut>();
+  const shortcutId = ref<keyof Shortcuts>();
   const pressedKeys = ref<Set<string>>(new Set());
   const pressedKeyString = computed(() => Array.from(pressedKeys.value).join("+"));
 
-  const handleShortcutInput = (): void => {
+  const handleShortcutInput = (shortcutIdValue: keyof Shortcuts): void => {
+    removeEventListener("keydown", handleKeyDown);
+    shortcutId.value = shortcutIdValue;
     onHandle();
     pressedKeys.value.clear();
     addEventListener("keydown", handleKeyDown);
@@ -34,10 +36,7 @@ export function useShortcut(
     }
     if (e.code === "Enter") {
       onEnter();
-      settingStore.setGlobalShortcut({
-        ...shortcut.value!,
-        key: pressedKeyString.value,
-      });
+      if (shortcutId.value) settingStore.setGlobalShortcut(shortcutId.value, pressedKeyString.value);
       reset();
       return;
     }
@@ -60,7 +59,7 @@ export function useShortcut(
   const reset = (): void => {
     pressedKeys.value.clear();
     removeEventListener("keydown", handleKeyDown);
-    shortcut.value = undefined;
+    shortcutId.value = undefined;
   };
 
   const normalizeKey = (key: string): string => {
@@ -78,7 +77,7 @@ export function useShortcut(
   };
 
   return {
-    shortcut,
+    shortcutId,
     pressedKeys,
     pressedKeyString,
     handleShortcutInput,

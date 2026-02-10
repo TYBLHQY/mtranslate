@@ -1,10 +1,7 @@
 import { defineComponent } from "vue";
 
-export default defineComponent({
-  props: {
-    onClick: { type: Function, required: false },
-  },
-  setup(props, { slots, attrs }) {
+export default defineComponent(
+  (props, { slots, attrs }) => {
     return () => (
       <div class="flex min-h-8 flex-row items-center justify-between gap-2 select-none">
         {slots.prev ? <div class="min-w-1/4">{slots.prev()}</div> : null}
@@ -18,4 +15,9 @@ export default defineComponent({
       </div>
     );
   },
-});
+  {
+    props: {
+      onClick: { type: Function, required: false },
+    },
+  },
+);

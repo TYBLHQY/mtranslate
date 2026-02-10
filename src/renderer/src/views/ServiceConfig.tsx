@@ -1,191 +1,385 @@
-import { serviceOptions, ServicesConfig, youdaoZhiYunDomains } from "@common/types";
-import IconYoudaoWeb from "@renderer/assets/images/iconYoudaoWeb.png";
-import IconYoudaoZhiYun from "@renderer/assets/images/iconYoudaoZhiYun.png";
-import Button from "@renderer/components/base/Button";
-import Input from "@renderer/components/base/Input";
-import Select from "@renderer/components/base/Select";
-import Tag from "@renderer/components/base/Tag";
-import Text from "@renderer/components/base/Text";
-import { useEsc } from "@renderer/composables/useEsc";
-import { useSettingStore } from "@renderer/stores/setting";
+import { deepLProSYGOption, serviceOptions, Services, youdaoZhiYunDomains } from "@common/types";
+import {
+  IconDeepLProSYG,
+  IconMdiCircle,
+  IconMdiTransitionMasked,
+  IconYoudaoWeb,
+  IconYoudaoZhiYun,
+} from "@renderer/assets";
+import { Button, Input, Select, Tag, Text } from "@renderer/components";
+import { useEsc } from "@renderer/composables";
+import { useSettingStore } from "@renderer/stores";
 import { defineComponent, VNode } from "vue";
 import { useRouter } from "vue-router";
-import IconMdiCircle from "~icons/mdi/circle";
-import IconMdiTransitionMasked from "~icons/mdi/transition-masked";
 
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const settingStore = useSettingStore();
-    useEsc(() => router.replace({ name: "service" }));
+export default defineComponent(() => {
+  const router = useRouter();
+  const settingStore = useSettingStore();
+  useEsc(() => router.replace({ name: "service" }));
 
-    const renderTitle = (title: string, icon?: string, doc?: string): VNode => (
-      <div class="flex items-center gap-2 leading-none">
-        {icon && (
-          <img
-            src={icon}
-            class="h-6 w-6"
-            draggable="false"
-          />
-        )}
+  const renderTitle = (title: string, icon?: string, doc?: string): VNode => (
+    <div class="flex items-center gap-2 leading-none">
+      {icon && (
+        <img
+          src={icon}
+          class="h-4 w-4"
+          draggable="false"
+        />
+      )}
 
-        <span class="flex -translate-y-px items-center select-none">{title}</span>
+      <span class="flex -translate-y-px items-center select-none">{title}</span>
 
-        {doc && (
-          <Tag
-            class="flex items-center leading-none select-none"
-            onClick={() => window.api.window.openExternal(doc)}>
-            Doc
-          </Tag>
-        )}
+      {doc && (
+        <Tag
+          class="flex items-center leading-none select-none"
+          onClick={() => window.api.window.openExternal(doc)}>
+          Doc
+        </Tag>
+      )}
+    </div>
+  );
+
+  const renderState = (service: keyof Services, state: boolean): VNode => (
+    <IconMdiCircle
+      class={["cursor-pointer", state ? "text-ctp-green" : "text-ctp-surface2"]}
+      onClick={() => settingStore.setServiceConfig(service, "state", !state)}
+    />
+  );
+
+  const renderServiceConfig: Record<keyof Services, () => VNode> = {
+    youdaoWebNew: () => (
+      <Text align="end">
+        {{
+          prev: () => renderTitle(serviceOptions.youdaoWebNew, IconYoudaoWeb),
+          default: () => renderState("youdaoWebNew", settingStore.getServicesConfig().youdaoWebNew.state),
+        }}
+      </Text>
+    ),
+    youdaoWebOld: () => (
+      <Text align="end">
+        {{
+          prev: () => renderTitle(serviceOptions.youdaoWebOld, IconYoudaoWeb),
+          default: () => renderState("youdaoWebOld", settingStore.getServicesConfig().youdaoWebOld.state),
+        }}
+      </Text>
+    ),
+    youdaoZhiYun: () => {
+      const config = settingStore.getServicesConfig().youdaoZhiYun;
+      return (
+        <>
+          <Text align="end">
+            {{
+              prev: () =>
+                renderTitle(
+                  serviceOptions.youdaoZhiYun,
+                  IconYoudaoZhiYun,
+                  "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
+                ),
+              default: () => renderState("youdaoZhiYun", config.state),
+            }}
+          </Text>
+          {config.state && (
+            <>
+              <Input
+                value={config.appKey}
+                type="password"
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setServiceConfig(
+                    "youdaoZhiYun",
+                    "appKey",
+                    (e.target as HTMLInputElement).value,
+                  )
+                }>
+                {{
+                  prev: () => "Key",
+                }}
+              </Input>
+              <Input
+                value={config.apiSecret}
+                type="password"
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setServiceConfig(
+                    "youdaoZhiYun",
+                    "apiSecret",
+                    (e.target as HTMLInputElement).value,
+                  )
+                }>
+                {{ prev: () => "Secret" }}
+              </Input>
+              <Input
+                value={config.vocabId}
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setServiceConfig(
+                    "youdaoZhiYun",
+                    "vocabId",
+                    (e.target as HTMLInputElement).value,
+                  )
+                }>
+                {{
+                  prev: () => "术语词表",
+                }}
+              </Input>
+              <Button
+                onClick={() =>
+                  settingStore.setServiceConfig("youdaoZhiYun", "voice", config.voice === 0 ? 1 : 0)
+                }>
+                {{
+                  prev: () => "发声模式",
+                  default: () => (config.voice === 1 ? "男声" : "女声"),
+                }}
+              </Button>
+              <Button
+                onClick={() => settingStore.setServiceConfig("youdaoZhiYun", "wrapLine", !config.wrapLine)}>
+                {{
+                  prev: () => "译文换行",
+                  default: () => (config.wrapLine ? "开启" : "关闭"),
+                }}
+              </Button>
+              <Button onClick={() => settingStore.setServiceConfig("youdaoZhiYun", "strict", !config.strict)}>
+                {{
+                  prev: () => "严格语言",
+                  default: () => (config.strict ? "开启" : "关闭"),
+                }}
+              </Button>
+              <Select
+                value={config.domain}
+                options={youdaoZhiYunDomains}
+                onChange={value =>
+                  settingStore.setServiceConfig(
+                    "youdaoZhiYun",
+                    "domain",
+                    value as keyof typeof youdaoZhiYunDomains,
+                  )
+                }>
+                {{
+                  prev: () => "领域翻译",
+                }}
+              </Select>
+              <Button
+                onClick={() =>
+                  settingStore.setServiceConfig("youdaoZhiYun", "rejectFallback", !config.rejectFallback)
+                }>
+                {{
+                  prev: () => "领域降级",
+                  default: () => (config.rejectFallback ? "关闭" : "开启"),
+                }}
+              </Button>
+            </>
+          )}
+        </>
+      );
+    },
+    deepLProSYG: () => {
+      const config = settingStore.getServicesConfig().deepLProSYG;
+      return (
+        <>
+          <Text align="end">
+            {{
+              prev: () =>
+                renderTitle(
+                  serviceOptions.deepLProSYG,
+                  IconDeepLProSYG,
+                  "https://doc.weixin.qq.com/doc/w3_AR8A8QbQANUX2RVuSxXQiqP31kKiW",
+                ),
+              default: () => renderState("deepLProSYG", config.state),
+            }}
+          </Text>
+          {config.state && (
+            <>
+              <Input
+                value={config.authKey}
+                type="password"
+                onInput={(e: KeyboardEvent) =>
+                  settingStore.setServiceConfig(
+                    "deepLProSYG",
+                    "authKey",
+                    (e.target as HTMLInputElement).value,
+                  )
+                }>
+                {{
+                  prev: () => "AuthKey",
+                }}
+              </Input>
+              <Select
+                value={config.modelType}
+                options={deepLProSYGOption.modelType}
+                onChange={value =>
+                  settingStore.setServiceConfig(
+                    "deepLProSYG",
+                    "modelType",
+                    value as keyof typeof deepLProSYGOption.modelType,
+                  )
+                }>
+                {{
+                  prev: () => "模型选择",
+                }}
+              </Select>
+              <Select
+                value={config.formality}
+                options={deepLProSYGOption.formality}
+                onChange={value =>
+                  settingStore.setServiceConfig(
+                    "deepLProSYG",
+                    "formality",
+                    value as keyof typeof deepLProSYGOption.formality,
+                  )
+                }>
+                {{
+                  prev: () => "语气设置",
+                }}
+              </Select>
+              <Button
+                onClick={() =>
+                  settingStore.setServiceConfig(
+                    "deepLProSYG",
+                    "showBilledCharacters",
+                    !config.showBilledCharacters,
+                  )
+                }>
+                {{
+                  prev: () => "计费统计",
+                  default: () => (config.showBilledCharacters ? "显示" : "不显示"),
+                }}
+              </Button>
+              <Button
+                onClick={() =>
+                  settingStore.setServiceConfig("deepLProSYG", "outlineDetection", !config.outlineDetection)
+                }>
+                {{
+                  prev: () => "标签检测",
+                  default: () => (config.outlineDetection ? "开启" : "关闭"),
+                }}
+              </Button>
+              {config.outlineDetection && (
+                <>
+                  <Select
+                    value={config.tagHandling}
+                    options={deepLProSYGOption.tagHandling}
+                    onChange={value =>
+                      settingStore.setServiceConfig(
+                        "deepLProSYG",
+                        "tagHandling",
+                        value as keyof typeof deepLProSYGOption.tagHandling,
+                      )
+                    }>
+                    {{
+                      prev: () => "标签处理",
+                    }}
+                  </Select>
+                  <Input
+                    onKeydown={(e: KeyboardEvent) => {
+                      if (e.key === "Enter") {
+                        const input = (e.target as HTMLInputElement).value.trim();
+                        if (!input) return;
+                        const newTags = [...new Set(config.nonSplittingTags).add(input)];
+                        settingStore.setServiceConfig("deepLProSYG", "nonSplittingTags", newTags);
+                        (e.target as HTMLInputElement).value = "";
+                      }
+                    }}>
+                    {{ prev: () => "非拆标签" }}
+                  </Input>
+                  {config.nonSplittingTags.length > 0 && (
+                    <Text align="start">
+                      {{
+                        prev: () => "",
+                        default: () => (
+                          <div class="flex flex-row flex-wrap gap-2">
+                            {config.nonSplittingTags.map((t, i) => (
+                              <Tag
+                                key={i}
+                                onClick={() => {
+                                  const newTags = config.nonSplittingTags.filter((_, ii) => ii !== i);
+                                  settingStore.setServiceConfig("deepLProSYG", "nonSplittingTags", newTags);
+                                }}>{`<${t}>`}</Tag>
+                            ))}
+                          </div>
+                        ),
+                      }}
+                    </Text>
+                  )}
+                  <Input
+                    onKeydown={(e: KeyboardEvent) => {
+                      if (e.key === "Enter") {
+                        const input = (e.target as HTMLInputElement).value.trim();
+                        if (!input) return;
+                        const newTags = [...new Set(config.splittingTags).add(input)];
+                        settingStore.setServiceConfig("deepLProSYG", "splittingTags", newTags);
+                        (e.target as HTMLInputElement).value = "";
+                      }
+                    }}>
+                    {{ prev: () => "拆分标签" }}
+                  </Input>
+                  {config.splittingTags.length > 0 && (
+                    <Text align="start">
+                      {{
+                        prev: () => "",
+                        default: () => (
+                          <div class="flex flex-row flex-wrap gap-2">
+                            {config.splittingTags.map((t, i) => (
+                              <Tag
+                                key={i}
+                                onClick={() => {
+                                  const newTags = config.splittingTags.filter((_, ii) => ii != i);
+                                  settingStore.setServiceConfig("deepLProSYG", "splittingTags", newTags);
+                                }}>
+                                {`<${t}>`}
+                              </Tag>
+                            ))}
+                          </div>
+                        ),
+                      }}
+                    </Text>
+                  )}
+                  <Input
+                    value={config.ignoreTags}
+                    onKeydown={(e: KeyboardEvent) => {
+                      if (e.key !== "Enter") return;
+                      const input = e.target as HTMLInputElement;
+                      settingStore.setServiceConfig("deepLProSYG", "ignoreTags", input.value);
+                      input.blur();
+                    }}>
+                    {{ prev: () => "免译标签" }}
+                  </Input>
+                  <Select
+                    value={config.splitSentences}
+                    options={deepLProSYGOption.splitSentences}
+                    onChange={value =>
+                      settingStore.setServiceConfig(
+                        "deepLProSYG",
+                        "splitSentences",
+                        value as keyof typeof deepLProSYGOption.splitSentences,
+                      )
+                    }>
+                    {{
+                      prev: () => "分句设置",
+                    }}
+                  </Select>
+                </>
+              )}
+            </>
+          )}
+        </>
+      );
+    },
+  };
+
+  return () => (
+    <div class="flex flex-col gap-2">
+      <Button onClick={() => router.replace({ name: "service" })}>
+        <IconMdiTransitionMasked class="text-ctp-mauve" />
+      </Button>
+
+      <div class="flex flex-1 flex-col overflow-auto">
+        {Object.values(renderServiceConfig).map((render, index, array) => (
+          <div
+            class={[
+              "border-ctp-surface1 flex flex-col gap-2 py-3",
+              index < array.length - 1 ? "border-b" : "",
+            ]}>
+            {render()}
+          </div>
+        ))}
       </div>
-    );
-
-    const renderState = (state: boolean, service: keyof ServicesConfig): VNode => (
-      <IconMdiCircle
-        class={["cursor-pointer", state ? "text-ctp-green" : "text-ctp-surface2"]}
-        onClick={() => settingStore.setServiceConfig(service, { state: !state })}
-      />
-    );
-
-    const renderServiceConfig: Record<keyof ServicesConfig, () => VNode> = {
-      youdaoWebNew: () => (
-        <Text>
-          {{
-            prev: () => renderTitle(serviceOptions.youdaoWebNew, IconYoudaoWeb),
-            default: () => renderState(settingStore.getServicesConfig().youdaoWebNew.state, "youdaoWebNew"),
-          }}
-        </Text>
-      ),
-      youdaoWebOld: () => (
-        <Text>
-          {{
-            prev: () => renderTitle(serviceOptions.youdaoWebOld, IconYoudaoWeb),
-            default: () => renderState(settingStore.getServicesConfig().youdaoWebOld.state, "youdaoWebOld"),
-          }}
-        </Text>
-      ),
-      youdaoZhiYun: () => {
-        const config = settingStore.getServicesConfig().youdaoZhiYun;
-        return (
-          <>
-            <Text>
-              {{
-                prev: () =>
-                  renderTitle(
-                    serviceOptions.youdaoZhiYun,
-                    IconYoudaoZhiYun,
-                    "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
-                  ),
-                default: () => renderState(config.state, "youdaoZhiYun"),
-              }}
-            </Text>
-            {config.state && (
-              <>
-                <Input
-                  value={config.appKey}
-                  type="password"
-                  onInput={(e: KeyboardEvent) =>
-                    settingStore.setServiceConfig("youdaoZhiYun", {
-                      appKey: (e.target as HTMLInputElement).value,
-                    })
-                  }>
-                  {{
-                    prev: () => "Key",
-                  }}
-                </Input>
-                <Input
-                  value={config.apiSecret}
-                  type="password"
-                  onInput={(e: KeyboardEvent) =>
-                    settingStore.setServiceConfig("youdaoZhiYun", {
-                      apiSecret: (e.target as HTMLInputElement).value,
-                    })
-                  }>
-                  {{ prev: () => "Secret" }}
-                </Input>
-                <Input
-                  value={config.vocabId}
-                  onInput={(e: KeyboardEvent) =>
-                    settingStore.setServiceConfig("youdaoZhiYun", {
-                      vocabId: (e.target as HTMLInputElement).value,
-                    })
-                  }>
-                  {{
-                    prev: () => "术语词表",
-                  }}
-                </Input>
-                <Button
-                  onClick={() =>
-                    settingStore.setServiceConfig("youdaoZhiYun", {
-                      voice: config.voice === 0 ? 1 : 0,
-                    })
-                  }>
-                  {{
-                    prev: () => "发声模式",
-                    default: () => (config.voice === 1 ? "男声" : "女声"),
-                  }}
-                </Button>
-                <Button
-                  onClick={() =>
-                    settingStore.setServiceConfig("youdaoZhiYun", {
-                      strict: !config.strict,
-                    })
-                  }>
-                  {{
-                    prev: () => "严格语言",
-                    default: () => (config.strict ? "开启" : "关闭"),
-                  }}
-                </Button>
-                <Select
-                  value={config.domain}
-                  options={youdaoZhiYunDomains}
-                  onUpdate:change={(value: keyof typeof youdaoZhiYunDomains) =>
-                    settingStore.setServiceConfig("youdaoZhiYun", { domain: value })
-                  }>
-                  {{
-                    prev: () => "领域翻译",
-                  }}
-                </Select>
-                <Button
-                  onClick={() =>
-                    settingStore.setServiceConfig("youdaoZhiYun", {
-                      rejectFallback: !config.rejectFallback,
-                    })
-                  }>
-                  {{
-                    prev: () => "领域降级",
-                    default: () => (config.rejectFallback ? "关闭" : "开启"),
-                  }}
-                </Button>
-              </>
-            )}
-          </>
-        );
-      },
-      deepLProSiYiGuan: () => {
-        return <></>;
-      },
-    };
-
-    return () => (
-      <div class="flex flex-col gap-2">
-        <Button onClick={() => router.replace({ name: "service" })}>
-          <IconMdiTransitionMasked class="text-ctp-mauve" />
-        </Button>
-
-        <div class="flex flex-1 flex-col overflow-auto">
-          {Object.values(renderServiceConfig).map((render, index, array) => (
-            <div
-              class={[
-                "border-ctp-surface1 flex flex-col gap-2 py-3",
-                index < array.length - 1 ? "border-b" : "",
-              ]}>
-              {render()}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  },
+    </div>
+  );
 });

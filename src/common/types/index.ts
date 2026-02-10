@@ -1,7 +1,9 @@
-export * from "./services/youdaoWeb";
-export * from "./services/youdaoZhiYun";
-
 export * from "./ipc";
 export * from "./proxy";
 export * from "./service";
+export * from "./services/deepLProSYG";
+export * from "./services/youdaoWeb";
+export * from "./services/youdaoZhiYun";
 export * from "./setting";
+export * from "./shortcut";
+export * from "./theme";

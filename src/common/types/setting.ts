@@ -1,25 +1,19 @@
 import { UUID } from "crypto";
-import { deepLProSiYiGuanOption } from "./services/deepLProSiYiGuan";
-import { youdaoZhiYunDomains, youdaoZhiYunLangSupport } from "./services/youdaoZhiYun";
+import {
+  deepLProSYGOption,
+  deepLProSYGSourceSupport,
+  deepLProSYGTargetSupport,
+  shortcutOptions,
+  themeOptions,
+  youdaoZhiYunDomains,
+  youdaoZhiYunLangSupport,
+} from ".";
 
 export type PronunciationMode = "hover" | "click";
 
-export const themeOptions = {
-  latte: "latte",
-  mocha: "mocha",
-  frappe: "frappe",
-  macchiato: "macchiato",
-} as const;
-
-export const shortcuts = {
-  openAndClose: "开关窗口",
-  copyText: "划词翻译",
-} as const satisfies Record<string, string>;
-
-export interface Shortcut {
-  id: keyof typeof shortcuts;
-  key: string;
-}
+export type Shortcuts = {
+  [K in keyof typeof shortcutOptions]: string;
+};
 
 export interface Proxy extends Electron.ProxyConfig {
   url: string;
@@ -30,7 +24,7 @@ export interface Proxy extends Electron.ProxyConfig {
   proxyBypassRules: string;
 }
 
-export interface ServicesConfig {
+export interface Services {
   youdaoWebNew: {
     state: boolean;
   };
@@ -48,18 +42,23 @@ export interface ServicesConfig {
     vocabId: string;
     domain: keyof typeof youdaoZhiYunDomains;
     rejectFallback: boolean;
+    wrapLine: boolean;
   };
-  deepLProSiYiGuan: {
+  deepLProSYG: {
     state: boolean;
-    contextId: string;
-    contexts: Record<UUID, string>;
+    contextId: UUID | "";
+    contexts: Record<UUID, { title: string; content: string }>;
     authKey: string;
-    sourceLang: string;
-    targetLang: string;
-    modelType: keyof typeof deepLProSiYiGuanOption.modelType;
-    formality: keyof typeof deepLProSiYiGuanOption.formality;
-    tagHandling: keyof typeof deepLProSiYiGuanOption.tagHandling;
-    splitSentences: keyof typeof deepLProSiYiGuanOption.splitSentences;
+    sourceLang: keyof typeof deepLProSYGSourceSupport;
+    targetLang: keyof typeof deepLProSYGTargetSupport;
+    modelType: keyof typeof deepLProSYGOption.modelType;
+    formality: keyof typeof deepLProSYGOption.formality;
+    tagHandling: keyof typeof deepLProSYGOption.tagHandling;
+    outlineDetection: boolean;
+    nonSplittingTags: string[];
+    splittingTags: string[];
+    ignoreTags: string;
+    splitSentences: keyof typeof deepLProSYGOption.splitSentences;
     showBilledCharacters: boolean;
   };
 }
@@ -79,10 +78,10 @@ export interface Settings {
   // service
   service: string;
   pronunciationMode: PronunciationMode;
-  servicesConfig: ServicesConfig;
+  servicesConfig: Services;
 
   // shortcuts
-  globalShortcuts: Shortcut[];
+  globalShortcuts: Shortcuts;
 
   // proxy
   proxy: Proxy;
@@ -98,10 +97,10 @@ export const defaultSettings: Settings = {
   bounds: { x: 0, y: 0, width: 330, height: 600 },
   service: "youdaoWebNew",
   pronunciationMode: "click",
-  globalShortcuts: [
-    { id: "openAndClose", key: "" },
-    { id: "copyText", key: "" },
-  ],
+  globalShortcuts: {
+    openAndClose: "",
+    copyText: "",
+  },
   proxy: {
     mode: "system",
     proxyBypassRules: "",
@@ -129,17 +128,22 @@ export const defaultSettings: Settings = {
       vocabId: "",
       domain: "general",
       rejectFallback: false,
+      wrapLine: true,
     },
-    deepLProSiYiGuan: {
+    deepLProSYG: {
       state: false,
       contextId: "",
       contexts: {},
       authKey: "",
       sourceLang: "ZH",
       targetLang: "EN-US",
-      modelType: "latency_optimized",
+      modelType: "prefer_quality_optimized",
       formality: "default",
-      tagHandling: "xml",
+      tagHandling: "noml",
+      outlineDetection: false,
+      nonSplittingTags: [],
+      splittingTags: [],
+      ignoreTags: "",
       splitSentences: "1",
       showBilledCharacters: true,
     },

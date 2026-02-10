@@ -1,10 +1,13 @@
 import { ProgressInfo } from "electron-updater";
 import {
+  DeepLProSYGLang,
+  DeepLProSYGService,
+  DeepLProSYGUsage,
   PronunciationMode,
   Proxy,
-  ServicesConfig,
+  Services,
   Settings,
-  Shortcut,
+  Shortcuts,
   YoudaoWebNewService,
   YoudaoWebOldService,
   YoudaoZhiYunService,
@@ -15,6 +18,9 @@ export interface Api {
     youdaoWebOld: (data: string) => Promise<YoudaoWebOldService["response"]>;
     youdaoWebNew: (data: string) => Promise<YoudaoWebNewService["response"]>;
     youdaoZhiYun: (data: string) => Promise<YoudaoZhiYunService["response"]>;
+    deepLProSYG: (data: string) => Promise<DeepLProSYGService["response"]>;
+    deepLProSYGLang: (data: DeepLProSYGLang["request"]) => Promise<DeepLProSYGLang["response"]>;
+    deepLProSYGUsage: () => Promise<DeepLProSYGUsage["response"]>;
   };
   setting: {
     getSettings: () => Promise<Settings>;
@@ -24,9 +30,13 @@ export interface Api {
     setPronunciationMode: (mode: PronunciationMode) => Promise<void>;
     setResizable: (resize: boolean) => Promise<void>;
     setSilent: (silent: boolean) => Promise<void>;
-    setGlobalShortcut: (shortcut: Shortcut) => Promise<void>;
+    setGlobalShortcut: (id: keyof Shortcuts, map: string) => Promise<void>;
     setProxy: (proxy: Proxy) => Promise<void>;
-    setServiceConfig: (serviceConfig: ServicesConfig) => Promise<void>;
+    setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(
+      service: K,
+      field: T,
+      value: Services[K][T],
+    ) => Promise<void>;
   };
   window: {
     capture: () => Promise<void>;

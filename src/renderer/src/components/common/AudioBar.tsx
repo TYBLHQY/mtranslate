@@ -1,15 +1,9 @@
+import { IconMdiVolume } from "@renderer/assets";
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, ref } from "vue";
-import IconMdiVolume from "~icons/mdi/volume";
+import { defineComponent, PropType, ref } from "vue";
 
-export default defineComponent({
-  props: {
-    audios: {
-      type: Array as () => { url: string; text?: string }[],
-      required: true,
-    },
-  },
-  setup(props) {
+export default defineComponent(
+  props => {
     const settingStore = useSettingStore();
 
     const audiosRefs = ref<HTMLAudioElement[]>([]);
@@ -27,24 +21,35 @@ export default defineComponent({
     return () =>
       !!props.audios.length && (
         <div class="flex flex-wrap gap-2">
-          {props.audios.map((audio, index) => (
-            <button
-              class="bg-ctp-surface0 hover:bg-ctp-surface1 flex flex-1 items-center justify-center gap-2 rounded-xs px-2 py-1 text-sm transition-colors"
-              onClick={() => {
-                if (settingStore.getPronunciationMode() === "click") play(index);
-              }}
-              onMouseenter={() => {
-                if (settingStore.getPronunciationMode() === "hover") play(index);
-              }}>
-              <span>{audio.text}</span>
-              <IconMdiVolume />
-              <audio
-                ref={(el: HTMLAudioElement | null) => (audiosRefs.value[index] = el as HTMLAudioElement)}
-                src={audio.url}
-              />
-            </button>
-          ))}
+          {props.audios.map(
+            (audio, index) =>
+              audio.url && (
+                <button
+                  class="bg-ctp-surface0 hover:bg-ctp-surface1 flex flex-1 items-center justify-center gap-2 rounded-xs px-2 py-1 text-sm transition-colors"
+                  onClick={() => {
+                    if (settingStore.getPronunciationMode() === "click") play(index);
+                  }}
+                  onMouseenter={() => {
+                    if (settingStore.getPronunciationMode() === "hover") play(index);
+                  }}>
+                  <div class="leading-none">{audio.text}</div>
+                  <IconMdiVolume />
+                  <audio
+                    ref={(el: HTMLAudioElement | null) => (audiosRefs.value[index] = el as HTMLAudioElement)}
+                    src={audio.url}
+                  />
+                </button>
+              ),
+          )}
         </div>
       );
   },
-});
+  {
+    props: {
+      audios: {
+        type: Array as PropType<{ url: string; text?: string }[]>,
+        required: true,
+      },
+    },
+  },
+);
