@@ -30,6 +30,8 @@ export interface Api {
     setPronunciationMode: (mode: PronunciationMode) => Promise<void>;
     setResizable: (resize: boolean) => Promise<void>;
     setSilent: (silent: boolean) => Promise<void>;
+    setAutoTranslate: (autoTranslate: boolean) => Promise<void>;
+    setAutoTranslateDelay: (autoTranslateDelay: number) => Promise<void>;
     setGlobalShortcut: (id: keyof Shortcuts, map: string) => Promise<void>;
     setProxy: (proxy: Proxy) => Promise<void>;
     setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(

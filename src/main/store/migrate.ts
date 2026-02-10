@@ -19,14 +19,14 @@ function migrateDbVersion(): void {
   const oldDBVersion = getSetting("dbVersion") || 0;
 
   if (oldDBVersion === latestDBVersion) return;
-  if (oldDBVersion === undefined || oldDBVersion < 5) to5();
+  if (oldDBVersion === undefined || oldDBVersion < 6) to6();
 }
 
-function to5(): void {
+function to6(): void {
   clearAllSettings();
   saveAllSettings({
     ...defaultSettings,
-    dbVersion: 5,
+    dbVersion: 6,
     appVersion: app.getVersion(),
   });
 }

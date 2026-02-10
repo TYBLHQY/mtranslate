@@ -71,6 +71,27 @@ export default defineComponent(() => {
         }}
       </Button>
     ),
+    autoTranslate: () => (
+      <Button onClick={() => settingStore.setAutoTranslate()}>
+        {{
+          prev: () => "自动翻译",
+          default: () =>
+            [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
+              +!settingStore.getAutoTranslate()
+            ],
+        }}
+      </Button>
+    ),
+    autoTranslateDelay: () => (
+      <Input
+        type="number"
+        value={settingStore.getAutoTranslateDelay()}
+        onInput={(e: KeyboardEvent) =>
+          settingStore.setAutoTranslateDelay((e.target as HTMLInputElement).value as unknown as number)
+        }>
+        {{ prev: () => "翻译延迟" }}
+      </Input>
+    ),
     globalShortcuts: () => (
       <>
         {(Object.entries(settingStore.getGlobalShortcuts()) as [keyof typeof shortcutOptions, string][]).map(
@@ -130,7 +151,6 @@ export default defineComponent(() => {
             <>
               {proxyFixedFields.map(field => (
                 <Input
-                  class="flex-1"
                   type={field.type ?? "text"}
                   placeholder={field.label}
                   value={field.value}
@@ -143,7 +163,6 @@ export default defineComponent(() => {
 
           {proxy.mode === "pac_script" && (
             <Input
-              class="flex-1"
               value={proxy.pacScript}
               onInput={(e: KeyboardEvent) =>
                 settingStore.setProxy({ ...proxy, pacScript: (e.target as HTMLInputElement).value })
@@ -198,6 +217,8 @@ export default defineComponent(() => {
         {renderSettings.resizable()}
         {renderSettings.silent()}
         {renderSettings.pronunciationMode()}
+        {renderSettings.autoTranslate()}
+        {renderSettings.autoTranslateDelay()}
 
         <Text align="center">全局快捷键</Text>
         {renderSettings.globalShortcuts()}

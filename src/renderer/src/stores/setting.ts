@@ -43,6 +43,18 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setSilent(silent);
   };
 
+  const getAutoTranslate = (): boolean => settings.value.autoTranslate;
+  const setAutoTranslate = (): void => {
+    settings.value.autoTranslate = !settings.value.autoTranslate;
+    window.api.setting.setAutoTranslate(settings.value.autoTranslate);
+  };
+
+  const getAutoTranslateDelay = (): number => settings.value.autoTranslateDelay;
+  const setAutoTranslateDelay = (value: number): void => {
+    settings.value.autoTranslateDelay = value;
+    window.api.setting.setAutoTranslateDelay(settings.value.autoTranslateDelay);
+  };
+
   const getGlobalShortcuts = (): Shortcuts => settings.value.globalShortcuts;
   const setGlobalShortcut = <K extends keyof Shortcuts>(id: K, map: string): void => {
     settings.value.globalShortcuts[id] = map;
@@ -90,6 +102,10 @@ export const useSettingStore = defineStore("setting", () => {
     setResizable,
     getSilent,
     setSilent,
+    getAutoTranslate,
+    setAutoTranslate,
+    getAutoTranslateDelay,
+    setAutoTranslateDelay,
     getGlobalShortcuts,
     setGlobalShortcut,
     getPronunciationMode,

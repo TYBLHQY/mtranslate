@@ -28,6 +28,9 @@ const api: Api = {
     setPronunciationMode: (mode: PronunciationMode) => invoke("setting:setPronunciationMode", mode),
     setResizable: (resizable: boolean) => invoke("setting:setResizable", resizable),
     setSilent: (silent: boolean) => invoke("setting:setSilent", silent),
+    setAutoTranslate: (autoTranslate: boolean) => invoke("setting:setAutoTranslate", autoTranslate),
+    setAutoTranslateDelay: (autoTranslateDelay: number) =>
+      invoke("setting:setAutoTranslateDelay", autoTranslateDelay),
     setGlobalShortcut: (id: keyof Shortcuts, map: string) => invoke("setting:setGlobalShortcut", id, map),
     setProxy: (proxy: Proxy) => invoke("setting:setProxy", proxy),
     setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(

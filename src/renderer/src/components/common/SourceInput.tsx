@@ -1,16 +1,19 @@
-import { useTranslationStore } from "@renderer/stores";
+import { useSettingStore, useTranslationStore } from "@renderer/stores";
 import { defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent(() => {
+  const translationStore = useTranslationStore();
+  const settingStore = useSettingStore();
+
   const sourceTextRef = ref<HTMLTextAreaElement>();
   const query = ref<string>();
-  const translationStore = useTranslationStore();
 
   const focusInput = (): void => {
     sourceTextRef.value?.focus();
     sourceTextRef.value?.select();
   };
 
+  const timeoutId = ref<NodeJS.Timeout | null>();
   const handleInput = async (event: KeyboardEvent): Promise<void> => {
     if (event.key === "Enter" && !event.shiftKey) {
       query.value = sourceTextRef.value?.value ?? "";
@@ -22,11 +25,19 @@ export default defineComponent(() => {
       event.preventDefault();
       focusInput();
     }
+
+    if (!settingStore.getAutoTranslate()) return;
+    if (timeoutId.value) clearTimeout(timeoutId.value);
+    timeoutId.value = setTimeout(() => {
+      query.value = sourceTextRef.value?.value ?? "";
+      handleTranslate();
+      timeoutId.value = null;
+    }, settingStore.getAutoTranslateDelay());
   };
 
   const handleTranslate = async (): Promise<void> => {
     translationStore.setSourceText(query.value || "");
-    setTimeout(focusInput, 0);
+    !settingStore.getAutoTranslate() && setTimeout(focusInput, 0);
   };
 
   window.api.window.selectedText((text: string) => {

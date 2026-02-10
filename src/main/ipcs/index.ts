@@ -40,6 +40,12 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
     saveSetting("resizable", resizable);
     window.resizable = resizable;
   });
+  handle("setting:setAutoTranslate", (_, autoTranslate: boolean) =>
+    saveSetting("autoTranslate", autoTranslate),
+  );
+  handle("setting:setAutoTranslateDelay", (_, autoTranslateDelay: number) =>
+    saveSetting("autoTranslateDelay", autoTranslateDelay),
+  );
   handle("setting:setGlobalShortcut", (_, id: keyof Shortcuts, key: string) => {
     unregisterGlobalShortcut(id);
     saveSetting("globalShortcuts", {

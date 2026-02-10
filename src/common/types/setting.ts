@@ -74,6 +74,8 @@ export interface Settings {
   silent: boolean;
   resizable: boolean;
   bounds: Electron.Rectangle;
+  autoTranslate: boolean;
+  autoTranslateDelay: number;
 
   // service
   service: string;
@@ -95,6 +97,8 @@ export const defaultSettings: Settings = {
   silent: false,
   resizable: false,
   bounds: { x: 0, y: 0, width: 330, height: 600 },
+  autoTranslate: false,
+  autoTranslateDelay: 500,
   service: "youdaoWebNew",
   pronunciationMode: "click",
   globalShortcuts: {
