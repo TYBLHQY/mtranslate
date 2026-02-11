@@ -1,11 +1,5 @@
 import { deepLProSYGOption, serviceOptions, Services, youdaoZhiYunDomains } from "@common/types";
-import {
-  IconDeepLProSYG,
-  IconMdiCircle,
-  IconMdiTransitionMasked,
-  IconYoudaoWeb,
-  IconYoudaoZhiYun,
-} from "@renderer/assets";
+import { IconDeepLProSYG, IconMdiCircle, IconMdiTransitionMasked, IconYoudaoWeb, IconYoudaoZhiYun } from "@renderer/assets";
 import { Button, Input, Select, Tag, Text } from "@renderer/components";
 import { useEsc } from "@renderer/composables";
 import { useSettingStore } from "@renderer/stores";
@@ -17,17 +11,7 @@ export default defineComponent(() => {
   const settingStore = useSettingStore();
   useEsc(() => router.replace({ name: "service" }));
 
-  const renderTitle = ({
-    title,
-    icon,
-    web,
-    doc,
-  }: {
-    title: string;
-    icon?: string;
-    web?: string;
-    doc?: string;
-  }): VNode => (
+  const renderTitle = ({ title, icon, web, doc }: { title: string; icon?: string; web?: string; doc?: string }): VNode => (
     <div class="flex items-center gap-2 leading-none">
       {icon && (
         <img
@@ -106,11 +90,7 @@ export default defineComponent(() => {
                 value={config.appKey}
                 type="password"
                 onInput={(e: KeyboardEvent) =>
-                  settingStore.setServiceConfig(
-                    "youdaoZhiYun",
-                    "appKey",
-                    (e.target as HTMLInputElement).value,
-                  )
+                  settingStore.setServiceConfig("youdaoZhiYun", "appKey", (e.target as HTMLInputElement).value)
                 }>
                 {{
                   prev: () => "Key",
@@ -120,38 +100,26 @@ export default defineComponent(() => {
                 value={config.apiSecret}
                 type="password"
                 onInput={(e: KeyboardEvent) =>
-                  settingStore.setServiceConfig(
-                    "youdaoZhiYun",
-                    "apiSecret",
-                    (e.target as HTMLInputElement).value,
-                  )
+                  settingStore.setServiceConfig("youdaoZhiYun", "apiSecret", (e.target as HTMLInputElement).value)
                 }>
                 {{ prev: () => "Secret" }}
               </Input>
               <Input
                 value={config.vocabId}
                 onInput={(e: KeyboardEvent) =>
-                  settingStore.setServiceConfig(
-                    "youdaoZhiYun",
-                    "vocabId",
-                    (e.target as HTMLInputElement).value,
-                  )
+                  settingStore.setServiceConfig("youdaoZhiYun", "vocabId", (e.target as HTMLInputElement).value)
                 }>
                 {{
                   prev: () => "术语词表",
                 }}
               </Input>
-              <Button
-                onClick={() =>
-                  settingStore.setServiceConfig("youdaoZhiYun", "voice", config.voice === 0 ? 1 : 0)
-                }>
+              <Button onClick={() => settingStore.setServiceConfig("youdaoZhiYun", "voice", config.voice === 0 ? 1 : 0)}>
                 {{
                   prev: () => "发声模式",
                   default: () => (config.voice === 1 ? "男声" : "女声"),
                 }}
               </Button>
-              <Button
-                onClick={() => settingStore.setServiceConfig("youdaoZhiYun", "wrapLine", !config.wrapLine)}>
+              <Button onClick={() => settingStore.setServiceConfig("youdaoZhiYun", "wrapLine", !config.wrapLine)}>
                 {{
                   prev: () => "译文换行",
                   default: () => (config.wrapLine ? "开启" : "关闭"),
@@ -166,21 +134,12 @@ export default defineComponent(() => {
               <Select
                 value={config.domain}
                 options={youdaoZhiYunDomains}
-                onChange={value =>
-                  settingStore.setServiceConfig(
-                    "youdaoZhiYun",
-                    "domain",
-                    value as keyof typeof youdaoZhiYunDomains,
-                  )
-                }>
+                onChange={value => settingStore.setServiceConfig("youdaoZhiYun", "domain", value as keyof typeof youdaoZhiYunDomains)}>
                 {{
                   prev: () => "领域翻译",
                 }}
               </Select>
-              <Button
-                onClick={() =>
-                  settingStore.setServiceConfig("youdaoZhiYun", "rejectFallback", !config.rejectFallback)
-                }>
+              <Button onClick={() => settingStore.setServiceConfig("youdaoZhiYun", "rejectFallback", !config.rejectFallback)}>
                 {{
                   prev: () => "领域降级",
                   default: () => (config.rejectFallback ? "关闭" : "开启"),
@@ -213,11 +172,7 @@ export default defineComponent(() => {
                 value={config.authKey}
                 type="password"
                 onInput={(e: KeyboardEvent) =>
-                  settingStore.setServiceConfig(
-                    "deepLProSYG",
-                    "authKey",
-                    (e.target as HTMLInputElement).value,
-                  )
+                  settingStore.setServiceConfig("deepLProSYG", "authKey", (e.target as HTMLInputElement).value)
                 }>
                 {{
                   prev: () => "AuthKey",
@@ -227,11 +182,7 @@ export default defineComponent(() => {
                 value={config.modelType}
                 options={deepLProSYGOption.modelType}
                 onChange={value =>
-                  settingStore.setServiceConfig(
-                    "deepLProSYG",
-                    "modelType",
-                    value as keyof typeof deepLProSYGOption.modelType,
-                  )
+                  settingStore.setServiceConfig("deepLProSYG", "modelType", value as keyof typeof deepLProSYGOption.modelType)
                 }>
                 {{
                   prev: () => "模型选择",
@@ -241,33 +192,19 @@ export default defineComponent(() => {
                 value={config.formality}
                 options={deepLProSYGOption.formality}
                 onChange={value =>
-                  settingStore.setServiceConfig(
-                    "deepLProSYG",
-                    "formality",
-                    value as keyof typeof deepLProSYGOption.formality,
-                  )
+                  settingStore.setServiceConfig("deepLProSYG", "formality", value as keyof typeof deepLProSYGOption.formality)
                 }>
                 {{
                   prev: () => "语气设置",
                 }}
               </Select>
-              <Button
-                onClick={() =>
-                  settingStore.setServiceConfig(
-                    "deepLProSYG",
-                    "showBilledCharacters",
-                    !config.showBilledCharacters,
-                  )
-                }>
+              <Button onClick={() => settingStore.setServiceConfig("deepLProSYG", "showBilledCharacters", !config.showBilledCharacters)}>
                 {{
                   prev: () => "计费统计",
                   default: () => (config.showBilledCharacters ? "显示" : "不显示"),
                 }}
               </Button>
-              <Button
-                onClick={() =>
-                  settingStore.setServiceConfig("deepLProSYG", "outlineDetection", !config.outlineDetection)
-                }>
+              <Button onClick={() => settingStore.setServiceConfig("deepLProSYG", "outlineDetection", !config.outlineDetection)}>
                 {{
                   prev: () => "标签检测",
                   default: () => (config.outlineDetection ? "开启" : "关闭"),
@@ -279,11 +216,7 @@ export default defineComponent(() => {
                     value={config.tagHandling}
                     options={deepLProSYGOption.tagHandling}
                     onChange={value =>
-                      settingStore.setServiceConfig(
-                        "deepLProSYG",
-                        "tagHandling",
-                        value as keyof typeof deepLProSYGOption.tagHandling,
-                      )
+                      settingStore.setServiceConfig("deepLProSYG", "tagHandling", value as keyof typeof deepLProSYGOption.tagHandling)
                     }>
                     {{
                       prev: () => "标签处理",
@@ -367,11 +300,7 @@ export default defineComponent(() => {
                     value={config.splitSentences}
                     options={deepLProSYGOption.splitSentences}
                     onChange={value =>
-                      settingStore.setServiceConfig(
-                        "deepLProSYG",
-                        "splitSentences",
-                        value as keyof typeof deepLProSYGOption.splitSentences,
-                      )
+                      settingStore.setServiceConfig("deepLProSYG", "splitSentences", value as keyof typeof deepLProSYGOption.splitSentences)
                     }>
                     {{
                       prev: () => "分句设置",
@@ -394,13 +323,7 @@ export default defineComponent(() => {
 
       <div class="flex flex-1 flex-col overflow-auto">
         {Object.values(renderServiceConfig).map((render, index, array) => (
-          <div
-            class={[
-              "border-ctp-surface1 flex flex-col gap-2 py-3",
-              index < array.length - 1 ? "border-b" : "",
-            ]}>
-            {render()}
-          </div>
+          <div class={["border-ctp-surface1 flex flex-col gap-2 py-3", index < array.length - 1 ? "border-b" : ""]}>{render()}</div>
         ))}
       </div>
     </div>

@@ -77,11 +77,7 @@ export const useSettingStore = defineStore("setting", () => {
   };
 
   const getServicesConfig = (): Services => settings.value.servicesConfig;
-  const setServiceConfig = <K extends keyof Services, T extends keyof Services[K]>(
-    service: K,
-    field: T,
-    value: Services[K][T],
-  ): void => {
+  const setServiceConfig = <K extends keyof Services, T extends keyof Services[K]>(service: K, field: T, value: Services[K][T]): void => {
     settings.value.servicesConfig[service][field] = value;
     window.api.setting.setServiceConfig(service, field, value);
   };

@@ -1,4 +1,4 @@
-printWidth: 110
+printWidth: 140
 arrowParens: avoid
 singleAttributePerLine: true
 bracketSameLine: true

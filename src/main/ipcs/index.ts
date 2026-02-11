@@ -1,12 +1,4 @@
-import {
-  DeepLProSYGLang,
-  IpcChannel,
-  PronunciationMode,
-  Proxy,
-  Services,
-  Shortcuts,
-  themeOptions,
-} from "@common/types";
+import { DeepLProSYGLang, IpcChannel, PronunciationMode, Proxy, Services, Shortcuts, themeOptions } from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { registerProxy } from "@main/proxy";
 import { youdaoWebNewService, youdaoWebOldService, youdaoZhiYunService } from "@main/services";
@@ -32,20 +24,14 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
   handle("setting:setTheme", (_, theme: keyof typeof themeOptions) => saveSetting("theme", theme));
   handle("setting:setFont", (_, font: string) => saveSetting("font", font));
   handle("setting:setService", (_, service: string) => saveSetting("service", service));
-  handle("setting:setPronunciationMode", (_, mode: PronunciationMode) =>
-    saveSetting("pronunciationMode", mode),
-  );
+  handle("setting:setPronunciationMode", (_, mode: PronunciationMode) => saveSetting("pronunciationMode", mode));
   handle("setting:setSilent", (_, silent: boolean) => saveSetting("silent", silent));
   handle("setting:setResizable", (_, resizable: boolean) => {
     saveSetting("resizable", resizable);
     window.resizable = resizable;
   });
-  handle("setting:setAutoTranslate", (_, autoTranslate: boolean) =>
-    saveSetting("autoTranslate", autoTranslate),
-  );
-  handle("setting:setAutoTranslateDelay", (_, autoTranslateDelay: number) =>
-    saveSetting("autoTranslateDelay", autoTranslateDelay),
-  );
+  handle("setting:setAutoTranslate", (_, autoTranslate: boolean) => saveSetting("autoTranslate", autoTranslate));
+  handle("setting:setAutoTranslateDelay", (_, autoTranslateDelay: number) => saveSetting("autoTranslateDelay", autoTranslateDelay));
   handle("setting:setGlobalShortcut", (_, id: keyof Shortcuts, key: string) => {
     unregisterGlobalShortcut(id);
     saveSetting("globalShortcuts", {
@@ -105,10 +91,7 @@ export function sendUpdateDownloaded(window: Electron.BrowserWindow, downloaded:
 }
 
 // wrap
-function handle(
-  channel: IpcChannel,
-  listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => unknown,
-): void {
+function handle(channel: IpcChannel, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => unknown): void {
   ipcMain.handle(channel, listener);
 }
 function send(window: Electron.BrowserWindow, channel: IpcChannel, ...args: any[]): void {

@@ -34,11 +34,7 @@ export interface Api {
     setAutoTranslateDelay: (autoTranslateDelay: number) => Promise<void>;
     setGlobalShortcut: (id: keyof Shortcuts, map: string) => Promise<void>;
     setProxy: (proxy: Proxy) => Promise<void>;
-    setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(
-      service: K,
-      field: T,
-      value: Services[K][T],
-    ) => Promise<void>;
+    setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(service: K, field: T, value: Services[K][T]) => Promise<void>;
   };
   window: {
     capture: () => Promise<void>;

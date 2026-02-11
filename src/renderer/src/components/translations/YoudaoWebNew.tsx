@@ -51,9 +51,7 @@ export default defineComponent(() => {
             <div class="flex flex-col gap-2">
               {data.value?.exp.map(e => (
                 <div class="flex flex-col gap-1">
-                  {e.po && (
-                    <div class="bg-ctp-surface0 text-ctp-peach rounded text-center font-bold">{e.po}</div>
-                  )}
+                  {e.po && <div class="bg-ctp-surface0 text-ctp-peach rounded text-center font-bold">{e.po}</div>}
                   <List list={e.tr} />
                 </div>
               ))}

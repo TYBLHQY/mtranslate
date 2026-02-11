@@ -37,9 +37,7 @@ export async function deepLProSYGService(data: string): Promise<DeepLProSYGServi
 }
 
 // Supported languages
-export async function deepLProSYGLang(
-  data: DeepLProSYGLang["request"],
-): Promise<DeepLProSYGLang["response"]> {
+export async function deepLProSYGLang(data: DeepLProSYGLang["request"]): Promise<DeepLProSYGLang["response"]> {
   const storeConfig = getSetting("servicesConfig")?.deepLProSYG;
   if (!storeConfig?.state) return Promise.reject(new Error("service is disabled"));
 

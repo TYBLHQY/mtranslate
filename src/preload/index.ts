@@ -1,12 +1,4 @@
-import {
-  Api,
-  DeepLProSYGLang,
-  IpcChannel,
-  PronunciationMode,
-  Proxy,
-  Services,
-  Shortcuts,
-} from "@common/types";
+import { Api, DeepLProSYGLang, IpcChannel, PronunciationMode, Proxy, Services, Shortcuts } from "@common/types";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { ProgressInfo } from "electron-updater";
@@ -29,15 +21,11 @@ const api: Api = {
     setResizable: (resizable: boolean) => invoke("setting:setResizable", resizable),
     setSilent: (silent: boolean) => invoke("setting:setSilent", silent),
     setAutoTranslate: (autoTranslate: boolean) => invoke("setting:setAutoTranslate", autoTranslate),
-    setAutoTranslateDelay: (autoTranslateDelay: number) =>
-      invoke("setting:setAutoTranslateDelay", autoTranslateDelay),
+    setAutoTranslateDelay: (autoTranslateDelay: number) => invoke("setting:setAutoTranslateDelay", autoTranslateDelay),
     setGlobalShortcut: (id: keyof Shortcuts, map: string) => invoke("setting:setGlobalShortcut", id, map),
     setProxy: (proxy: Proxy) => invoke("setting:setProxy", proxy),
-    setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(
-      service: K,
-      field: T,
-      value: Services[K][T],
-    ) => invoke("setting:setServiceConfig", service, field, value),
+    setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(service: K, field: T, value: Services[K][T]) =>
+      invoke("setting:setServiceConfig", service, field, value),
   },
   window: {
     capture: () => invoke("window:capture"),
@@ -47,12 +35,9 @@ const api: Api = {
     getFonts: () => invoke("window:getFonts"),
   },
   update: {
-    getAvailable: (fn: (available: boolean) => void) =>
-      on("update:getAvailable", (_, available) => fn(available)),
-    getDownloadProgress: (fn: (progress: ProgressInfo) => void) =>
-      on("update:getDownloadProgress", (_, progress) => fn(progress)),
-    getUpdateDownloaded: (fn: (downloaded: boolean) => void) =>
-      on("update:getUpdateDownloaded", (_, downloaded) => fn(downloaded)),
+    getAvailable: (fn: (available: boolean) => void) => on("update:getAvailable", (_, available) => fn(available)),
+    getDownloadProgress: (fn: (progress: ProgressInfo) => void) => on("update:getDownloadProgress", (_, progress) => fn(progress)),
+    getUpdateDownloaded: (fn: (downloaded: boolean) => void) => on("update:getUpdateDownloaded", (_, downloaded) => fn(downloaded)),
     check: () => invoke("update:check"),
     download: () => invoke("update:download"),
     upgrade: () => invoke("update:upgrade"),

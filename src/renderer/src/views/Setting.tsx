@@ -1,10 +1,5 @@
 import { proxyOptions, Settings, shortcutOptions, themeOptions } from "@common/types";
-import {
-  IconMdiGithub,
-  IconMdiLock,
-  IconMdiLockOpenVariant,
-  IconMdiTransitionMasked,
-} from "@renderer/assets";
+import { IconMdiGithub, IconMdiLock, IconMdiLockOpenVariant, IconMdiTransitionMasked } from "@renderer/assets";
 import { Button, Input, Select, Text } from "@renderer/components";
 import { useEsc, useFont, useShortcut, useUpdate } from "@renderer/composables";
 import { useSettingStore } from "@renderer/stores";
@@ -23,20 +18,11 @@ export default defineComponent(() => {
     () => escHandler.start(),
   );
 
-  const lockToggle = ({
-    label,
-    value,
-    onToggle,
-  }: {
-    label: string;
-    value: boolean;
-    onToggle: () => void;
-  }): VNode => (
+  const lockToggle = ({ label, value, onToggle }: { label: string; value: boolean; onToggle: () => void }): VNode => (
     <Button onClick={onToggle}>
       {{
         prev: () => label,
-        default: () =>
-          value ? <IconMdiLockOpenVariant class="text-ctp-green" /> : <IconMdiLock class="text-ctp-red" />,
+        default: () => (value ? <IconMdiLockOpenVariant class="text-ctp-green" /> : <IconMdiLock class="text-ctp-red" />),
       }}
     </Button>
   );
@@ -89,26 +75,22 @@ export default defineComponent(() => {
       <Input
         type="number"
         value={settingStore.getAutoTranslateDelay()}
-        onInput={(e: KeyboardEvent) =>
-          settingStore.setAutoTranslateDelay((e.target as HTMLInputElement).value as unknown as number)
-        }>
+        onInput={(e: KeyboardEvent) => settingStore.setAutoTranslateDelay((e.target as HTMLInputElement).value as unknown as number)}>
         {{ prev: () => "翻译延迟" }}
       </Input>
     ),
     globalShortcuts: () => (
       <>
-        {(Object.entries(settingStore.getGlobalShortcuts()) as [keyof typeof shortcutOptions, string][]).map(
-          ([id, value]) => (
-            <Button
-              class={[shortcutId.value === id ? "border-ctp-mauve" : ""]}
-              onClick={() => handleShortcutInput(id)}>
-              {{
-                prev: () => shortcutOptions[id],
-                default: () => (shortcutId.value === id ? pressedKeyString.value : value || "未设置"),
-              }}
-            </Button>
-          ),
-        )}
+        {(Object.entries(settingStore.getGlobalShortcuts()) as [keyof typeof shortcutOptions, string][]).map(([id, value]) => (
+          <Button
+            class={[shortcutId.value === id ? "border-ctp-mauve" : ""]}
+            onClick={() => handleShortcutInput(id)}>
+            {{
+              prev: () => shortcutOptions[id],
+              default: () => (shortcutId.value === id ? pressedKeyString.value : value || "未设置"),
+            }}
+          </Button>
+        ))}
       </>
     ),
     proxy: () => {
@@ -144,9 +126,7 @@ export default defineComponent(() => {
           <Select
             value={proxy.mode || ""}
             options={proxyOptions}
-            onChange={value =>
-              settingStore.setProxy({ ...proxy, mode: value as Electron.ProxyConfig["mode"] })
-            }>
+            onChange={value => settingStore.setProxy({ ...proxy, mode: value as Electron.ProxyConfig["mode"] })}>
             {{ prev: () => <div>模式</div> }}
           </Select>
 
@@ -167,9 +147,7 @@ export default defineComponent(() => {
           {proxy.mode === "pac_script" && (
             <Input
               value={proxy.pacScript}
-              onInput={(e: KeyboardEvent) =>
-                settingStore.setProxy({ ...proxy, pacScript: (e.target as HTMLInputElement).value })
-              }>
+              onInput={(e: KeyboardEvent) => settingStore.setProxy({ ...proxy, pacScript: (e.target as HTMLInputElement).value })}>
               {{ prev: () => <div>脚本</div> }}
             </Input>
           )}
@@ -200,9 +178,7 @@ export default defineComponent(() => {
         </Text>
       );
     },
-    dbVersion: () => (
-      <Text align="end">{{ prev: () => "数据库", default: () => settingStore.getDbVersion() }}</Text>
-    ),
+    dbVersion: () => <Text align="end">{{ prev: () => "数据库", default: () => settingStore.getDbVersion() }}</Text>,
   } as const satisfies Partial<Record<keyof Settings, () => VNode>>;
 
   return () => (

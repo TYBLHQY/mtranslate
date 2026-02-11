@@ -43,9 +43,7 @@ export function getAllSettings(): Settings {
 
 export function saveAllSettings(settings: Partial<Settings>): void {
   getDB().transaction((data: Partial<Settings>) => {
-    (Object.keys(data) as Array<keyof Settings>).forEach(key =>
-      saveStmt.run({ key: key, value: JSON.stringify(data[key]) }),
-    );
+    (Object.keys(data) as Array<keyof Settings>).forEach(key => saveStmt.run({ key: key, value: JSON.stringify(data[key]) }));
   })(settings);
 }
 

@@ -8,11 +8,9 @@ export default defineComponent(() => {
   const translateData = ref<YoudaoWebOldService["response"]>();
 
   useTranslation(() => {
-    window.api.translate
-      .youdaoWebOld(useTranslationStore().getSourceText())
-      .then((res: YoudaoWebOldService["response"]) => {
-        translateData.value = res;
-      });
+    window.api.translate.youdaoWebOld(useTranslationStore().getSourceText()).then((res: YoudaoWebOldService["response"]) => {
+      translateData.value = res;
+    });
   });
 
   return () => (

@@ -6,9 +6,7 @@ import { BrowserWindow, globalShortcut } from "electron";
 import { getSelectedText } from "node-get-selected-text";
 
 export function registerAllGlobalShortcut(mainWindow: BrowserWindow): void {
-  Object.entries(getAllSettings().globalShortcuts).forEach(([id, map]) =>
-    registerGlobalShortcut(mainWindow, id as keyof Shortcuts, map),
-  );
+  Object.entries(getAllSettings().globalShortcuts).forEach(([id, map]) => registerGlobalShortcut(mainWindow, id as keyof Shortcuts, map));
 }
 
 export function registerGlobalShortcut(mainWindow: BrowserWindow, id: keyof Shortcuts, map: string): void {

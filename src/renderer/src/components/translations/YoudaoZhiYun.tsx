@@ -25,12 +25,8 @@ export default defineComponent(() => {
         targetLang={settingStore.getServicesConfig().youdaoZhiYun.to}
         sourceSupport={youdaoZhiYunLangSupport}
         targetSupport={youdaoZhiYunLangSupport}
-        onUpdateSource={(value: keyof typeof youdaoZhiYunLangSupport) =>
-          settingStore.setServiceConfig("youdaoZhiYun", "from", value)
-        }
-        onUpdateTarget={(value: keyof typeof youdaoZhiYunLangSupport) =>
-          settingStore.setServiceConfig("youdaoZhiYun", "to", value)
-        }
+        onUpdateSource={(value: keyof typeof youdaoZhiYunLangSupport) => settingStore.setServiceConfig("youdaoZhiYun", "from", value)}
+        onUpdateTarget={(value: keyof typeof youdaoZhiYunLangSupport) => settingStore.setServiceConfig("youdaoZhiYun", "to", value)}
         onUpdateExchange={() => {
           const [currentSource, currentTarget] = [
             settingStore.getServicesConfig().youdaoZhiYun.from,

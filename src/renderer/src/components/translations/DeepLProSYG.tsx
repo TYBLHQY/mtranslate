@@ -1,9 +1,4 @@
-import {
-  DeepLProSYGService,
-  deepLProSYGSourceSupport,
-  deepLProSYGTargetSupport,
-  DeepLProSYGUsage,
-} from "@common/types";
+import { DeepLProSYGService, deepLProSYGSourceSupport, deepLProSYGTargetSupport, DeepLProSYGUsage } from "@common/types";
 import { LanguageBar } from "@renderer/components";
 import { useTranslation } from "@renderer/composables";
 import { useSettingStore, useTranslationStore } from "@renderer/stores";
@@ -56,16 +51,8 @@ export default defineComponent(() => {
             settingStore.getServicesConfig().deepLProSYG.sourceLang,
             settingStore.getServicesConfig().deepLProSYG.targetLang,
           ];
-          settingStore.setServiceConfig(
-            "deepLProSYG",
-            "sourceLang",
-            currentTarget as keyof typeof deepLProSYGSourceSupport,
-          );
-          settingStore.setServiceConfig(
-            "deepLProSYG",
-            "targetLang",
-            currentSource as keyof typeof deepLProSYGTargetSupport,
-          );
+          settingStore.setServiceConfig("deepLProSYG", "sourceLang", currentTarget as keyof typeof deepLProSYGSourceSupport);
+          settingStore.setServiceConfig("deepLProSYG", "targetLang", currentSource as keyof typeof deepLProSYGTargetSupport);
         }}
       />
       {data.value && (

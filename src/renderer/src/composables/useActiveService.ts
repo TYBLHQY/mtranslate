@@ -10,9 +10,7 @@ export function useActiveServices(): {
   const settingStore = useSettingStore();
 
   const activeServiceOptions = computed(() =>
-    Object.fromEntries(
-      Object.entries(serviceOptions).filter(([key]) => settingStore.getServicesConfig()[key]?.state),
-    ),
+    Object.fromEntries(Object.entries(serviceOptions).filter(([key]) => settingStore.getServicesConfig()[key]?.state)),
   );
 
   function syncActiveService(): void {

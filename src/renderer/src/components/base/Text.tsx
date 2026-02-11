@@ -10,11 +10,7 @@ export default defineComponent(
         <div
           class={[
             "text-ctp-surface2 flex flex-1",
-            props.align === "start"
-              ? "justify-start"
-              : props.align === "center"
-                ? "justify-center"
-                : "justify-end",
+            props.align === "start" ? "justify-start" : props.align === "center" ? "justify-center" : "justify-end",
           ]}>
           {slots.default ? slots.default() : null}
         </div>

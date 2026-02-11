@@ -3,8 +3,7 @@ import { fetchWithTimeout } from "@main/utils";
 import * as cheerio from "cheerio";
 
 const URL = (word: string): string => `https://dict.youdao.com/w/${encodeURIComponent(word)}/`;
-const audioURL = (word: string, type: 1 | 2): string =>
-  `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}`;
+const audioURL = (word: string, type: 1 | 2): string => `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(word)}&type=${type}`;
 
 function parse(html: string, word: string): YoudaoWebOldService["response"] {
   const $ = cheerio.load(html);

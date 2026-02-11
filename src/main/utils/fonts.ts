@@ -44,10 +44,7 @@ export function getSystemFonts(): string[] {
     } else if (os === "win32") {
       // Windows: Query registry for fonts
       try {
-        const output = execSync(
-          'reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /s',
-          { encoding: "utf8" },
-        );
+        const output = execSync('reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" /s', { encoding: "utf8" });
         const fontNames = output
           .split("\n")
           .filter(line => line.includes("REG_SZ"))
