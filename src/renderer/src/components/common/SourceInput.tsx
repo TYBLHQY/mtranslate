@@ -44,6 +44,7 @@ export default defineComponent(() => {
     query.value = text;
     handleTranslate();
   });
+  window.api.window.shown(() => focusInput());
   onMounted(() => focusInput());
 
   return () => (
