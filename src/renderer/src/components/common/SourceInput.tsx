@@ -1,5 +1,6 @@
 import { useSettingStore, useTranslationStore } from "@renderer/stores";
-import { defineComponent, onMounted, ref } from "vue";
+import { debounce } from "lodash-es";
+import { defineComponent, onBeforeUnmount, onMounted, ref } from "vue";
 
 export default defineComponent(() => {
   const translationStore = useTranslationStore();
@@ -13,7 +14,15 @@ export default defineComponent(() => {
     sourceTextRef.value?.select();
   };
 
-  const timeoutId = ref<NodeJS.Timeout | null>();
+  const debouncedTranslate = debounce(
+    () => {
+      query.value = sourceTextRef.value?.value ?? "";
+      handleTranslate();
+    },
+    settingStore.getAutoTranslateDelay(),
+    { leading: false, trailing: true },
+  );
+  onBeforeUnmount(() => debouncedTranslate.cancel());
   const handleInput = async (event: KeyboardEvent): Promise<void> => {
     if (event.key === "Enter" && !event.shiftKey) {
       query.value = sourceTextRef.value?.value ?? "";
@@ -25,14 +34,8 @@ export default defineComponent(() => {
       event.preventDefault();
       focusInput();
     }
-
     if (!settingStore.getAutoTranslate()) return;
-    if (timeoutId.value) clearTimeout(timeoutId.value);
-    timeoutId.value = setTimeout(() => {
-      query.value = sourceTextRef.value?.value ?? "";
-      handleTranslate();
-      timeoutId.value = null;
-    }, settingStore.getAutoTranslateDelay());
+    debouncedTranslate();
   };
 
   const handleTranslate = async (): Promise<void> => {
