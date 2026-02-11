@@ -17,13 +17,24 @@ export default defineComponent(() => {
   const settingStore = useSettingStore();
   useEsc(() => router.replace({ name: "service" }));
 
-  const renderTitle = (title: string, icon?: string, doc?: string): VNode => (
+  const renderTitle = ({
+    title,
+    icon,
+    web,
+    doc,
+  }: {
+    title: string;
+    icon?: string;
+    web?: string;
+    doc?: string;
+  }): VNode => (
     <div class="flex items-center gap-2 leading-none">
       {icon && (
         <img
           src={icon}
-          class="h-4 w-4"
+          class="text-ctp-blue h-4 w-4 cursor-pointer"
           draggable="false"
+          onClick={() => web && window.api.window.openExternal(web)}
         />
       )}
 
@@ -50,7 +61,12 @@ export default defineComponent(() => {
     youdaoWebNew: () => (
       <Text align="end">
         {{
-          prev: () => renderTitle(serviceOptions.youdaoWebNew, IconYoudaoWeb),
+          prev: () =>
+            renderTitle({
+              title: serviceOptions.youdaoWebNew,
+              icon: IconYoudaoWeb,
+              web: "https://dict.youdao.com/",
+            }),
           default: () => renderState("youdaoWebNew", settingStore.getServicesConfig().youdaoWebNew.state),
         }}
       </Text>
@@ -58,7 +74,12 @@ export default defineComponent(() => {
     youdaoWebOld: () => (
       <Text align="end">
         {{
-          prev: () => renderTitle(serviceOptions.youdaoWebOld, IconYoudaoWeb),
+          prev: () =>
+            renderTitle({
+              title: serviceOptions.youdaoWebOld,
+              icon: IconYoudaoWeb,
+              web: "https://dict.youdao.com/w/",
+            }),
           default: () => renderState("youdaoWebOld", settingStore.getServicesConfig().youdaoWebOld.state),
         }}
       </Text>
@@ -70,11 +91,12 @@ export default defineComponent(() => {
           <Text align="end">
             {{
               prev: () =>
-                renderTitle(
-                  serviceOptions.youdaoZhiYun,
-                  IconYoudaoZhiYun,
-                  "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
-                ),
+                renderTitle({
+                  title: serviceOptions.youdaoZhiYun,
+                  icon: IconYoudaoZhiYun,
+                  web: "https://ai.youdao.com/console/#/",
+                  doc: "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
+                }),
               default: () => renderState("youdaoZhiYun", config.state),
             }}
           </Text>
@@ -176,11 +198,12 @@ export default defineComponent(() => {
           <Text align="end">
             {{
               prev: () =>
-                renderTitle(
-                  serviceOptions.deepLProSYG,
-                  IconDeepLProSYG,
-                  "https://doc.weixin.qq.com/doc/w3_AR8A8QbQANUX2RVuSxXQiqP31kKiW",
-                ),
+                renderTitle({
+                  title: serviceOptions.deepLProSYG,
+                  icon: IconDeepLProSYG,
+                  web: "https://deepl-pro.com/#/translate",
+                  doc: "https://doc.weixin.qq.com/doc/w3_AR8A8QbQANUX2RVuSxXQiqP31kKiW",
+                }),
               default: () => renderState("deepLProSYG", config.state),
             }}
           </Text>

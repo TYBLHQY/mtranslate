@@ -9,7 +9,7 @@ export default defineComponent(
       <div class="flex min-h-8 flex-row items-center justify-between gap-2">
         {slots.prev ? <div class="min-w-1/4 select-none">{slots.prev()}</div> : null}
         <input
-          class="bg-ctp-mantle hover:bg-ctp-surface0 focus:border-ctp-mauve flex min-h-8 min-w-8 flex-1 items-center justify-center rounded border-2 px-2 transition-colors"
+          class="bg-ctp-mantle hover:bg-ctp-surface0 focus:border-ctp-mauve flex min-h-8 min-w-8 flex-1 items-center justify-center rounded border-2 px-2 text-center transition-colors"
           {...attrs}
           type={type.value}>
           {slots.icon ? slots.icon() : null}
