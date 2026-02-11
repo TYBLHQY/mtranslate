@@ -32,15 +32,15 @@ export const useSettingStore = defineStore("setting", () => {
   };
 
   const getResizable = (): boolean => settings.value.resizable;
-  const setResizable = (resizable: boolean): void => {
-    settings.value.resizable = resizable;
-    window.api.setting.setResizable(resizable);
+  const setResizable = (): void => {
+    settings.value.resizable = !settings.value.resizable;
+    window.api.setting.setResizable(settings.value.resizable);
   };
 
   const getSilent = (): boolean => settings.value.silent;
-  const setSilent = (silent: boolean): void => {
-    settings.value.silent = silent;
-    window.api.setting.setSilent(silent);
+  const setSilent = (): void => {
+    settings.value.silent = !settings.value.silent;
+    window.api.setting.setSilent(settings.value.silent);
   };
 
   const getAutoTranslate = (): boolean => settings.value.autoTranslate;

@@ -1,25 +1,11 @@
-import IconMdiCircle from "~icons/mdi/circle";
-import IconMdiEye from "~icons/mdi/eye";
-import IconMdiEyeOff from "~icons/mdi/eye-off";
-import IconMdiGithub from "~icons/mdi/github";
-import IconMdiKey from "~icons/mdi/key";
-import IconMdiLock from "~icons/mdi/lock";
-import IconMdiLockOpenVariant from "~icons/mdi/lock-open-variant";
-import IconMdiSettings from "~icons/mdi/settings";
-import IconMdiSwapHorizontal from "~icons/mdi/swap-horizontal";
-import IconMdiTransitionMasked from "~icons/mdi/transition-masked";
-import IconMdiVolume from "~icons/mdi/volume";
-
-export {
-  IconMdiCircle,
-  IconMdiEye,
-  IconMdiEyeOff,
-  IconMdiGithub,
-  IconMdiKey,
-  IconMdiLock,
-  IconMdiLockOpenVariant,
-  IconMdiSettings,
-  IconMdiSwapHorizontal,
-  IconMdiTransitionMasked,
-  IconMdiVolume,
-};
+export { default as IconMdiCircle } from "~icons/mdi/circle";
+export { default as IconMdiEye } from "~icons/mdi/eye";
+export { default as IconMdiEyeOff } from "~icons/mdi/eye-off";
+export { default as IconMdiGithub } from "~icons/mdi/github";
+export { default as IconMdiKey } from "~icons/mdi/key";
+export { default as IconMdiLock } from "~icons/mdi/lock";
+export { default as IconMdiLockOpenVariant } from "~icons/mdi/lock-open-variant";
+export { default as IconMdiSettings } from "~icons/mdi/settings";
+export { default as IconMdiSwapHorizontal } from "~icons/mdi/swap-horizontal";
+export { default as IconMdiTransitionMasked } from "~icons/mdi/transition-masked";
+export { default as IconMdiVolume } from "~icons/mdi/volume";

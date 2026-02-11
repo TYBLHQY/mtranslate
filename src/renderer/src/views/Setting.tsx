@@ -23,7 +23,25 @@ export default defineComponent(() => {
     () => escHandler.start(),
   );
 
-  const renderSettings: Record<keyof Settings, () => VNode> = {
+  const lockToggle = ({
+    label,
+    value,
+    onToggle,
+  }: {
+    label: string;
+    value: boolean;
+    onToggle: () => void;
+  }): VNode => (
+    <Button onClick={onToggle}>
+      {{
+        prev: () => label,
+        default: () =>
+          value ? <IconMdiLockOpenVariant class="text-ctp-green" /> : <IconMdiLock class="text-ctp-red" />,
+      }}
+    </Button>
+  );
+
+  const settingRenderers = {
     theme: () => (
       <Select
         options={themeOptions}
@@ -49,39 +67,24 @@ export default defineComponent(() => {
         }}
       </Button>
     ),
-    resizable: () => (
-      <Button onClick={() => settingStore.setResizable(!settingStore.getResizable())}>
-        {{
-          prev: () => "窗口大小",
-          default: () =>
-            [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
-              +!settingStore.getResizable()
-            ],
-        }}
-      </Button>
-    ),
-    silent: () => (
-      <Button onClick={() => settingStore.setSilent(!settingStore.getSilent())}>
-        {{
-          prev: () => "静默启动",
-          default: () =>
-            [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
-              +!settingStore.getSilent()
-            ],
-        }}
-      </Button>
-    ),
-    autoTranslate: () => (
-      <Button onClick={() => settingStore.setAutoTranslate()}>
-        {{
-          prev: () => "自动翻译",
-          default: () =>
-            [<IconMdiLockOpenVariant class="text-ctp-green" />, <IconMdiLock class="text-ctp-red" />][
-              +!settingStore.getAutoTranslate()
-            ],
-        }}
-      </Button>
-    ),
+    resizable: () =>
+      lockToggle({
+        label: "窗口大小",
+        value: settingStore.getResizable(),
+        onToggle: () => settingStore.setResizable(),
+      }),
+    silent: () =>
+      lockToggle({
+        label: "静默启动",
+        value: settingStore.getSilent(),
+        onToggle: () => settingStore.setSilent(),
+      }),
+    autoTranslate: () =>
+      lockToggle({
+        label: "自动翻译",
+        value: settingStore.getAutoTranslate(),
+        onToggle: () => settingStore.setAutoTranslate(),
+      }),
     autoTranslateDelay: () => (
       <Input
         type="number"
@@ -173,7 +176,6 @@ export default defineComponent(() => {
         </>
       );
     },
-    servicesConfig: () => <></>,
     appVersion: () => {
       const percent = Math.floor(progressInfo.value?.percent ?? 0);
       return (
@@ -201,8 +203,7 @@ export default defineComponent(() => {
     dbVersion: () => (
       <Text align="end">{{ prev: () => "数据库", default: () => settingStore.getDbVersion() }}</Text>
     ),
-    bounds: () => <></>,
-  };
+  } as const satisfies Partial<Record<keyof Settings, () => VNode>>;
 
   return () => (
     <div class="flex flex-col gap-2 overflow-auto">
@@ -212,23 +213,23 @@ export default defineComponent(() => {
 
       <div class="flex flex-1 flex-col gap-2 overflow-auto">
         <Text align="center">基本设置</Text>
-        {renderSettings.theme()}
-        {renderSettings.font()}
-        {renderSettings.resizable()}
-        {renderSettings.silent()}
-        {renderSettings.pronunciationMode()}
-        {renderSettings.autoTranslate()}
-        {renderSettings.autoTranslateDelay()}
+        {settingRenderers.theme()}
+        {settingRenderers.font()}
+        {settingRenderers.resizable()}
+        {settingRenderers.silent()}
+        {settingRenderers.pronunciationMode()}
+        {settingRenderers.autoTranslate()}
+        {settingRenderers.autoTranslateDelay()}
 
         <Text align="center">全局快捷键</Text>
-        {renderSettings.globalShortcuts()}
+        {settingRenderers.globalShortcuts()}
 
         <Text align="center">代理设置</Text>
-        {renderSettings.proxy()}
+        {settingRenderers.proxy()}
 
         <Text align="center">关于</Text>
-        {renderSettings.appVersion()}
-        {renderSettings.dbVersion()}
+        {settingRenderers.appVersion()}
+        {settingRenderers.dbVersion()}
         <Text align="end">{{ prev: () => "开发者", default: () => "MYQ" }}</Text>
 
         <Text align="center">
