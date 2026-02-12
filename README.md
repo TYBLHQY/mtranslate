@@ -1,8 +1,8 @@
 # mtranslate - 跨平台桌面翻译工具
 
-<h3 align="center">
+<p align="center">
   <img src="./resources/icon.png" width="150" height="150" /><br>
-</h3>
+</p>
 
 快速、便捷的文本翻译。
 
