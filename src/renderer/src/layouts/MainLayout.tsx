@@ -15,9 +15,9 @@ export default defineComponent(() => {
     { immediate: true },
   );
 
-  // addEventListener("keydown", e => {
-  //   if (e.key === "F6") window.api.window.capture();
-  // });
+  addEventListener("keydown", e => {
+    if (e.key === "F6") window.api.window.capture();
+  });
 
   return () => (
     <div class={["bg-ctp-base text-ctp-text flex h-screen p-2 *:flex-1", settingStore.theme]}>
