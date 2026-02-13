@@ -1,8 +1,10 @@
 import { youdaoZhiYunErrorCodes, youdaoZhiYunLangSupport, YoudaoZhiYunService } from "@common/types";
-import { AudioBar, LanguageBar, List } from "@renderer/components";
 import { useTranslation } from "@renderer/composables";
 import { useSettingStore, useTranslationStore } from "@renderer/stores";
 import { defineComponent, ref } from "vue";
+import List from "../base/List";
+import AudioBar from "../common/AudioBar";
+import LanguageBar from "../common/LanguageBar";
 
 export default defineComponent(() => {
   const settingStore = useSettingStore();

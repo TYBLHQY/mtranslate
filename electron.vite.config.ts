@@ -5,6 +5,8 @@ import { defineConfig } from "electron-vite";
 import { resolve } from "path";
 import icons from "unplugin-icons/vite";
 
+const isDev = process.env.NODE_ENV === "development";
+
 export default defineConfig({
   main: {
     resolve: {
@@ -14,11 +16,13 @@ export default defineConfig({
         "@resources": resolve("resources"),
       },
     },
+    build: { sourcemap: isDev },
   },
   preload: {
     resolve: {
       alias: {},
     },
+    build: { sourcemap: isDev },
   },
   renderer: {
     resolve: {
@@ -28,5 +32,6 @@ export default defineConfig({
       },
     },
     plugins: [vue(), vueJsx(), tailwindcss(), icons()],
+    build: { sourcemap: isDev },
   },
 });

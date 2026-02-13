@@ -1,8 +1,8 @@
 import { DeepLProSYGService, deepLProSYGSourceSupport, deepLProSYGTargetSupport, DeepLProSYGUsage } from "@common/types";
-import { LanguageBar } from "@renderer/components";
 import { useTranslation } from "@renderer/composables";
 import { useSettingStore, useTranslationStore } from "@renderer/stores";
 import { computed, defineComponent, ref } from "vue";
+import LanguageBar from "../common/LanguageBar";
 
 export default defineComponent(() => {
   const settingStore = useSettingStore();

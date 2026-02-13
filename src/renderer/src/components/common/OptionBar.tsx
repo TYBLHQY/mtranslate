@@ -1,9 +1,10 @@
 import { IconMdiKey, IconMdiSettings } from "@renderer/assets";
-import { Button, Select } from "@renderer/components";
 import { useActiveServices } from "@renderer/composables";
 import { useSettingStore } from "@renderer/stores";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
+import Button from "../base/Button";
+import Select from "../base/Select";
 
 export default defineComponent(() => {
   const router = useRouter();

@@ -1,8 +1,9 @@
 import { YoudaoWebNewService } from "@common/types";
-import { AudioBar, List } from "@renderer/components";
 import { useTranslation } from "@renderer/composables";
 import { useTranslationStore } from "@renderer/stores";
 import { defineComponent, ref } from "vue";
+import List from "../base/List";
+import AudioBar from "../common/AudioBar";
 
 export default defineComponent(() => {
   const data = ref<YoudaoWebNewService["response"]>();

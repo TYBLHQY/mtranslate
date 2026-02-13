@@ -1,8 +1,8 @@
 import { IconMdiSwapHorizontal } from "@renderer/assets";
-import { Button } from "@renderer/components";
-import Select from "@renderer/components/base/Select";
 import { useTranslationStore } from "@renderer/stores/translation";
 import { defineComponent, nextTick, PropType } from "vue";
+import Button from "../base/Button";
+import Select from "../base/Select";
 
 export default defineComponent(
   (props, { emit }) => {
