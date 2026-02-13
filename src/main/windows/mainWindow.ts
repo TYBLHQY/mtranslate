@@ -32,6 +32,10 @@ export async function createMainWindow(): Promise<BrowserWindow> {
   });
 
   window.on("close", event => {
+    if (is.dev) {
+      window.close();
+      return;
+    }
     event.preventDefault();
     window.hide();
   });

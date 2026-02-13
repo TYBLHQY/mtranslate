@@ -2,8 +2,6 @@ import { defaultSettings, YoudaoZhiYunService } from "@common/types";
 import { getSetting } from "@main/store";
 import { sha256, toFormUrlEncoded } from "@main/utils";
 
-// https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html
-
 const input = (q: string): string => {
   if (q.length <= 20) return q;
   return q.substring(0, 10) + q.length + q.substring(q.length - 10);

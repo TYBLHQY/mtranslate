@@ -11,79 +11,86 @@ export default defineComponent(() => {
   const settingStore = useSettingStore();
   useEsc(() => router.replace({ name: "service" }));
 
-  const renderTitle = ({ title, icon, web, doc }: { title: string; icon?: string; web?: string; doc?: string }): VNode => (
-    <div class="flex items-center gap-2 leading-none">
-      {icon && (
-        <img
-          src={icon}
-          class="text-ctp-blue h-4 w-4 cursor-pointer"
-          draggable="false"
-          onClick={() => web && window.api.window.openExternal(web)}
-        />
-      )}
+  const renderTitleBar = ({
+    title,
+    icon,
+    web,
+    doc,
+    service,
+    state,
+  }: {
+    title: string;
+    icon?: string;
+    web?: string;
+    doc?: string;
+    service: keyof Services;
+    state: boolean;
+  }): VNode => (
+    <Text align="end">
+      {{
+        prev: () => (
+          <div class="flex items-center gap-2 leading-none">
+            {icon && (
+              <img
+                src={icon}
+                class="text-ctp-blue h-4 w-4 cursor-pointer"
+                draggable="false"
+                onClick={() => web && window.api.window.openExternal(web)}
+              />
+            )}
 
-      <span class="flex -translate-y-px items-center select-none">{title}</span>
+            <div class="flex -translate-y-px items-center select-none">{title}</div>
 
-      {doc && (
-        <Tag
-          class="flex items-center leading-none select-none"
-          onClick={() => window.api.window.openExternal(doc)}>
-          Doc
-        </Tag>
-      )}
-    </div>
-  );
+            {doc && (
+              <Tag
+                class="flex items-center leading-none select-none"
+                onClick={() => window.api.window.openExternal(doc)}>
+                Doc
+              </Tag>
+            )}
+          </div>
+        ),
 
-  const renderState = (service: keyof Services, state: boolean): VNode => (
-    <IconMdiCircle
-      class={["cursor-pointer", state ? "text-ctp-green" : "text-ctp-surface2"]}
-      onClick={() => settingStore.setServiceConfig(service, "state", !state)}
-    />
+        default: () => (
+          <IconMdiCircle
+            class={["cursor-pointer", state ? "text-ctp-green" : "text-ctp-surface2"]}
+            onClick={() => settingStore.setServiceConfig(service, "state", !state)}
+          />
+        ),
+      }}
+    </Text>
   );
 
   const renderServiceConfig: Record<keyof Services, () => VNode> = {
-    youdaoWebNew: () => (
-      <Text align="end">
-        {{
-          prev: () =>
-            renderTitle({
-              title: serviceOptions.youdaoWebNew,
-              icon: IconYoudaoWeb,
-              web: "https://dict.youdao.com/",
-            }),
-          default: () => renderState("youdaoWebNew", settingStore.getServicesConfig().youdaoWebNew.state),
-        }}
-      </Text>
-    ),
-    youdaoWebOld: () => (
-      <Text align="end">
-        {{
-          prev: () =>
-            renderTitle({
-              title: serviceOptions.youdaoWebOld,
-              icon: IconYoudaoWeb,
-              web: "https://dict.youdao.com/w/",
-            }),
-          default: () => renderState("youdaoWebOld", settingStore.getServicesConfig().youdaoWebOld.state),
-        }}
-      </Text>
-    ),
+    youdaoWebNew: () =>
+      renderTitleBar({
+        title: serviceOptions.youdaoWebNew,
+        icon: IconYoudaoWeb,
+        web: "https://dict.youdao.com/",
+        service: "youdaoWebNew",
+        state: settingStore.getServicesConfig().youdaoWebNew.state,
+      }),
+    youdaoWebOld: () =>
+      renderTitleBar({
+        title: serviceOptions.youdaoWebOld,
+        icon: IconYoudaoWeb,
+        web: "https://dict.youdao.com/w/",
+        service: "youdaoWebOld",
+        state: settingStore.getServicesConfig().youdaoWebOld.state,
+      }),
+
     youdaoZhiYun: () => {
       const config = settingStore.getServicesConfig().youdaoZhiYun;
       return (
         <>
-          <Text align="end">
-            {{
-              prev: () =>
-                renderTitle({
-                  title: serviceOptions.youdaoZhiYun,
-                  icon: IconYoudaoZhiYun,
-                  web: "https://ai.youdao.com/console/#/",
-                  doc: "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
-                }),
-              default: () => renderState("youdaoZhiYun", config.state),
-            }}
-          </Text>
+          {renderTitleBar({
+            title: serviceOptions.youdaoZhiYun,
+            icon: IconYoudaoZhiYun,
+            web: "https://ai.youdao.com/console/#/",
+            doc: "https://ai.youdao.com/DOCSIRMA/html/trans/api/wbfy/index.html",
+            service: "youdaoZhiYun",
+            state: config.state,
+          })}
           {config.state && (
             <>
               <Input
@@ -154,18 +161,14 @@ export default defineComponent(() => {
       const config = settingStore.getServicesConfig().deepLProSYG;
       return (
         <>
-          <Text align="end">
-            {{
-              prev: () =>
-                renderTitle({
-                  title: serviceOptions.deepLProSYG,
-                  icon: IconDeepLProSYG,
-                  web: "https://deepl-pro.com/#/translate",
-                  doc: "https://doc.weixin.qq.com/doc/w3_AR8A8QbQANUX2RVuSxXQiqP31kKiW",
-                }),
-              default: () => renderState("deepLProSYG", config.state),
-            }}
-          </Text>
+          {renderTitleBar({
+            title: serviceOptions.deepLProSYG,
+            icon: IconDeepLProSYG,
+            web: "https://deepl-pro.com/#/translate",
+            doc: "https://doc.weixin.qq.com/doc/w3_AR8A8QbQANUX2RVuSxXQiqP31kKiW",
+            service: "deepLProSYG",
+            state: config.state,
+          })}
           {config.state && (
             <>
               <Input
