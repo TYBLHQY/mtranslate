@@ -1,10 +1,11 @@
 import { useSettingStore } from "@renderer/stores/setting";
 import { defineComponent, watch } from "vue";
-import { RouterView, useRouter } from "vue-router";
+import { RouterView, useRoute, useRouter } from "vue-router";
 
 export default defineComponent(() => {
   const settingStore = useSettingStore();
   const router = useRouter();
+  const route = useRoute();
 
   window.api.setting.getSettings().then(settings => settingStore.initSettings(settings));
   window.api.window.shown(() => router.replace({ name: settingStore.getService() }));
@@ -17,6 +18,8 @@ export default defineComponent(() => {
 
   addEventListener("keydown", e => {
     if (e.key === "F6") window.api.window.capture();
+    if (e.ctrlKey && e.key === "," && route.name !== "setting") router.replace({ name: "setting" });
+    if (e.ctrlKey && e.key === "k" && route.name !== "serviceConfig") router.replace({ name: "serviceConfig" });
   });
 
   return () => (

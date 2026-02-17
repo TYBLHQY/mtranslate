@@ -25,7 +25,10 @@ export default defineComponent(() => {
         <div class="text-ctp-red text-center">翻译失败，请重试</div>
       ) : (
         <>
-          <AudioBar audios={data.value?.audio || []} />
+          <AudioBar
+            audios={data.value?.audio || []}
+            showIcon={false}
+          />
 
           <div class="flex flex-1 flex-col gap-2 overflow-auto">
             {/* exam type */}

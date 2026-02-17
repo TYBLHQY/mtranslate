@@ -26,14 +26,10 @@ export default defineComponent(
               audio.url && (
                 <button
                   class="bg-ctp-surface0 hover:bg-ctp-surface1 flex flex-1 items-center justify-center gap-2 rounded-xs px-2 py-1 text-sm transition-colors"
-                  onClick={() => {
-                    if (settingStore.getPronunciationMode() === "click") play(index);
-                  }}
-                  onMouseenter={() => {
-                    if (settingStore.getPronunciationMode() === "hover") play(index);
-                  }}>
+                  onClick={() => settingStore.getPronunciationMode() === "click" && play(index)}
+                  onMouseenter={() => settingStore.getPronunciationMode() === "hover" && play(index)}>
                   <div class="leading-none">{audio.text}</div>
-                  <IconMdiVolume />
+                  {props.showIcon && <IconMdiVolume />}
                   <audio
                     ref={(el: HTMLAudioElement | null) => (audiosRefs.value[index] = el as HTMLAudioElement)}
                     src={audio.url}
@@ -48,6 +44,10 @@ export default defineComponent(
     props: {
       audios: {
         type: Array as PropType<{ url: string; text?: string }[]>,
+        required: true,
+      },
+      showIcon: {
+        type: Boolean,
         required: true,
       },
     },

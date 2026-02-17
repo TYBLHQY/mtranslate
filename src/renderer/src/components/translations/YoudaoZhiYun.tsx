@@ -49,6 +49,7 @@ export default defineComponent(() => {
               { url: data.value.speakUrl, text: "原文" },
               { url: data.value.tSpeakUrl, text: "译文" },
             ]}
+            showIcon
           />
           <div class="flex flex-col gap-2">
             <List list={data.value?.translation || []} />
