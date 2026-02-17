@@ -1,6 +1,7 @@
 import { IconMdiVolume } from "@renderer/assets";
+import { useAudioShortcut } from "@renderer/composables/useAudioShortcut";
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, PropType, ref } from "vue";
+import { defineComponent, PropType, ref, toRef } from "vue";
 
 export default defineComponent(
   props => {
@@ -17,6 +18,8 @@ export default defineComponent(
         audiosRefs.value[index]?.play();
       });
     };
+
+    useAudioShortcut(toRef(props, "audios"), play);
 
     return () =>
       !!props.audios.length && (
