@@ -1,14 +1,13 @@
 import { IconMdiVolume } from "@renderer/assets";
 import { useAudioShortcut } from "@renderer/composables/useAudioShortcut";
 import { useSettingStore } from "@renderer/stores/setting";
-import { computed, defineComponent, PropType, ref, toRef } from "vue";
+import { defineComponent, PropType, ref, toRef } from "vue";
 
 export default defineComponent(
   props => {
     const settingStore = useSettingStore();
 
     const audiosRefs = ref<HTMLAudioElement[]>([]);
-    const show = computed(() => !!props.audios.length && props.audios[0].text !== "");
 
     const play = (index: number): void => {
       if (!audiosRefs.value[index]) return;
@@ -23,11 +22,12 @@ export default defineComponent(
     useAudioShortcut(toRef(props, "audios"), play);
 
     return () =>
-      show.value && (
+      !!props.audios.length && (
         <div class="flex flex-wrap gap-2">
           {props.audios.map(
             (audio, index) =>
-              audio.url && (
+              audio.url &&
+              audio.text && (
                 <button
                   class="bg-ctp-surface0 hover:bg-ctp-surface1 flex flex-1 items-center justify-center gap-2 rounded-xs px-2 py-1 text-sm transition-colors"
                   onClick={() => settingStore.getPronunciationMode() === "click" && play(index)}
