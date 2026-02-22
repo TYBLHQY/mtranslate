@@ -1,13 +1,14 @@
 import { IconMdiVolume } from "@renderer/assets";
 import { useAudioShortcut } from "@renderer/composables/useAudioShortcut";
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, PropType, ref, toRef } from "vue";
+import { computed, defineComponent, PropType, ref, toRef } from "vue";
 
 export default defineComponent(
   props => {
     const settingStore = useSettingStore();
 
     const audiosRefs = ref<HTMLAudioElement[]>([]);
+    const show = computed(() => !!props.audios.length && props.audios[0].text !== "");
 
     const play = (index: number): void => {
       if (!audiosRefs.value[index]) return;
@@ -22,7 +23,7 @@ export default defineComponent(
     useAudioShortcut(toRef(props, "audios"), play);
 
     return () =>
-      !!props.audios.length && (
+      show.value && (
         <div class="flex flex-wrap gap-2">
           {props.audios.map(
             (audio, index) =>
