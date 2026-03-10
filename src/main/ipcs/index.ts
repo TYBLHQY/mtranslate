@@ -62,6 +62,10 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
     },
   );
 
+  handle("setting:setWindowToggleBehavior", (_, behavior: "focus-if-shown" | "hide-if-shown") =>
+    saveSetting("windowToggleBehavior", behavior),
+  );
+
   // window
   handle("window:capture", async () => await captureWindow(window));
   handle("window:getFonts", () => getSystemFonts());

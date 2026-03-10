@@ -65,8 +65,15 @@ export async function createMainWindow(): Promise<BrowserWindow> {
 
 export function toggleMainWindow(mainWindow: BrowserWindow): void {
   if (!mainWindow) createMainWindow();
-  else if (mainWindow.isVisible()) mainWindow.hide();
-  else showMainWindow(mainWindow);
+  else if (mainWindow.isVisible()) {
+    const behavior = getSetting("windowToggleBehavior") || "focus-if-shown";
+    if (behavior === "focus-if-shown") {
+      if (!mainWindow.isFocused()) showMainWindow(mainWindow);
+      else mainWindow.hide();
+    } else {
+      mainWindow.hide();
+    }
+  } else showMainWindow(mainWindow);
 }
 
 export function showMainWindow(mainWindow: BrowserWindow): void {

@@ -26,6 +26,7 @@ const api: Api = {
     setProxy: (proxy: Proxy) => invoke("setting:setProxy", proxy),
     setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(service: K, field: T, value: Services[K][T]) =>
       invoke("setting:setServiceConfig", service, field, value),
+    setWindowToggleBehavior: (behavior: "focus-if-shown" | "hide-if-shown") => invoke("setting:setWindowToggleBehavior", behavior),
   },
   window: {
     capture: () => invoke("window:capture"),

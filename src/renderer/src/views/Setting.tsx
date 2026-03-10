@@ -59,6 +59,17 @@ export default defineComponent(() => {
         value: settingStore.getResizable(),
         onToggle: () => settingStore.setResizable(),
       }),
+    windowToggleBehavior: () => (
+      <Select
+        options={{
+          "focus-if-shown": "先聚焦",
+          "hide-if-shown": "隐藏",
+        }}
+        value={settingStore.getWindowToggleBehavior()}
+        onChange={value => settingStore.setWindowToggleBehavior(value as "focus-if-shown" | "hide-if-shown")}>
+        {{ prev: () => "窗口切换" }}
+      </Select>
+    ),
     silent: () =>
       lockToggle({
         label: "静默启动",
@@ -192,6 +203,7 @@ export default defineComponent(() => {
         {settingRenderers.theme()}
         {settingRenderers.font()}
         {settingRenderers.resizable()}
+        {settingRenderers.windowToggleBehavior()}
         {settingRenderers.silent()}
         {settingRenderers.pronunciationMode()}
         {settingRenderers.autoTranslate()}

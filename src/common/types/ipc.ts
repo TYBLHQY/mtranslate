@@ -35,6 +35,7 @@ export interface Api {
     setGlobalShortcut: (id: keyof Shortcuts, map: string) => Promise<void>;
     setProxy: (proxy: Proxy) => Promise<void>;
     setServiceConfig: <K extends keyof Services, T extends keyof Services[K]>(service: K, field: T, value: Services[K][T]) => Promise<void>;
+    setWindowToggleBehavior: (behavior: "focus-if-shown" | "hide-if-shown") => Promise<void>;
   };
   window: {
     capture: () => Promise<void>;

@@ -85,6 +85,10 @@ export interface Settings {
   // shortcuts
   globalShortcuts: Shortcuts;
 
+  // window toggle behavior: when toggling main window, if it's already shown,
+  // either focus when unfocused or always hide regardless of focus
+  windowToggleBehavior: "focus-if-shown" | "hide-if-shown";
+
   // proxy
   proxy: Proxy;
 }
@@ -105,6 +109,7 @@ export const defaultSettings: Settings = {
     openAndClose: "",
     copyText: "",
   },
+  windowToggleBehavior: "focus-if-shown",
   proxy: {
     mode: "system",
     proxyBypassRules: "",

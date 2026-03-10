@@ -76,6 +76,12 @@ export const useSettingStore = defineStore("setting", () => {
     window.api.setting.setProxy(proxy);
   };
 
+  const getWindowToggleBehavior = (): "focus-if-shown" | "hide-if-shown" => settings.value.windowToggleBehavior;
+  const setWindowToggleBehavior = (behavior: "focus-if-shown" | "hide-if-shown"): void => {
+    settings.value.windowToggleBehavior = behavior;
+    window.api.setting.setWindowToggleBehavior(behavior);
+  };
+
   const getServicesConfig = (): Services => settings.value.servicesConfig;
   const setServiceConfig = <K extends keyof Services, T extends keyof Services[K]>(service: K, field: T, value: Services[K][T]): void => {
     settings.value.servicesConfig[service][field] = value;
@@ -110,6 +116,8 @@ export const useSettingStore = defineStore("setting", () => {
     getDbVersion,
     getProxy,
     setProxy,
+    getWindowToggleBehavior,
+    setWindowToggleBehavior,
     getServicesConfig,
     setServiceConfig,
   };
