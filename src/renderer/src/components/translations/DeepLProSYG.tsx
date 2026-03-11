@@ -56,7 +56,7 @@ export default defineComponent(() => {
         }}
       />
       {data.value && (
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-1 flex-col gap-2 overflow-auto">
           <div class="bg-ctp-surface0 rounded p-1 text-center">
             本周期：{usage.value?.character_count}/{usage.value?.character_limit}
           </div>

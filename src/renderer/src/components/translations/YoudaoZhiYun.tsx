@@ -51,7 +51,7 @@ export default defineComponent(() => {
             ]}
             showIcon
           />
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2 overflow-auto">
             <List list={data.value?.translation || []} />
           </div>
         </>
