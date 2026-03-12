@@ -213,11 +213,12 @@ export default defineComponent(() => {
         {settingRenderers.globalShortcuts()}
 
         <Text align="center">应用内快捷键</Text>
-        <Text align="center">{{ prev: () => "发音", default: () => "Alt+Number" }}</Text>
-        <Text align="center">{{ prev: () => "设置", default: () => "Ctrl+," }}</Text>
-        <Text align="center">{{ prev: () => "服务", default: () => "Ctrl+k" }}</Text>
-        <Text align="center">{{ prev: () => "截图", default: () => "F6" }}</Text>
-        <Text align="center">{{ prev: () => "返回", default: () => "Esc" }}</Text>
+        <Text align="center">{{ prev: () => "按位发音", default: () => "Alt+Number" }}</Text>
+        <Text align="center">{{ prev: () => "切换服务", default: () => "Alt+j/k" }}</Text>
+        <Text align="center">{{ prev: () => "打开设置", default: () => "Ctrl+," }}</Text>
+        <Text align="center">{{ prev: () => "服务配置", default: () => "Ctrl+k" }}</Text>
+        <Text align="center">{{ prev: () => "窗口截图", default: () => "F6" }}</Text>
+        <Text align="center">{{ prev: () => "通用返回", default: () => "Esc" }}</Text>
 
         <Text align="center">代理设置</Text>
         {settingRenderers.proxy()}
