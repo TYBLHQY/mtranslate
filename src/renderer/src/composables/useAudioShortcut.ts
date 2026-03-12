@@ -1,27 +1,24 @@
 import { onUnmounted, Ref, watch } from "vue";
+import { useShortcuts } from "./useShortcuts";
 
 export function useAudioShortcut<T>(audios: Ref<T[]>, play: (index: number) => void): void {
-  let registered = false;
-
-  const handleKeydown = (e: KeyboardEvent): void => {
-    if (!e.altKey) return;
-    const key = Number(e.key);
-    if (Number.isNaN(key)) return;
-    const index = key - 1;
-    if (index < 0 || index >= audios.value.length) return;
-    play(index);
-  };
+  const { registerShortcut } = useShortcuts();
+  let unregisters: Array<() => void> = [];
 
   const register = (): void => {
-    if (registered) return;
-    window.addEventListener("keydown", handleKeydown);
-    registered = true;
+    if (unregisters.length > 0) return;
+    unregisters = audios.value.map((_, i) =>
+      registerShortcut(`Alt+${i + 1}`, () => {
+        play(i);
+      }),
+    );
   };
 
   const unregister = (): void => {
-    if (!registered) return;
-    window.removeEventListener("keydown", handleKeydown);
-    registered = false;
+    while (unregisters.length) {
+      const u = unregisters.shift();
+      if (u) u();
+    }
   };
 
   watch(

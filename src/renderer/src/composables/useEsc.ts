@@ -1,12 +1,20 @@
 import { onMounted, onUnmounted } from "vue";
+import { useShortcuts } from "./useShortcuts";
 
 export function useEsc(handler: () => void): { start: () => void; stop: () => void } {
-  const onKeydown = (e: KeyboardEvent): void => {
-    if (e.key === "Escape") handler();
+  const { registerShortcut } = useShortcuts();
+  let unregister: (() => void) | undefined;
+
+  const start = (): void => {
+    if (unregister) return;
+    unregister = registerShortcut("Escape", () => handler());
   };
 
-  const start = (): void => window.addEventListener("keydown", onKeydown);
-  const stop = (): void => window.removeEventListener("keydown", onKeydown);
+  const stop = (): void => {
+    if (!unregister) return;
+    unregister();
+    unregister = undefined;
+  };
 
   onMounted(() => start());
   onUnmounted(() => stop());

@@ -1,3 +1,4 @@
+import { useShortcuts } from "@renderer/composables";
 import { useSettingStore } from "@renderer/stores/setting";
 import { defineComponent, watch } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
@@ -16,10 +17,14 @@ export default defineComponent(() => {
     { immediate: true },
   );
 
-  addEventListener("keydown", e => {
-    if (e.key === "F6") window.api.window.capture();
-    if (e.ctrlKey && e.key === "," && route.name !== "setting") router.replace({ name: "setting" });
-    if (e.ctrlKey && e.key === "k" && route.name !== "serviceConfig") router.replace({ name: "serviceConfig" });
+  const { registerShortcut } = useShortcuts();
+
+  registerShortcut("F6", () => window.api.window.capture());
+  registerShortcut("Ctrl+,", () => {
+    if (route.name !== "setting") router.replace({ name: "setting" });
+  });
+  registerShortcut("Ctrl+k", () => {
+    if (route.name !== "serviceConfig") router.replace({ name: "serviceConfig" });
   });
 
   return () => (
