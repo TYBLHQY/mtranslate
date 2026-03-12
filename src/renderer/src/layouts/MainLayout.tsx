@@ -1,6 +1,6 @@
 import { useShortcuts } from "@renderer/composables";
 import { useSettingStore } from "@renderer/stores/setting";
-import { defineComponent, watch } from "vue";
+import { defineComponent, onMounted, watch } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 
 export default defineComponent(() => {
@@ -8,23 +8,25 @@ export default defineComponent(() => {
   const router = useRouter();
   const route = useRoute();
 
-  window.api.setting.getSettings().then(settings => settingStore.initSettings(settings));
-  window.api.window.shown(() => router.replace({ name: settingStore.getService() }));
+  onMounted(() => {
+    window.api.setting.getSettings().then(settings => settingStore.initSettings(settings));
+    window.api.window.shown(() => router.replace({ name: settingStore.getService() }));
 
-  watch(
-    () => settingStore.font,
-    newFont => (document.body.style.fontFamily = newFont),
-    { immediate: true },
-  );
+    watch(
+      () => settingStore.font,
+      newFont => (document.body.style.fontFamily = newFont),
+      { immediate: true },
+    );
 
-  const { registerShortcut } = useShortcuts();
+    const { registerShortcut } = useShortcuts();
 
-  registerShortcut("F6", () => window.api.window.capture());
-  registerShortcut("Ctrl+,", () => {
-    if (route.name !== "setting") router.replace({ name: "setting" });
-  });
-  registerShortcut("Ctrl+k", () => {
-    if (route.name !== "serviceConfig") router.replace({ name: "serviceConfig" });
+    registerShortcut("F6", () => window.api.window.capture());
+    registerShortcut("Ctrl+,", () => {
+      if (route.name !== "setting") router.replace({ name: "setting" });
+    });
+    registerShortcut("Ctrl+k", () => {
+      if (route.name !== "serviceConfig") router.replace({ name: "serviceConfig" });
+    });
   });
 
   return () => (

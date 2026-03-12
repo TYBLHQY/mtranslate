@@ -43,12 +43,14 @@ export default defineComponent(() => {
     !settingStore.getAutoTranslate() && setTimeout(focusInput, 0);
   };
 
-  window.api.window.selectedText((text: string) => {
-    query.value = text;
-    handleTranslate();
+  onMounted(() => {
+    window.api.window.selectedText((text: string) => {
+      query.value = text;
+      handleTranslate();
+    });
+    window.api.window.shown(() => focusInput());
+    focusInput();
   });
-  window.api.window.shown(() => focusInput());
-  onMounted(() => focusInput());
 
   return () => (
     <div class="flex min-h-0 flex-1">
