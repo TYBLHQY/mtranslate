@@ -22,6 +22,11 @@ const serviceRoutes = [
     name: "deepLProSYG",
     component: () => import("@renderer/components/translations/DeepLProSYG"),
   },
+  {
+    path: "freeDictionary",
+    name: "freeDictionary",
+    component: () => import("@renderer/components/translations/FreeDictionary"),
+  },
 ] as const satisfies Array<
   Omit<RouteRecordRaw, "name" | "path"> & {
     name: keyof typeof serviceOptions;

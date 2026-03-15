@@ -1,4 +1,4 @@
-import { Api, DeepLProSYGLang, IpcChannel, PronunciationMode, Proxy, Services, Shortcuts } from "@common/types";
+import { Api, DeepLProSYGLang, FreeDictionaryService, IpcChannel, PronunciationMode, Proxy, Services, Shortcuts } from "@common/types";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { ProgressInfo } from "electron-updater";
@@ -9,6 +9,8 @@ const api: Api = {
     youdaoWebNew: (data: string) => invoke("translate:youdaoWebNew", data),
     youdaoZhiYun: (data: string) => invoke("translate:youdaoZhiYun", data),
     deepLProSYG: (data: string) => invoke("translate:deepLProSYG", data),
+    freeDictionary: (data: FreeDictionaryService["request"]) => invoke("translate:freeDictionary", data),
+    freeDictionaryLanguages: () => invoke("translate:freeDictionaryLanguages"),
     deepLProSYGLang: (data: DeepLProSYGLang["request"]) => invoke("translate:deepLProSYGLang", data),
     deepLProSYGUsage: () => invoke("translate:deepLProSYGUsage"),
   },

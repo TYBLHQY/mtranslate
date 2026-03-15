@@ -1,6 +1,6 @@
 import { defaultSettings } from "@common/types";
 import { app } from "electron";
-import { clearAllSettings, getSetting, saveAllSettings, saveSetting } from "./operation";
+import { clearAllSettings, getAllSettings, getSetting, saveAllSettings, saveSetting } from "./operation";
 import { latestDBVersion } from "./version";
 
 export function migrate(): void {
@@ -20,6 +20,7 @@ function migrateDbVersion(): void {
 
   if (oldDBVersion === latestDBVersion) return;
   if (oldDBVersion === undefined || oldDBVersion < 6) to6();
+  if (oldDBVersion < 7) to7();
 }
 
 function to6(): void {
@@ -27,6 +28,22 @@ function to6(): void {
   saveAllSettings({
     ...defaultSettings,
     dbVersion: 6,
+    appVersion: app.getVersion(),
+  });
+}
+
+// migrate to version 7: add freeDictionary service config, keep existing config unchanged
+function to7(): void {
+  const current = getAllSettings();
+  const mergedServices = {
+    ...current.servicesConfig,
+    freeDictionary: defaultSettings.servicesConfig.freeDictionary,
+  };
+
+  saveAllSettings({
+    ...current,
+    servicesConfig: mergedServices,
+    dbVersion: 7,
     appVersion: app.getVersion(),
   });
 }

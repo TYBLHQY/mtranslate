@@ -61,6 +61,10 @@ export interface Services {
     splitSentences: keyof typeof deepLProSYGOption.splitSentences;
     showBilledCharacters: boolean;
   };
+  freeDictionary: {
+    state: boolean;
+    language: string;
+  };
 }
 
 export interface Settings {
@@ -155,6 +159,10 @@ export const defaultSettings: Settings = {
       ignoreTags: "",
       splitSentences: "1",
       showBilledCharacters: true,
+    },
+    freeDictionary: {
+      state: false,
+      language: "all",
     },
   },
 } as const;

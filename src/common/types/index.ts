@@ -2,6 +2,7 @@ export * from "./ipc";
 export * from "./proxy";
 export * from "./service";
 export * from "./services/deepLProSYG";
+export * from "./services/freeDictionary";
 export * from "./services/youdaoWeb";
 export * from "./services/youdaoZhiYun";
 export * from "./setting";

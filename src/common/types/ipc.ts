@@ -3,6 +3,8 @@ import {
   DeepLProSYGLang,
   DeepLProSYGService,
   DeepLProSYGUsage,
+  FreeDictionaryLanguages,
+  FreeDictionaryService,
   PronunciationMode,
   Proxy,
   Services,
@@ -18,6 +20,8 @@ export interface Api {
     youdaoWebOld: (data: string) => Promise<YoudaoWebOldService["response"]>;
     youdaoWebNew: (data: string) => Promise<YoudaoWebNewService["response"]>;
     youdaoZhiYun: (data: string) => Promise<YoudaoZhiYunService["response"]>;
+    freeDictionary: (data: FreeDictionaryService["request"]) => Promise<FreeDictionaryService["response"]>;
+    freeDictionaryLanguages: () => Promise<FreeDictionaryLanguages["response"]>;
     deepLProSYG: (data: string) => Promise<DeepLProSYGService["response"]>;
     deepLProSYGLang: (data: DeepLProSYGLang["request"]) => Promise<DeepLProSYGLang["response"]>;
     deepLProSYGUsage: () => Promise<DeepLProSYGUsage["response"]>;

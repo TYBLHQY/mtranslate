@@ -15,15 +15,17 @@ export default defineComponent(
     };
     return () => (
       <div class="bg-ctp-crust flex items-center justify-center">
-        <Select
-          class="size-0 flex-1 text-sm"
-          value={props.sourceLang}
-          options={props.sourceSupport}
-          onChange={(value: string) => {
-            emit("updateSource", value);
-            reflash();
-          }}
-        />
+        {props.sourceLang && (
+          <Select
+            class="size-0 flex-1 text-sm"
+            value={props.sourceLang}
+            options={props.sourceSupport}
+            onChange={(value: string) => {
+              emit("updateSource", value);
+              reflash();
+            }}
+          />
+        )}
         {props.changeButton && (
           <Button
             onClick={() => {
@@ -33,15 +35,17 @@ export default defineComponent(
             <IconMdiSwapHorizontal />
           </Button>
         )}
-        <Select
-          class="size-0 flex-1 text-sm"
-          value={props.targetLang}
-          options={props.targetSupport}
-          onChange={(value: string) => {
-            emit("updateTarget", value);
-            reflash();
-          }}
-        />
+        {props.targetLang && (
+          <Select
+            class="size-0 flex-1 text-sm"
+            value={props.targetLang}
+            options={props.targetSupport}
+            onChange={(value: string) => {
+              emit("updateTarget", value);
+              reflash();
+            }}
+          />
+        )}
       </div>
     );
   },

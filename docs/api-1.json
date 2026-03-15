@@ -1,0 +1,495 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Free Dictionary API",
+    "description": "A Free Dictionary API providing structured multilingual dictionary data sourced from Wiktionary under Creative Commons licensing.",
+    "version": "1.0.0",
+    "termsOfService": "https://freedictionaryapi.com",
+    "contact": {
+      "name": "FreeDictionaryAPI.com",
+      "url": "https://freedictionaryapi.com",
+      "email": "support@freedictionaryapi.com"
+    },
+    "license": {
+      "name": "CC BY-SA 4.0",
+      "identifier": "CC-BY-SA-4.0",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://freedictionaryapi.com/api/v1"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/entries/{language}/{word}": {
+      "get": {
+        "summary": "Entries",
+        "description": "Retrieves dictionary entries for a specified word for a specific language or all available\nlanguages.",
+        "parameters": [
+          {
+            "name": "language",
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "description": "ISO 639-1/639-3 (2 or 3 letter) language code for word lookup, or \"all\" to retrieve\nentries across all available languages.",
+            "required": true,
+            "deprecated": false,
+            "explode": true
+          },
+          {
+            "name": "word",
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "description": "Word to retrieve entries for.",
+            "required": true,
+            "deprecated": false,
+            "explode": true
+          },
+          {
+            "name": "translations",
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "description": "Whether to include translations of the word to other languages.",
+            "required": false,
+            "deprecated": false,
+            "explode": true
+          },
+          {
+            "name": "pretty",
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "description": "Whether to pretty-print the JSON response.",
+            "required": false,
+            "deprecated": false,
+            "explode": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntriesByLanguageAndWord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/languages": {
+      "get": {
+        "summary": "Languages",
+        "description": "Retrieves all available languages with the number of words in the dictionary.",
+        "parameters": [
+          {
+            "name": "pretty",
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "description": "Whether to pretty-print the JSON response.",
+            "required": false,
+            "deprecated": false,
+            "explode": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageWithWords"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EntriesByLanguageAndWord": {
+        "type": "object",
+        "title": "EntriesByLanguageAndWord",
+        "description": "A collection of dictionary entries for a word in different languages.",
+        "required": [
+          "word",
+          "entries",
+          "source"
+        ],
+        "properties": {
+          "word": {
+            "type": "string",
+            "description": "The word being looked up."
+          },
+          "entries": {
+            "type": "array",
+            "description": "All dictionary entries for this word in different languages and contexts.",
+            "items": {
+              "$ref": "#/components/schemas/Entry"
+            }
+          },
+          "source": {
+            "description": "Information about where this data comes from and how it can be used.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Source"
+              },
+              {
+                "description": "Information about where this data comes from and how it can be used."
+              }
+            ]
+          }
+        }
+      },
+      "Entry": {
+        "type": "object",
+        "title": "Entry",
+        "description": "A dictionary entry for a word in one specific language.",
+        "required": [
+          "language",
+          "partOfSpeech",
+          "pronunciations",
+          "forms",
+          "senses",
+          "synonyms",
+          "antonyms"
+        ],
+        "properties": {
+          "language": {
+            "description": "Which language this entry is for.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              },
+              {
+                "description": "Which language this entry is for."
+              }
+            ]
+          },
+          "partOfSpeech": {
+            "type": "string",
+            "description": "What type of word this is (noun, verb, adjective, etc.)."
+          },
+          "pronunciations": {
+            "type": "array",
+            "description": "How to pronounce this word.",
+            "items": {
+              "$ref": "#/components/schemas/Pronunciation"
+            }
+          },
+          "forms": {
+            "type": "array",
+            "description": "Different forms of this word (like plural, past tense).",
+            "items": {
+              "$ref": "#/components/schemas/Form"
+            }
+          },
+          "senses": {
+            "type": "array",
+            "description": "All the different meanings of this word.",
+            "items": {
+              "$ref": "#/components/schemas/Sense"
+            }
+          },
+          "synonyms": {
+            "type": "array",
+            "description": "Words that mean the same thing as this word (for the whole entry).",
+            "items": {
+              "type": "string"
+            }
+          },
+          "antonyms": {
+            "type": "array",
+            "description": "Words that mean the opposite of this word (for the whole entry).",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Form": {
+        "type": "object",
+        "title": "Form",
+        "description": "A different form of the word (like plural, past tense, etc.).",
+        "required": [
+          "word",
+          "tags"
+        ],
+        "properties": {
+          "word": {
+            "type": "string",
+            "description": "The different form of this word."
+          },
+          "tags": {
+            "type": "array",
+            "description": "Labels describing what kind of form this is (plural, past tense, etc.).",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Language": {
+        "type": "object",
+        "title": "Language",
+        "description": "Information about a language.",
+        "required": [
+          "code",
+          "name"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "ISO 639-1/639-3 (2 or 3 letter) language code."
+          },
+          "name": {
+            "type": "string",
+            "description": "The full name of this language in English."
+          }
+        }
+      },
+      "LanguageWithWords": {
+        "type": "object",
+        "title": "LanguageWithWords",
+        "description": "Information about a language with the number of words in the dictionary.",
+        "required": [
+          "code",
+          "name",
+          "words"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "ISO 639-1/639-3 (2 or 3 letter) language code."
+          },
+          "name": {
+            "type": "string",
+            "description": "The full name of this language in English."
+          },
+          "words": {
+            "type": "integer",
+            "format": "uint32",
+            "description": "The number of words in the dictionary for this language."
+          }
+        }
+      },
+      "License": {
+        "type": "object",
+        "title": "License",
+        "description": "Legal terms for using the dictionary data.",
+        "required": [
+          "name",
+          "url"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the license."
+          },
+          "url": {
+            "type": "string",
+            "description": "Link to read the full license terms."
+          }
+        }
+      },
+      "Pronunciation": {
+        "type": "object",
+        "title": "Pronunciation",
+        "description": "How to pronounce a word using phonetic symbols.",
+        "required": [
+          "type",
+          "text",
+          "tags"
+        ],
+        "properties": {
+          "type": {
+            "description": "The type of pronunciation (like \"ipa\", \"enpr\", etc.).",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PronunciationType"
+              },
+              {
+                "description": "The type of pronunciation (like \"ipa\", \"enpr\", etc.)."
+              }
+            ]
+          },
+          "text": {
+            "type": "string",
+            "description": "The pronunciation written in the specified notation."
+          },
+          "tags": {
+            "type": "array",
+            "description": "Labels describing this pronunciation (like dialect or formality level).",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PronunciationType": {
+        "type": "string",
+        "enum": [
+          "ipa",
+          "enpr"
+        ]
+      },
+      "Quote": {
+        "type": "object",
+        "title": "Quote",
+        "description": "A quote from a book or other source showing how the word is used.",
+        "required": [
+          "text",
+          "reference"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The actual quote text."
+          },
+          "reference": {
+            "type": "string",
+            "description": "Where this quote came from (book title, author, etc.)."
+          }
+        }
+      },
+      "Sense": {
+        "type": "object",
+        "title": "Sense",
+        "description": "One specific meaning of a word with examples and related information.",
+        "required": [
+          "definition",
+          "tags",
+          "examples",
+          "quotes",
+          "synonyms",
+          "antonyms",
+          "subsenses"
+        ],
+        "properties": {
+          "definition": {
+            "type": "string",
+            "description": "What this meaning of the word means."
+          },
+          "tags": {
+            "type": "array",
+            "description": "Labels about how this meaning is used (formal, old-fashioned, technical, etc.).",
+            "items": {
+              "type": "string"
+            }
+          },
+          "examples": {
+            "type": "array",
+            "description": "Example sentences showing how to use this meaning.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "quotes": {
+            "type": "array",
+            "description": "Real quotes from books or other sources using this word.",
+            "items": {
+              "$ref": "#/components/schemas/Quote"
+            }
+          },
+          "synonyms": {
+            "type": "array",
+            "description": "Words that mean the same as this specific meaning.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "antonyms": {
+            "type": "array",
+            "description": "Words that mean the opposite of this specific meaning.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "translations": {
+            "type": "array",
+            "description": "How to say this meaning in other languages.",
+            "items": {
+              "$ref": "#/components/schemas/Translation"
+            }
+          },
+          "subsenses": {
+            "type": "array",
+            "description": "More specific meanings within this meaning.",
+            "items": {
+              "$ref": "#/components/schemas/Sense"
+            }
+          }
+        }
+      },
+      "Source": {
+        "type": "object",
+        "title": "Source",
+        "description": "Information about where the dictionary data comes from.",
+        "required": [
+          "url",
+          "license"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Link to the original Wiktionary page."
+          },
+          "license": {
+            "description": "Legal information about how you can use this data.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/License"
+              },
+              {
+                "description": "Legal information about how you can use this data."
+              }
+            ]
+          }
+        }
+      },
+      "Translation": {
+        "type": "object",
+        "title": "Translation",
+        "description": "How to say a word in another language.",
+        "required": [
+          "language",
+          "word"
+        ],
+        "properties": {
+          "language": {
+            "description": "Which language this translation is in.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Language"
+              },
+              {
+                "description": "Which language this translation is in."
+              }
+            ]
+          },
+          "word": {
+            "type": "string",
+            "description": "The word or phrase in that language."
+          }
+        }
+      }
+    }
+  }
+}

@@ -316,6 +316,14 @@ export default defineComponent(() => {
         </>
       );
     },
+    freeDictionary: () =>
+      renderTitleBar({
+        title: serviceOptions.freeDictionary,
+        web: "https://www.thefreedictionary.com/",
+        doc: "https://www.thefreedictionary.com/api.htm",
+        service: "freeDictionary",
+        state: settingStore.getServicesConfig().freeDictionary.state,
+      }),
   };
 
   return () => (

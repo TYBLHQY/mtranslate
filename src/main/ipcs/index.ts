@@ -1,7 +1,22 @@
-import { DeepLProSYGLang, IpcChannel, PronunciationMode, Proxy, Services, Shortcuts, themeOptions } from "@common/types";
+import {
+  DeepLProSYGLang,
+  FreeDictionaryService,
+  IpcChannel,
+  PronunciationMode,
+  Proxy,
+  Services,
+  Shortcuts,
+  themeOptions,
+} from "@common/types";
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { registerProxy } from "@main/proxy";
-import { youdaoWebNewService, youdaoWebOldService, youdaoZhiYunService } from "@main/services";
+import {
+  freeDictionaryLanguages,
+  freeDictionaryService,
+  youdaoWebNewService,
+  youdaoWebOldService,
+  youdaoZhiYunService,
+} from "@main/services";
 import { deepLProSYGLang, deepLProSYGService, deepLProSYGUsage } from "@main/services/deepLProSYG";
 import { getAllSettings, saveSetting } from "@main/store";
 import { check, download, upgrade } from "@main/update";
@@ -16,6 +31,8 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
   handle("translate:youdaoWebOld", async (_, data: string) => youdaoWebOldService(data));
   handle("translate:youdaoZhiYun", async (_, data: string) => youdaoZhiYunService(data));
   handle("translate:deepLProSYG", async (_, data: string) => deepLProSYGService(data));
+  handle("translate:freeDictionary", async (_, data: FreeDictionaryService["request"]) => freeDictionaryService(data));
+  handle("translate:freeDictionaryLanguages", async () => freeDictionaryLanguages());
   handle("translate:deepLProSYGLang", async (_, data: DeepLProSYGLang["request"]) => deepLProSYGLang(data));
   handle("translate:deepLProSYGUsage", async () => deepLProSYGUsage());
 
