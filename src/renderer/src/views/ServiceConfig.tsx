@@ -1,5 +1,12 @@
 import { deepLProSYGOption, serviceOptions, Services, youdaoZhiYunDomains } from "@common/types";
-import { IconDeepLProSYG, IconMdiCircle, IconMdiTransitionMasked, IconYoudaoWeb, IconYoudaoZhiYun } from "@renderer/assets";
+import {
+  IconDeepLProSYG,
+  IconFreeDictionary,
+  IconMdiCircle,
+  IconMdiTransitionMasked,
+  IconYoudaoWeb,
+  IconYoudaoZhiYun,
+} from "@renderer/assets";
 import { Button, Input, Select, Tag, Text } from "@renderer/components";
 import { useEsc } from "@renderer/composables";
 import { useSettingStore } from "@renderer/stores";
@@ -319,6 +326,7 @@ export default defineComponent(() => {
     freeDictionary: () =>
       renderTitleBar({
         title: serviceOptions.freeDictionary,
+        icon: IconFreeDictionary,
         web: "https://www.thefreedictionary.com/",
         doc: "https://www.thefreedictionary.com/api.htm",
         service: "freeDictionary",
