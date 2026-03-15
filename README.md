@@ -60,5 +60,5 @@
 - [有道 OLD「开箱即用」](https://dict.youdao.com/)
 - [有道智云 API](https://ai.youdao.com/console/#/)
 - [DeepLPro 四译堂 API](https://deepl-pro.com/#/translate)
-- [FreeDictionary API](https://freedictionaryapi.com/)
+- [FreeDictionary API「开箱即用」](https://freedictionaryapi.com/)
 - ... 其他接口将陆续实现
