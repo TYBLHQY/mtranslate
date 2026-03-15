@@ -27,6 +27,13 @@ export async function createMainWindow(): Promise<BrowserWindow> {
     resizable: getSetting("resizable"),
   });
 
+  try {
+    window.setMenuBarVisibility(false);
+    window.setAutoHideMenuBar(true);
+  } catch (e: unknown) {
+    console.error("Failed to set menu bar visibility:", e);
+  }
+
   window.on("ready-to-show", () => {
     if (!getSetting("silent")) window.show();
   });
