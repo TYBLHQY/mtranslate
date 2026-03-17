@@ -213,6 +213,7 @@ export default defineComponent(() => {
         {settingRenderers.globalShortcuts()}
 
         <Text align="center">应用内快捷键</Text>
+        <Text align="center">{{ prev: () => "切换主题", default: () => "Ctrl+t" }}</Text>
         <Text align="center">{{ prev: () => "按位发音", default: () => "Alt+Number" }}</Text>
         <Text align="center">{{ prev: () => "切换服务", default: () => "Alt+j/k" }}</Text>
         <Text align="center">{{ prev: () => "打开设置", default: () => "Ctrl+," }}</Text>

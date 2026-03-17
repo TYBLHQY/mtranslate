@@ -38,7 +38,17 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
 
   // settings
   handle("setting:getSettings", async () => getAllSettings());
-  handle("setting:setTheme", (_, theme: keyof typeof themeOptions) => saveSetting("theme", theme));
+  handle("setting:setTheme", (_, theme: keyof typeof themeOptions) => {
+    // save theme and maintain recentThemes list (most recent first, max 4)
+    const all = getAllSettings();
+    const prev = Array.isArray(all.recentThemes) ? all.recentThemes.slice() : [];
+    const idx = prev.indexOf(theme);
+    if (idx >= 0) prev.splice(idx, 1);
+    prev.unshift(theme);
+    prev.splice(4);
+    saveSetting("theme", theme);
+    saveSetting("recentThemes", prev);
+  });
   handle("setting:setFont", (_, font: string) => saveSetting("font", font));
   handle("setting:setService", (_, service: string) => saveSetting("service", service));
   handle("setting:setPronunciationMode", (_, mode: PronunciationMode) => saveSetting("pronunciationMode", mode));

@@ -1,3 +1,4 @@
+import ThemePicker from "@renderer/components/common/ThemePicker";
 import { useShortcuts } from "@renderer/composables";
 import { useSettingStore } from "@renderer/stores/setting";
 import { defineComponent, onMounted, watch } from "vue";
@@ -32,6 +33,7 @@ export default defineComponent(() => {
   return () => (
     <div class={["bg-ctp-base text-ctp-text flex h-screen p-2 *:flex-1", settingStore.theme]}>
       <RouterView />
+      <ThemePicker />
     </div>
   );
 });

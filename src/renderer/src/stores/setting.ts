@@ -16,8 +16,19 @@ export const useSettingStore = defineStore("setting", () => {
   const getTheme = (): string => theme.value;
   const setTheme = (themeValue: keyof typeof themeOptions): void => {
     settings.value.theme = themeValue;
+    // update recentThemes locally (most recent first, max 4)
+    if (!settings.value.recentThemes) settings.value.recentThemes = [themeValue];
+    else {
+      const idx = settings.value.recentThemes.indexOf(themeValue);
+      if (idx >= 0) settings.value.recentThemes.splice(idx, 1);
+      settings.value.recentThemes.unshift(themeValue);
+      settings.value.recentThemes.splice(4);
+    }
     window.api.setting.setTheme(themeValue);
   };
+
+  const getRecentThemes = (): Array<keyof typeof themeOptions> =>
+    settings.value.recentThemes || (Object.keys(themeOptions) as Array<keyof typeof themeOptions>);
 
   const getFont = (): string => font.value;
   const setFont = (fontValue: string): void => {
@@ -114,6 +125,7 @@ export const useSettingStore = defineStore("setting", () => {
     setPronunciationMode,
     getAppVersion,
     getDbVersion,
+    getRecentThemes,
     getProxy,
     setProxy,
     getWindowToggleBehavior,

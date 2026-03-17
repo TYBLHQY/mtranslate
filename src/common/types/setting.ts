@@ -89,6 +89,9 @@ export interface Settings {
   // shortcuts
   globalShortcuts: Shortcuts;
 
+  // recent used themes (most recent first)
+  recentThemes?: Array<keyof typeof themeOptions>;
+
   // window toggle behavior: when toggling main window, if it's already shown,
   // either focus when unfocused or always hide regardless of focus
   windowToggleBehavior: "focus-if-shown" | "hide-if-shown";
@@ -165,4 +168,5 @@ export const defaultSettings: Settings = {
       language: "all",
     },
   },
+  recentThemes: ["mocha", "latte", "frappe", "macchiato"],
 } as const;
