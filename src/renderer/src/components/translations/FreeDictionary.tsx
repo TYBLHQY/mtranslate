@@ -94,7 +94,7 @@ export default defineComponent(() => {
                 <div class="space-y-2">
                   {entry.senses.map((s, idx) => (
                     <div key={idx}>
-                      <div class="text-ctp-subtle px-2">{s.definition}</div>
+                      <div class="text-ctp-subtle text-justify">{s.definition}</div>
                       {s.examples && s.examples.length > 0 && (
                         <div class="my-2 flex flex-col gap-1">
                           {s.examples.map((ex, exIdx) => (
