@@ -20,6 +20,7 @@ export default defineComponent(() => {
       !deepLProSYGTargetSupport[lang].supportsFormality &&
       settingStore.setServiceConfig("deepLProSYG", "targetLang", "DE");
     window.api.translate.deepLProSYG(useTranslationStore().getSourceText()).then(res => {
+      console.log("DeepL Pro SYG translation result:", res);
       data.value = res;
       updateUsage();
     });
@@ -60,15 +61,19 @@ export default defineComponent(() => {
           <div class="bg-ctp-surface0 rounded p-1 text-center">
             本周期：{usage.value?.character_count}/{usage.value?.character_limit}
           </div>
+
+          {data.value.message === "Inactive" && <div class="text-ctp-red rounded p-1 text-center">服务未激活</div>}
+
           <ul>
-            {data.value.translations.map((t, i) => (
-              <li class={["rounded p-1", i % 2 === 0 ? "bg-ctp-mantle" : ""]}>
-                <div class="whitespace-pre-line">{t.text}</div>
-                {settingStore.getServicesConfig().deepLProSYG.showBilledCharacters && (
-                  <div class="text-ctp-overlay0 text-end text-sm">消耗：{t.billed_characters}</div>
-                )}
-              </li>
-            ))}
+            {data.value.translations &&
+              data.value.translations.map((t, i) => (
+                <li class={["rounded p-1", i % 2 === 0 ? "bg-ctp-mantle" : ""]}>
+                  <div class="whitespace-pre-line">{t.text}</div>
+                  {settingStore.getServicesConfig().deepLProSYG.showBilledCharacters && (
+                    <div class="text-ctp-overlay0 text-end text-sm">消耗：{t.billed_characters}</div>
+                  )}
+                </li>
+              ))}
           </ul>
         </div>
       )}

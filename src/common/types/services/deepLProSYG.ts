@@ -136,6 +136,7 @@ export interface DeepLProSYGService {
       text: string;
       billed_characters?: number;
     }>;
+    message?: string;
   };
 }
 
