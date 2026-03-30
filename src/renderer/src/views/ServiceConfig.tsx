@@ -1,5 +1,6 @@
 import { deepLProSYGOption, serviceOptions, Services, youdaoZhiYunDomains } from "@common/types";
 import {
+  IconBing,
   IconDeepLProSYG,
   IconFreeDictionary,
   IconMdiCircle,
@@ -69,6 +70,15 @@ export default defineComponent(() => {
   );
 
   const renderServiceConfig: Record<keyof Services, () => VNode> = {
+    bing: () =>
+      renderTitleBar({
+        title: serviceOptions.bing,
+        icon: IconBing,
+        web: "https://www.bing.com/dict/",
+        doc: "https://learn.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-dictionary-lookup",
+        service: "bing",
+        state: settingStore.getServicesConfig().bing.state,
+      }),
     youdaoWebNew: () =>
       renderTitleBar({
         title: serviceOptions.youdaoWebNew,
@@ -85,7 +95,6 @@ export default defineComponent(() => {
         service: "youdaoWebOld",
         state: settingStore.getServicesConfig().youdaoWebOld.state,
       }),
-
     youdaoZhiYun: () => {
       const config = settingStore.getServicesConfig().youdaoZhiYun;
       return (

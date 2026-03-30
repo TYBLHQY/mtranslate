@@ -8,6 +8,7 @@ export { default as AudioBar } from "./common/AudioBar";
 export { default as LanguageBar } from "./common/LanguageBar";
 export { default as OptionBar } from "./common/OptionBar";
 export { default as SourceInput } from "./common/SourceInput";
+export { default as Bing } from "./translations/Bing";
 export { default as DeepLProSYG } from "./translations/DeepLProSYG";
 export { default as FreeDictionary } from "./translations/FreeDictionary";
 export { default as YoudaoWebNew } from "./translations/YoudaoWebNew";

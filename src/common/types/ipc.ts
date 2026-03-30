@@ -1,5 +1,6 @@
 import { ProgressInfo } from "electron-updater";
 import {
+  BingService,
   DeepLProSYGLang,
   DeepLProSYGService,
   DeepLProSYGUsage,
@@ -25,6 +26,7 @@ export interface Api {
     deepLProSYG: (data: string) => Promise<DeepLProSYGService["response"]>;
     deepLProSYGLang: (data: DeepLProSYGLang["request"]) => Promise<DeepLProSYGLang["response"]>;
     deepLProSYGUsage: () => Promise<DeepLProSYGUsage["response"]>;
+    bing: (data: string) => Promise<BingService["response"]>;
   };
   setting: {
     getSettings: () => Promise<Settings>;

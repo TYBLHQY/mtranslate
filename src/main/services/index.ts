@@ -1,3 +1,4 @@
+export * from "./bing";
 export * from "./deepLProSYG";
 export * from "./freeDictionary";
 export * from "./youdaoWebNew";

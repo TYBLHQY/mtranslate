@@ -27,6 +27,11 @@ const serviceRoutes = [
     name: "freeDictionary",
     component: () => import("@renderer/components/translations/FreeDictionary"),
   },
+  {
+    path: "bing",
+    name: "bing",
+    component: () => import("@renderer/components/translations/Bing"),
+  },
 ] as const satisfies Array<
   Omit<RouteRecordRaw, "name" | "path"> & {
     name: keyof typeof serviceOptions;

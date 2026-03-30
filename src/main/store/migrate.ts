@@ -21,6 +21,7 @@ function migrateDbVersion(): void {
   if (oldDBVersion === latestDBVersion) return;
   if (oldDBVersion === undefined || oldDBVersion < 6) to6();
   if (oldDBVersion < 7) to7();
+  if (oldDBVersion < 8) to8();
 }
 
 function to6(): void {
@@ -32,7 +33,7 @@ function to6(): void {
   });
 }
 
-// migrate to version 7: add freeDictionary service config, keep existing config unchanged
+// migrate to version 7: add freeDictionary service config
 function to7(): void {
   const current = getAllSettings();
   const mergedServices = {
@@ -44,6 +45,22 @@ function to7(): void {
     ...current,
     servicesConfig: mergedServices,
     dbVersion: 7,
+    appVersion: app.getVersion(),
+  });
+}
+
+// migrate to version 8: add bing service config
+function to8(): void {
+  const current = getAllSettings();
+  const mergedServices = {
+    ...current.servicesConfig,
+    bing: defaultSettings.servicesConfig.bing,
+  };
+
+  saveAllSettings({
+    ...current,
+    servicesConfig: mergedServices,
+    dbVersion: 8,
     appVersion: app.getVersion(),
   });
 }

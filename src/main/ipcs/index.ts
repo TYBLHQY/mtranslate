@@ -11,6 +11,7 @@ import {
 import { registerGlobalShortcut, unregisterGlobalShortcut } from "@main/globalShortcuts";
 import { registerProxy } from "@main/proxy";
 import {
+  bingDictService,
   freeDictionaryLanguages,
   freeDictionaryService,
   youdaoWebNewService,
@@ -31,6 +32,7 @@ export function registerIpcs(window: Electron.BrowserWindow): void {
   handle("translate:youdaoWebOld", async (_, data: string) => youdaoWebOldService(data));
   handle("translate:youdaoZhiYun", async (_, data: string) => youdaoZhiYunService(data));
   handle("translate:deepLProSYG", async (_, data: string) => deepLProSYGService(data));
+  handle("translate:bing", async (_, data: string) => bingDictService(data));
   handle("translate:freeDictionary", async (_, data: FreeDictionaryService["request"]) => freeDictionaryService(data));
   handle("translate:freeDictionaryLanguages", async () => freeDictionaryLanguages());
   handle("translate:deepLProSYGLang", async (_, data: DeepLProSYGLang["request"]) => deepLProSYGLang(data));

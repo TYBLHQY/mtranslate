@@ -1,4 +1,5 @@
 export * from "./icons";
+export { default as IconBing } from "./images/iconBing.ico";
 export { default as IconDeepLProSYG } from "./images/iconDeepLProSYG.png";
 export { default as IconFreeDictionary } from "./images/iconFreeDictionary.png";
 export { default as IconYoudaoWeb } from "./images/iconYoudaoWeb.png";

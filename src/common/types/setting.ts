@@ -65,6 +65,9 @@ export interface Services {
     state: boolean;
     language: string;
   };
+  bing: {
+    state: boolean;
+  };
 }
 
 export interface Settings {
@@ -166,6 +169,9 @@ export const defaultSettings: Settings = {
     freeDictionary: {
       state: false,
       language: "all",
+    },
+    bing: {
+      state: false,
     },
   },
   recentThemes: ["mocha", "latte", "frappe", "macchiato"],

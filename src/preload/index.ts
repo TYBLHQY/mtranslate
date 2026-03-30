@@ -8,6 +8,7 @@ const api: Api = {
     youdaoWebOld: (data: string) => invoke("translate:youdaoWebOld", data),
     youdaoWebNew: (data: string) => invoke("translate:youdaoWebNew", data),
     youdaoZhiYun: (data: string) => invoke("translate:youdaoZhiYun", data),
+    bing: (data: string) => invoke("translate:bing", data),
     deepLProSYG: (data: string) => invoke("translate:deepLProSYG", data),
     freeDictionary: (data: FreeDictionaryService["request"]) => invoke("translate:freeDictionary", data),
     freeDictionaryLanguages: () => invoke("translate:freeDictionaryLanguages"),

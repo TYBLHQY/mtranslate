@@ -1,6 +1,7 @@
 export * from "./ipc";
 export * from "./proxy";
 export * from "./service";
+export * from "./services/bing";
 export * from "./services/deepLProSYG";
 export * from "./services/freeDictionary";
 export * from "./services/youdaoWeb";
