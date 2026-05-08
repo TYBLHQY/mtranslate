@@ -4,7 +4,10 @@ import { getAllSettings, getSetting } from "@main/store";
 import { showMainWindow, toggleMainWindow } from "@main/windows";
 import { BrowserWindow, globalShortcut } from "electron";
 import { delay } from "lodash-es";
-import { getSelectedText } from "node-get-selected-text";
+import SelectionHook from "selection-hook";
+
+const selectionHook = new SelectionHook();
+selectionHook.start();
 
 export function registerAllGlobalShortcut(mainWindow: BrowserWindow): void {
   Object.entries(getAllSettings().globalShortcuts).forEach(([id, accelerator]) =>
@@ -15,7 +18,8 @@ export function registerAllGlobalShortcut(mainWindow: BrowserWindow): void {
 const shortcutHandlers: Record<keyof Shortcuts, (mainWindow: BrowserWindow) => Promise<void>> = {
   openAndClose: async mainWindow => toggleMainWindow(mainWindow),
   copyText: async mainWindow => {
-    const text = getSelectedText();
+    const sel = selectionHook.getCurrentSelection();
+    const text = sel?.text ?? "";
     delay(() => {
       if (!text) return;
       sendSelectedText(mainWindow, text);

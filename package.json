@@ -1,6 +1,6 @@
 {
   "name": "mtranslate",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "一个跨平台的翻译工具",
   "main": "./out/main/index.js",
   "author": "MYQ",
@@ -29,9 +29,9 @@
     "cheerio": "^1.2.0",
     "electron-updater": "^6.3.9",
     "lodash-es": "^4.17.23",
-    "node-get-selected-text": "^0.1.9",
     "ms": "^2.1.3",
     "pinia": "^3.0.4",
+    "selection-hook": "^2.0.1",
     "vue-router": "^5.0.1"
   },
   "devDependencies": {

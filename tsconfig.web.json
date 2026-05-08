@@ -11,6 +11,7 @@
 , "src/main/utils/network.ts"  ],
   "compilerOptions": {
     "composite": true,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "jsx": "preserve",
     "paths": {
