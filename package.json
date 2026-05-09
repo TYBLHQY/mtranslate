@@ -1,6 +1,6 @@
 {
   "name": "mtranslate",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "一个跨平台的翻译工具",
   "main": "./out/main/index.js",
   "author": "MYQ",
