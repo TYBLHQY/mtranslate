@@ -32,9 +32,6 @@ importers:
       ms:
         specifier: ^2.1.3
         version: 2.1.3
-      node-get-selected-text:
-        specifier: ^0.1.9
-        version: 0.1.9
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))
@@ -2518,35 +2515,6 @@ packages:
 
   node-api-version@0.2.1:
     resolution: {integrity: sha512-2xP/IGGMmmSQpI1+O/k72jF/ykvZ89JeuKX3TLJAYPDVLUalrshrLHkeVcCCZqG/eEa635cr8IBYzgnDvM2O8Q==}
-
-  node-get-selected-text-darwin-arm64@0.1.9:
-    resolution: {integrity: sha512-n/BM2ClvRsh9rDR4fPNj0ONvNhpIfUP0A7PAGwH7j6Q4sY2I7KHmKy7clyM82nI4UZ133X+qQoXKc51PwZVWOA==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [darwin]
-
-  node-get-selected-text-darwin-x64@0.1.9:
-    resolution: {integrity: sha512-1IqxU74iEvA/n/W1/WX16aR6ZqfH0DFuSyGvQBHpYFbVNClK6YiBUBHgg2AgS2pPz9rZgEOIbkbNFRh9LRLrIA==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [darwin]
-
-  node-get-selected-text-linux-x64-gnu@0.1.9:
-    resolution: {integrity: sha512-McVzLhHC/jgbXymwPnCYdishRxvvAkpEScSGNQO6ms01ZDMjfwvpU/LtH9E4035CHmxVGGbN35yaKF4HOngmXQ==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    libc: [glibc]
-
-  node-get-selected-text-win32-x64-msvc@0.1.9:
-    resolution: {integrity: sha512-aQ1+2svuB/ZvkEyzZew6dRzjMS8a1ay1FoqgS4RIQi93YbCF2waFf3aWs3U9+4cEl+laDG0qIioU9c3IVmB1KA==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [win32]
-
-  node-get-selected-text@0.1.9:
-    resolution: {integrity: sha512-unSSt4znCdcFky0o1Pg7HxnAqhCIJZnA8vdfvY8jV63ZhvjVzdwJheTiJASg4LJdED6FpGqb+agIlOnnLsAoOQ==}
-    engines: {node: '>= 10'}
 
   node-gyp-build@4.8.4:
     resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
@@ -5937,25 +5905,6 @@ snapshots:
   node-api-version@0.2.1:
     dependencies:
       semver: 7.7.3
-
-  node-get-selected-text-darwin-arm64@0.1.9:
-    optional: true
-
-  node-get-selected-text-darwin-x64@0.1.9:
-    optional: true
-
-  node-get-selected-text-linux-x64-gnu@0.1.9:
-    optional: true
-
-  node-get-selected-text-win32-x64-msvc@0.1.9:
-    optional: true
-
-  node-get-selected-text@0.1.9:
-    optionalDependencies:
-      node-get-selected-text-darwin-arm64: 0.1.9
-      node-get-selected-text-darwin-x64: 0.1.9
-      node-get-selected-text-linux-x64-gnu: 0.1.9
-      node-get-selected-text-win32-x64-msvc: 0.1.9
 
   node-gyp-build@4.8.4: {}
 
